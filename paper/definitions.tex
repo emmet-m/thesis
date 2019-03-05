@@ -1,0 +1,21 @@
+%%%% Shortcuts
+\newcommand{\num}[2]{\mbox{#1\,#2}}			% num with units
+
+%%%% Symbols
+\newcommand{\yes}{\ensuremath{\surd}\xspace}		% Tick mark
+\newcommand{\no}{\ensuremath{\times}\xspace}		% Cross mark
+\newcommand{\by}{\ensuremath{\times}\xspace}		% XXX x XXX
+\newcommand{\bAND}{\ensuremath{\wedge}\xspace}		% Bool. /\
+\newcommand{\bOR}{\ensuremath{\vee}\xspace}		% Bool. \/
+\newcommand{\becomes}{\ensuremath{\rightarrow}\xspace}	% -->
+
+%%%% Custom environments
+
+% Centered tabular with single spacing
+\newenvironment{ctabular}[1]
+    {\par\begin{sspacing}\begin{center}\begin{tabular}{#1}}%
+    {\end{tabular}\end{center}\end{sspacing}}
+
+
+%%%% Our default level for display in TOC - subsubsections
+\setcounter{tocdepth}{2}

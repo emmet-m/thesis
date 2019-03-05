@@ -1,0 +1,131 @@
+\chapter{Appendix 1}\label{app1}
+
+This section contains the options for the UNSW thesis class; and
+layout specifications used by this thesis.
+
+\section{Options}
+
+The standard thesis class options provided are:
+
+\qquad
+\begin{tabular}{rl}
+undergrad & default \\
+hdr & \\[2ex]
+11pt & default\\
+12pt &\\[2ex]
+oneside & default for HDR theses\\
+twoside & default for undergraduate theses\\[2ex]
+draft & (prints DRAFT on title page and in footer and omits pictures)\\
+final & default\\[2ex]
+doublespacing & default\\
+singlespacing & (only for use while drafting)
+\end{tabular}
+
+\section{Margins}
+
+The standard margins for theses in Engineering are as follows:
+
+\qquad
+\begin{tabular}{|l|r|r|}
+\hline
+ & U'grad & HDR\\\hline
+{\verb+\oddsidemargin+} & \unit[40]{mm} & \unit[40]{mm}\\
+{\verb+\evensidemargin+} & \unit[25]{mm} & \unit[20]{mm}\\
+{\verb+\topmargin+} & \unit[25]{mm} & \unit[30]{mm}\\
+{\verb+\headheight+} & \unit[40]{mm} & \unit[40]{mm}\\
+{\verb+\headsep+} & \unit[40]{mm} & \unit[40]{mm}\\
+{\verb+\footskip+} & \unit[15]{mm} & \unit[15]{mm}\\
+{\verb+\botmargin+} & \unit[20]{mm} & \unit[20]{mm}\\
+\hline
+\end{tabular}
+
+\section{Page Headers}
+
+\subsection{Undergraduate Theses}
+For undergraduate theses, the page header for odd numbers pages in the
+body of the document is:
+
+\quad\fbox{\parbox{.95\textwidth}{Author's Name\hfill \emph{The title of the thesis}}}
+
+and on even pages is:
+
+\quad\fbox{\parbox{.95\textwidth}{\emph{The title of the thesis}\hfill Author's Name}}
+
+These headers are printed on all mainmatter and backmatter pages,
+including the first page of chapters or appendices.
+
+\subsection{Higher Degree Research Theses}
+For postgraduate theses, the page header for the body of the document is:
+
+\quad\fbox{\parbox{.95\textwidth}{\emph{The title of the chapter or appendix}}}
+
+This header is printed on all mainmatter and backmatter pages,
+except for the first page of chapters or appendices.
+
+\section{Page Footers}
+
+For all theses, the page footer consists of a centred page number.  
+In the frontmatter, the page number is in roman numerals.  
+In the mainmatter and backmatter sections, the page number is in arabic numerals.
+Page numbers restart from 1 at the start of the mainmatter section.  
+
+If the \textbf{draft} document option has been selected, then a ``Draft'' message is also inserted into the footer, as in:
+
+\quad\fbox{\parbox{.95\textwidth}{\hfill 14\hfill\hbox to 0pt{\hss\textbf{Draft:} \today}}}
+
+or, on even numbered pages in two-sided mode:
+
+\quad\fbox{\parbox{.95\textwidth}{\leavevmode\hbox to 0pt{\textbf{Draft:} \today\hss}\hfill 14\hfill\mbox{}}}
+
+\section{Double Spacing}
+Double spacing (actualy 1.5 spacing) is used for the mainmatter section, except for
+footnotes and the text for figures and table.
+
+Single spacing is used in the frontmatter and backmatter sections.
+
+If it is necessary to switch between single-spacing and double-spacing, the commands \verb+\ssp+ and \verb+\dsp+ can be used; or there is a \verb+sspacing+ environment to invoke single spacing and a \verb+spacing+ environment to invoke double spacing if double spacing is used for the document (otherwise it leaves it in single spacing).  Note that switching to single spacing should only be done within the spirit of this thesis class, otherwise it may breach UNSW thesis format guidelines.
+
+\section{Files}
+
+This description and sample of the UNSW Thesis \LaTeX\ class consists of a number of files:
+
+\quad\begin{tabular}{rl}
+unswthesis.cls & the thesis class file itself\\[2ex]
+crest.pdf & the UNSW coat of arms, used by \verb+pdflatex+ \\
+crest.eps & the UNSW coat of arms, used by \verb+latex+ + \verb+dvips+ \\[2ex]
+dissertation-sheet.tex & formal information required by HDR theses\\[2ex]
+pubs.bib & reference details for use in the bibliography\\[2ex]
+sample-thesis.tex & the main file for the thesis
+\end{tabular}
+
+The file sample-thesis.tex is the main file for the current document (in use,
+its name should be changed to something more meaningful).  It presents
+the structure of the thesis, then includes a number of separate files
+for the various content sections.  While including separate files is
+not essential (it could all be in one file), using multiple files is
+useful for organising complex work.
+
+This sample thesis is typical of many theses; however, new authors should
+consult with their supervisors and exercise judgement.
+
+The included files used by this sample thesis are:
+
+\quad\begin{tabular}[t]{r}
+definitions.tex \\
+abstract.tex \\
+acknowledgements.tex \\
+abbreviations.tex \\
+introduction.tex \\
+background.tex
+\end{tabular}
+\quad\begin{tabular}[t]{r}
+mywork.tex \\
+evaluation.tex \\
+conclusion.tex \\
+appendix1.tex \\
+appendix2.tex 
+\end{tabular}
+
+These are typical; however the concepts and names
+(and obviously content) of the files making up the matter of the
+thesis will differ between theses.
