@@ -9,6 +9,10 @@
 
 * Simple introduction to linear types.
 
+### *G.M. Biermana A.M. Pittsb C.V. Russob* - Operational Properties of Lily, a Polymorphic Linear Lambda Calculus with Recursion
+
+[Paper](https://www.cl.cam.ac.uk/~amp12/papers/opeplp/opeplp.pdf)
+
 ### *Philip Wadler* - Linear types can change the world!
 
 [Paper](https://homepages.inf.ed.ac.uk/wadler/papers/linear/linear.ps)
@@ -21,13 +25,16 @@
 
 * Paper shows class of partial recursive functions that are syntactically linear are Turing Complete
 
-### *Unkown* - Linear λ-Calculus
+### *Frank Pfenning* - Linear λ-Calculus
 
-[Paper](https://www.cs.cmu.edu/~fp/courses/98-linear/handouts/rectypes.pdf)
+[Chapter](https://www.cs.cmu.edu/~fp/courses/98-linear/handouts/rectypes.pdf)
+
+[Full Paper](https://www.cs.cmu.edu/~fp/courses/98-linear/handouts/notes.pdf)
 
 * Looks very relevent
 * Addresses termination
 * Has exercises!
+* Can't cite :(
 
 ### *David Walker and Greg Morrisett* - Alias Types for Recursive Data Structures
 
