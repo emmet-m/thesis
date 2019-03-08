@@ -42,6 +42,18 @@
 
 * Doesn't strictly deal with Linear Types
 
+### *Thierry Coquand and Christine Paulin* - Inductively Defined Types
+
+[Paper](https://link.springer.com/content/pdf/10.1007%2F3-540-52335-9_47.pdf)
+
+* Very formal
+* Introduces the notion of concrete data types in HOL
+
+### *Paul Francis Mendler* - Inductive Definition in Type Theory
+
+[Paper](https://ecommons.cornell.edu/handle/1813/6710)
+
+* Deals with general positive types as opposed to strictly positive ones
 
 ## Languages with substructural type systems
 
