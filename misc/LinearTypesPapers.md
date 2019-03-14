@@ -19,6 +19,12 @@
 
 * Another good intro to linear types/destructive update semantics
 
+### *Phililip Wadler* - Recursive Types for Free!
+
+[Paper](https://homepages.inf.ed.ac.uk/wadler/papers/free-rectypes/free-rectypes.txt)
+
+* Introduction to recursive datatypes, positivity, least/greatest fixedpoint
+
 ### *University of Porto & Kings College London* - Linear Recursive Functions
 
 [Paper](https://pdfs.semanticscholar.org/9935/3481b2b55455d263420dcf0955fbada26114.pdf)
