@@ -12,3 +12,6 @@ Uniqueness Types:
 * `myu T. {deref : <Nil | Cons (Int, T)>}`
 * Efficiency problems (copying to stack)
 * Eliminators (Cite Coquand paper)
+
+* Slide 11 add bang to List U32
+* Address related works and how they did (related works section)

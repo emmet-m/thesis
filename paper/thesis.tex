@@ -32,22 +32,22 @@
 \begin{document}
 
 %% pages in the ``frontmatter'' section have roman numeral page number
-\frontmatter  
+\frontmatter
 \maketitle
 
-\include{abstract}
+% \include{abstract} % TODO reinclude?
 \include{acknowledgements}
 \include{abbreviations}
 
 \tableofcontents
-%\listoffigures  % if required
+%\listoffigures  % if required 
 %\listoftables  % if required 
 %% pages in the ``mainmatter'' section have arabic page numbers and chapters are numbered
 \mainmatter
 
 \include{introduction} 
 \include{background}
-\include{content}
+\include{proposal}
 \include{conclusion}
 
 %% chapters in the ``backmatter'' section do not have chapter numbering
@@ -56,6 +56,6 @@
 \bibliographystyle{alpha}
 \bibliography{pubs}
 
-\include{appendix1}
+%\include{appendix1}
 
 \end{document}

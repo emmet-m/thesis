@@ -2,6 +2,14 @@
 
 ## Diary
 
+### 14/03/19 - 29/03/19
+* Worked on thesis slides, literature review
+* Added info on uniqueness types, Cogent examples
+* Presented and got feedback:
+    * Add related works section
+    * Explain terms (Strictly Positive, etc.)
+
+
 ### 12/03/19 - 14/03/19
 * Met with Christine about thesis A presentation
     * Gave advice about touchups
