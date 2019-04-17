@@ -26,13 +26,13 @@ Cogent however has no support for recurison or iteration.
 Currently, any iterative data type and its iterators have to be defined externally in C,
   and included in the Cogent program via its C FFI.
 As it is desirable to prove totality about verified code,
-  reasoning about a particular programs termination is exacerbated with this overhead,
+  the cost of reasoning about a particular programs termination is exacerbated with this overhead,
   due to iteration being an external construct to the language.
 This forces the verification effort to again reason about low level C code, which Cogent strives to avoid.
 
 This thesis aims to introduce recursive types to Cogent's type system, allowing internal iteration over
   internal data structures without the involvement of C code.
-While providing these benefits, we will also respect the existing guarantees that Cogent enjoys,
+While providing these benefits, we must also respect the existing guarantees that Cogent enjoys,
   particularly simple reasoning about functional correctness (especially with respect to termination and totality),
   its static memory allocation and destructive updates all whilst keeping in mind
   an efficient and low level system C representation.
