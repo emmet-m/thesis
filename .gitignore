@@ -2,6 +2,7 @@ paper/thesis.synctex.gz
 paper/thesis.pdf
 paper/.out
 Liams_thesis.pdf
+<<<<<<< HEAD
 
 # Latex things
 *.aux
@@ -11,3 +12,6 @@ Liams_thesis.pdf
 *.fls
 *.log
 *.toc
+=======
+cogent-info
+>>>>>>> 79fe8e3f6e77c56cee794b30589a4c8a1c1111e3

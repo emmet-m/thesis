@@ -2,6 +2,12 @@
 
 ## Diary
 
+### 30/03/19 - 12/04/19
+* Began writing simple typing rules to extend cogent (strict positivity check)
+* Began expanding on thesis A lit review, wrote introduction
+* Talked with Liam about syntax of language and what is actually possible to write
+* Began reading minigent, exploring code and structure of project
+
 ### 14/03/19 - 29/03/19
 * Worked on thesis slides, literature review
 * Added info on uniqueness types, Cogent examples
