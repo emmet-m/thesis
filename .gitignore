@@ -2,3 +2,12 @@ paper/thesis.synctex.gz
 paper/thesis.pdf
 paper/.out
 Liams_thesis.pdf
+
+# Latex things
+*.aux
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.toc
