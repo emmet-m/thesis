@@ -63,11 +63,11 @@
 % simply use \thesisfaculty{xxx} and \thesisschool{xxx}.
 
 \gdef\ThesisFacultyName{Faculty of Engineering}
-\gdef\ThesisSchoolName{Name of School}
+\gdef\ThesisSchoolName{School of Computer Science and Engineering}
 
 % Customise for foreign languages.
 
-\def\supervisorname{Supervisor}
+\def\supervisorname{Christine Rizkallah}
 \def\abstractname{Abstract}
 \def\declarationname{Originality Statement}
 

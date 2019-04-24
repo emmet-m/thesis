@@ -1,26 +1,112 @@
 \chapter{Proposal and Plan}\label{ch:style}
 
-Considering our investigation, we seek to expand on the existing Cogent infrastructure keeping in mind
-two major requirements; the necessity for our programs to be probably \textit{total}, and preserving the
-guarantees of Cogent's uniqueness types system.
+Considering our investigation, we seek to expand upon the existing Cogent infrastructure keeping in mind
+two major requirements; the necessity for our programs to be probavly \textit{total}, and the preservation 
+of the benefits Cogent's uniqueness types system guarantees.
 
-\subsection{Preserving totality}
 
-We will require that our recursive types be \textit{strictly positive}, such as \textit{Agda},
+
+%%%%%%%%%%
+\section{Structure \& Syntax}
+
+We present the syntax for our new recursive types:
+
+\begin{center}
+    \textbf{type} Recursive = \textbf{mu} $T$. \{ \textit{field}: $\langle \overline{\kappa^n\; \tau} \rangle$ \}
+\end{center}
+
+Where:
+\begin{itemize}
+    \item
+        \textbf{mu} $T$. is a recursive paramater $T$ that references the following type,
+        It may be used in the body of the type
+    \item
+        \{ \textit{field}: \} is an unboxed record with a field in it that has a valid field name
+    \item 
+        $\langle \overline{\kappa^n\; \tau} \rangle$ is an alternate type with $n$ constructors, 
+        with $\kappa^i$ meaning constructor $i$ in the series that takes one argument of type $\tau$
+\end{itemize}
+
+Our decision to use Cogent's existing records to house recursive types comes from the fact that they are boxed -
+given an indefinite input stream read into the program, we cannot construct variable length data structures that
+are unbounded in size using the statically sized stack. As records are currently implemented in Cogent,
+adding recursive types would not require new rules or a new implementation for static memory allocation which
+is already implemented for records.
+
+Consider the following example recursive type for a list:
+
+\begin{center}
+    \textbf{type} List a = \textbf{mu} \textit{T}. \{ deref: $\langle$ Nil () $\vert$ Cons (\textit{a,T}) $\rangle$ \}
+\end{center}
+
+The alternative type {$\langle$ Nil $\vert$ Cons (\textit{a,T}) $\rangle$} we supply as the type of the field
+\textit{deref} has two type constructors, \textit{Nil} for the end of the list and \textit{Cons} for an element
+followed by the remains of the list. Our list also takes a type paramater $a$, allowing our list to be generic.
+
+We can define a recursive function to sum lists of U32 ints by pattern matching on records as so:
+
+\begin{figure}
+\setstretch{1.2}
+    \begin{center}
+        \begin{tabular}{l}
+            sum : (List U32)! $\rightarrow$ U32 \\
+            sum (\textit{ r \{ deref \}}) = \\
+            \hspace{0.8em} deref \\
+                \hspace{2em} $\vert$ Nil  \quad\quad\quad$\,$   $\rightarrow$ 0 \\
+                \hspace{2em} $\vert$ Cons (x,r$'$)  $\rightarrow$ x + sum r$'$
+        \end{tabular}
+    \end{center}
+    \caption[short]{a sum function}
+    \label{fig:sum}
+\end{figure}
+
+
+
+%%%%%%%%%%
+\section{Totality}
+
+We will require that our recursive types be \textit{strictly positive}, as in \textit{Agda},
 \textit{Coq} and \textit{Isabelle} in order to produce a cleaner and easier to reason about
 embedding within Isabelle. This will allow our types to be compatible with Isabelle, and potentially
 produce an induction principle within Isabelle to reason about these types directly.
 
-In addition to this, \textit{strictly positive} types allow us to avoid expressions that are infinite,
-of which iterating over would potentially cause an infinite loop and thus nontermination. Consider
+In addition to this, \textit{strictly positive} types allow us to avoid expressions that are infinitely recursive,
+of which iterating over would potentially cause non-termination. Consider
 the following example in \textit{Haskell} using GADT syntax:
 
 \pagebreak
-\begin{center}
-    \lstinputlisting[language=haskell]{content/NegativeType.hs}
-\end{center}
+\lstinputlisting[language=haskell]{content/NegativeType.hs}
 
 By our definition in \todo{REFERENCE}, we can see that our type constructor is \textit{negative}, and
-infinite loop. Although this example was constructed maliciously, there may be situations where the
-allows us to construct an expression \verb|infiniteExpression| that when iterated over causes an
-programmer may accidentally construct such an expression, which strictly positive types prohibit.
+thus allows infinitely recursive expressions. This is not an issue in Haskell due to its lazy evaluation,
+however as Cogent is not lazily evaluated these expressions are undesirable in our language. 
+Although this example was constructed maliciously, situations may arise where the
+programmer accidentally constructs such an expression, which strictly positive types prohibit.
+
+Given our definition, we can check the strict positivity of a type with the following judgement:
+$$
+\infer{
+    \Gamma \vdash \mu T.\; \{\; f: \langle \overline{\kappa^n\; \tau} \rangle\; \}
+}{
+   \forall \tau.\; \Gamma \vdash (\phi \rightarrow \psi \sqsubseteq \tau) \implies T \notin \phi
+}
+$$
+
+Where:
+\begin{itemize}
+    \item 
+        $\phi \rightarrow \psi \sqsubseteq \tau$ is the subtyping relation that $\phi \rightarrow \psi$
+        is a subtype of $\tau$ (i.e. $\tau$ has the `shape' of a function, from type $\phi$ to $\psi$) 
+    \item
+        $T \notin \phi$ is the constraint that the recursive paramater $T$ does not exist anywhere in the type $\phi$.
+\end{itemize}
+
+In addition to this, any \textit{primitive recursive} functions over our recursive types 
+(such as the sum function in figure \ref{fig:sum}) potentially gain the benefit of a guaranteed
+automatic termination proof due to an easy to reason about functional imbedding within Isabelle.
+All other generally recursive functions must be proved manually, however due to our embedding
+the cost of such proofs are drastically reduced.
+
+\section{Preservation of Uniqueness}
+
+\todo{Write this}

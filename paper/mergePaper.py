@@ -15,6 +15,6 @@ with open("thesis.tex") as thesis:
     for line in thesis:
         if re.match(r'^\\include{\w+}', line):
             filename = re.search(r'\\include{(\w+)}', line).group(1)
-            print("\n% ======== BEGIN SECTION: {} ========\n".format(filename))
+            print("\n% ======== BEGIN SECTION: {} ========\n".format(filename), end="\n")
             line = replace(filename)
         print(line, end="")

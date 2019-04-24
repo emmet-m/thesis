@@ -1,17 +1,53 @@
+% Fix margins
+\usepackage[margin=7em,top=8em,headsep=3em]{geometry}
+
+% Various packages
+\usepackage{color,soul}
+\usepackage{graphicx}
+\usepackage{setspace}
+
+% Personal info
+\newcommand{\thesistitle}{Recursive Types For Cogent}
+\newcommand{\me}{Emmet Murray}
+
+% Setting header/footer rules
+\usepackage{fancyhdr}
+\fancypagestyle{fancybook}{}
+\renewcommand{\headrulewidth}{0pt}
+\pagestyle{fancy}
+\fancyhf{}% Clear header/footer
+\fancyhead[L]{\textit{\thesistitle}}
+\fancyhead[R]{\me}
+ 
+% Derivation tree styles
+\usepackage{proof}
+
+% Nice lines
+\linespread{1.5}
+\setlength{\parskip}{1em plus 0.5ex}
+\setlength{\parindent}{0pt}
+
+% Center spacing
+\let\oldcenter\center
+\let\oldendcenter\endcenter
+\renewenvironment{center}{\setlength\topsep{0pt}\oldcenter}{\oldendcenter}
+
+% Make the lists not that thick
+\usepackage{enumitem}
+\setlist[itemize]{topsep=0pt}
+\setlist[itemize]{itemsep=0pt}
+
 %%%% Shortcuts
-\newcommand{\num}[2]{\mbox{#1\,#2}} % num with units
+\newcommand{\todo}[1]{\textbf{\hl{TODO: #1}}}
 
-\newcommand{\todo}[1]{\hl{TODO: #1}}
-
-%%%% Symbols
-
-%%%% Custom environments
+%%%% Maths 
+\newcommand{\implies}{\Rightarrow}
 
 %%%% Our default level for display in TOC - subsubsections
 \setcounter{tocdepth}{2}
 
-%%%% included code
-
+%%%% Included code settings
+\usepackage{listings}
 \lstset{
   frame=none,
   xleftmargin=50pt,
@@ -33,3 +69,10 @@
   showstringspaces=false,
   morecomment=[l]\%,
 }
+
+% Spacing before and after titles
+\usepackage{titlesec}
+\titleformat{\chapter}[display]{\normalfont\huge\bfseries}{\chaptertitlename\ \thechapter}{20pt}{\Huge} 
+% \titlespacing*{<command>}{<left>}{<before-sep>}{<after-sep>}
+\titlespacing*{\chapter}{0pt}{-30pt}{20pt}
+\titlespacing*{\section}{0pt}{10pt}{0pt}

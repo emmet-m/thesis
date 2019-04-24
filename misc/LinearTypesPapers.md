@@ -61,6 +61,25 @@
 
 * Deals with general positive types as opposed to strictly positive ones
 
+### *Michael Abbott et. al.* - Containers: Constructingstrictly positive types  
+
+[Paper](https://ecommons.cornell.edu/handle/1813/6710)
+
+### *Ralph Matthes* - Non-strictly positive fixed points for classical natural deduction  
+  
+[Paper](https://ecommons.cornell.edu/handle/1813/6710)
+
+
+### *Erik Palmgren* - Type-theoretic interpretation of iterated, strictly positive inductive definitions
+
+[Paper](https://link.springer.com/article/10.1007/BF01269951)
+
+
+### *Erik Barendsen et. al.* - Uniqueness Type Inference 
+
+[Paper](https://link.springer.com/chapter/10.1007/BFb0026821)
+
+
 ## Languages with substructural type systems
 
 

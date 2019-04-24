@@ -1,45 +1,19 @@
-\documentclass[]{unswthesis}
+\documentclass[a4paper, 12pt, openany, oneside]{book}
 
-%%% Class options:
-
-%  undergrad (default)
-%  hdr
-%  11pt (default)
-%  12pt
-
-%  final (default)
-%  draft
-
-%  oneside (default for hdr)
-%  twoside (default for undergrad)
- 
-% Packages
-\usepackage{listings}
-\usepackage{color,soul}
-
-%% Thesis details
-\thesistitle{Recursive Types For Cogent}
-\thesisschool{School of Computer Science and Engineering} 
-\thesisauthor{Emmet Murray}
-\thesisZid{z5059840}
-\thesistopic{TODO}  % for undergrad theses only
-\thesisdegree{Bachelor of Engineering in Software Engineering}
-%\thesisdegree{Doctor of Philosophy}
-\thesisdate{2019}
-\thesissupervisor{Christine Rizkallah}% for undergrad theses only
-
-%% My own LaTeX macros, definitions, etc
 \include{definitions}
 
 \begin{document}
 
 %% pages in the ``frontmatter'' section have roman numeral page number
 \frontmatter
-\maketitle
+\include{titlepage}
 
-% \include{abstract} % TODO reinclude?
+% TODO reinclude?
+% \include{abstract}
 \include{acknowledgements}
-\include{abbreviations}
+
+% TODO reinclude?
+%\include{abbreviations}
 
 \tableofcontents
 %\listoffigures  % if required 
