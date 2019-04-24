@@ -1,1 +1,26 @@
 \chapter{Proposal and Plan}\label{ch:style}
+
+Considering our investigation, we seek to expand on the existing Cogent infrastructure keeping in mind
+two major requirements; the necessity for our programs to be probably \textit{total}, and preserving the
+guarantees of Cogent's uniqueness types system.
+
+\subsection{Preserving totality}
+
+We will require that our recursive types be \textit{strictly positive}, such as \textit{Agda},
+\textit{Coq} and \textit{Isabelle} in order to produce a cleaner and easier to reason about
+embedding within Isabelle. This will allow our types to be compatible with Isabelle, and potentially
+produce an induction principle within Isabelle to reason about these types directly.
+
+In addition to this, \textit{strictly positive} types allow us to avoid expressions that are infinite,
+of which iterating over would potentially cause an infinite loop and thus nontermination. Consider
+the following example in \textit{Haskell} using GADT syntax:
+
+\pagebreak
+\begin{center}
+    \lstinputlisting[language=haskell]{content/NegativeType.hs}
+\end{center}
+
+By our definition in \todo{REFERENCE}, we can see that our type constructor is \textit{negative}, and
+infinite loop. Although this example was constructed maliciously, there may be situations where the
+allows us to construct an expression \verb|infiniteExpression| that when iterated over causes an
+programmer may accidentally construct such an expression, which strictly positive types prohibit.

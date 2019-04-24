@@ -9,3 +9,27 @@
 
 %%%% Our default level for display in TOC - subsubsections
 \setcounter{tocdepth}{2}
+
+%%%% included code
+
+\lstset{
+  frame=none,
+  xleftmargin=50pt,
+  stepnumber=1,
+  numbers=left,
+  numbersep=20pt,
+  numberstyle=\ttfamily\small\color[gray]{0.3},
+  belowcaptionskip=\bigskipamount,
+  captionpos=b,
+  escapeinside={*'}{'*},
+  tabsize=2,
+  emphstyle={\bf},
+  commentstyle=\it,
+  stringstyle=\mdseries\rmfamily,
+  showspaces=false,
+  keywordstyle=\bfseries\rmfamily,
+  columns=flexible,
+  basicstyle=\sffamily,
+  showstringspaces=false,
+  morecomment=[l]\%,
+}
