@@ -1,7 +1,7 @@
 \chapter{Proposal and Plan}\label{ch:style}
 
 Considering our investigation, we seek to expand upon the existing Cogent infrastructure keeping in mind
-two major requirements; the necessity for our programs to be probavly \textit{total}, and the preservation 
+two major requirements; the necessity for our programs to be easily probavly \textit{total}, and the preservation 
 of the benefits Cogent's uniqueness types system guarantees.
 
 
@@ -21,7 +21,7 @@ Where:
         \textbf{mu} $T$. is a recursive paramater $T$ that references the following type,
         It may be used in the body of the type
     \item
-        \{ \textit{field}: \} is an unboxed record with a field in it that has a valid field name
+        \{ \textit{field}: \} is a boxed record with a field in it that has a valid field name
     \item 
         $\langle \overline{\kappa^n\; \tau} \rangle$ is an alternate type with $n$ constructors, 
         with $\kappa^i$ meaning constructor $i$ in the series that takes one argument of type $\tau$
