@@ -11,14 +11,14 @@ Using C to implement this code is a very popular choice in the systems community
   reason about the functional properties of C code.
 
 Cogent\cite{OCo16}, is a domain specific language that was introduced to address these issues.
-It is a functional, high level, linearly typed language with a certifying compiler
+It is a functional, high level language with uniqueness types and a certifying compiler
   that produces a shallow embedding in Isabelle (the interactive theorem prover) as well as low level efficient C code,
-  the semantics of which correspond to the proof in the Isabelle embedding.
+  the semantics of which correspond to the the Isabelle embedding.
 This embedding is easy to reason about within Isabelle due to it's functional,
   high level nature, which in term allows for a much less taxing process of verifying low level systems code. 
 
 Cogent is also suitable for low level systems development,
-  as its linear type system allows for both efficient destructive updates as well as static memory allocation.
+  as its uniqueness type system allows for both efficient destructive updates as well as static memory allocation.
 In addition to this, Cogent presents a C FFI allowing existing C programs to interact with Cogent code without having to
   abandon a project already written in C and already verified.
 
@@ -32,7 +32,7 @@ This forces the verification effort to again reason about low level C code, whic
 
 This thesis aims to introduce recursive types to Cogent's type system, allowing internal iteration over
   internal data structures without the involvement of C code.
-While providing these benefits, we must also respect the existing guarantees that Cogent enjoys,
+Whilst providing these benefits, we must also respect the existing guarantees that Cogent enjoys,
   particularly simple reasoning about functional correctness (especially with respect to termination and totality),
-  its static memory allocation and destructive updates all whilst keeping in mind
-  an efficient and low level system C representation.
+  its static memory allocation and destructive updates all while keeping in mind
+  an efficient and low level C representation.
