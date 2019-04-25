@@ -2,18 +2,21 @@
 
 Considering our investigation, we seek to expand upon the existing Cogent infrastructure keeping in mind
 two major requirements; the necessity for our programs to be easily probavly \textit{total}, and the preservation 
-of the benefits Cogent's uniqueness types system guarantees.
+of the benefits Cogent's uniqueness types system guarantees.\liam{use ``guaranteed by Cogent's\dots''}
 
 
 
 %%%%%%%%%%
 \section{Structure \& Syntax}
 
+\liam{Recommend first justifying the decisions made in the design before presenting the design, but it's up to you.}
 We present the syntax for our new recursive types:
 
 \begin{center}
     \textbf{type} Recursive = \textbf{mu} $T$. \{ \textit{field}: $\langle \overline{\kappa^n\; \tau} \rangle$ \}
 \end{center}
+\liam{A snippet of pseudo-Cogent code is perhaps a bit confusing. Consider taking the grammar of Cogent expressions from 
+my thesis and extending it? The overline is not defined anywhere. You should probably have a figure with a grammar. }
 
 Where:
 \begin{itemize}
@@ -27,24 +30,26 @@ Where:
         with $\kappa^i$ meaning constructor $i$ in the series that takes one argument of type $\tau$
 \end{itemize}
 
-Our decision to use Cogent's existing records to house recursive types comes from the fact that they are boxed -
-given an indefinite input stream read into the program, we cannot construct variable length data structures that
-are unbounded in size using the statically sized stack. As records are currently implemented in Cogent,
+Our decision to use Cogent's existing records to house recursive types comes from the fact that they are boxed - \liam{ Use an em-dash (\texttt{---}), or a colon, not a hyphen. }
+given an indefinite input stream read into the program\liam{Lost me}, we cannot construct variable length data structures that
+are unbounded in size using the statically sized stack\liam{Don't see what this has to do with inputs. Should probably talk about how our C 
+verification framework doesn't support dynamic stack allocation. Explicitly conclude that you can only have dynamically-sized structures by using 
+heap-allocated recursive objects behind a pointer}. As records are currently implemented in Cogent,
 adding recursive types would not require new rules or a new implementation for static memory allocation which
 is already implemented for records.
 
 Consider the following example recursive type for a list:
-
+\liam{You show this example without ever explaining what $\textbf{mu}\ T\dots$ actually means?}
 \begin{center}
     \textbf{type} List a = \textbf{mu} \textit{T}. \{ deref: $\langle$ Nil () $\vert$ Cons (\textit{a,T}) $\rangle$ \}
 \end{center}
 
-The alternative type {$\langle$ Nil $\vert$ Cons (\textit{a,T}) $\rangle$} we supply as the type of the field
-\textit{deref} has two type constructors, \textit{Nil} for the end of the list and \textit{Cons} for an element
+The alternative\liam{variant, not alternative} type {$\langle$ Nil $\vert$ Cons (\textit{a,T}) $\rangle$} we supply as the type of the field
+\textit{deref} has two type\liam{not type constructor, it's a data constructor or an alternative} constructors, \textit{Nil} for the end of the list and \textit{Cons} for an element
 followed by the remains of the list. Our list also takes a type paramater $a$, allowing our list to be generic.
 
-We can define a recursive function to sum lists of U32 ints by pattern matching on records as so:
-
+We can define a recursive function to sum lists of U32 ints\liam{int is not actually a noun.} by pattern matching on records as so:
+\liam{In my experience in CS writing, we tend not to use in-line figures. Code that is presented in-line is not put in a figure. }
 \begin{figure}[!htbp]
 \setstretch{1.2}
     \begin{center}
@@ -65,21 +70,24 @@ We can define a recursive function to sum lists of U32 ints by pattern matching 
 %%%%%%%%%%
 \section{Totality}
 
-We will require that our recursive types be \textit{strictly positive}, as in \textit{Agda},
-\textit{Coq} and \textit{Isabelle} in order to produce a cleaner and easier to reason about
+We will require that our recursive types be \textit{strictly positive}\liam{No definition?}, as in \textit{Agda},
+\textit{Coq} and \textit{Isabelle}\liam{why italic?} in order to produce a cleaner and easier to reason about
 embedding within Isabelle. This will allow our types to be compatible with Isabelle, and potentially
 produce an induction principle within Isabelle to reason about these types directly.
 
-In addition to this, \textit{strictly positive} types allow us to avoid expressions that are infinitely recursive,
-of which iterating over would potentially cause non-termination. Consider
-the following example in \textit{Haskell} using GADT syntax:
+In addition to this, \textit{strictly positive}\liam{Why repeat the italics?} types allow us to avoid expressions that are infinitely recursive,
+of which iterating over \liam{grammar, rephrase} would potentially cause non-termination. Consider
+the following example in \textit{Haskell} using GADT\liam{cite for GADTs, or, perhaps better is to not use GADT syntax and just use regular datatypes} syntax:
 
+\liam{Why pagebreak? \LaTeX~usually knows better than you. If you need to add your layout tweaks, do so after finishing writing.}
 \pagebreak
+
+\liam{The arrows in this listing look very ugly.}
 \lstinputlisting[language=haskell]{content/NegativeType.hs}
 
-By our definition in \todo{REFERENCE}, we can see that our type constructor is \textit{negative}, and
+By our definition in \todo{REFERENCE}\liam{Is this reference supposed to be a cite or an internal reference? If it's a cite, don't use ``our''.}, we can see that our type constructor is \textit{negative}, and
 thus allows infinitely recursive expressions. This is not an issue in Haskell due to its lazy evaluation,
-however as Cogent is not lazily evaluated these expressions are undesirable in our language. 
+however as Cogent is not lazily evaluated these expressions are undesirable in our language\liam{Why? Just say they won't terminate.}. 
 Although this example was constructed maliciously, situations may arise where the
 programmer accidentally constructs such an expression, which strictly positive types prohibit.
 
@@ -91,6 +99,7 @@ $$
    \forall \tau.\; \Gamma \vdash (\phi \rightarrow \psi \sqsubseteq \tau) \implies T \notin \phi
 }
 $$
+\liam{I am beginning to suspect that the subtyping relation should actually go the other way here, i.e. $\tau \sqsubseteq \phi \rightarrow \psi$}
 
 Where:
 \begin{itemize}
@@ -103,7 +112,8 @@ Where:
 
 In addition to this, any \textit{primitive recursive} functions over our recursive types 
 (such as the sum function in figure \ref{fig:sum}) potentially gain the benefit of a guaranteed
-automatic termination proof due to an easy to reason about functional imbedding within Isabelle.
+automatic termination proof due to an easy to reason about functional imbedding\liam{embedding} within Isabelle\liam{Talk about how Isabelle 
+can prove termination for simple recursions first}.
 All other generally recursive functions must be proved manually, however due to our embedding
 the cost of such proofs are drastically reduced.
 
