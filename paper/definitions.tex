@@ -45,6 +45,9 @@
 
 %%%% Our default level for display in TOC - subsubsections
 \setcounter{tocdepth}{2}
+%%%% Our default level for displaying numbering - subsubsections
+\setcounter{secnumdepth}{3}
+
 
 %%%% Included code settings
 \usepackage{listings}
@@ -76,3 +79,10 @@
 % \titlespacing*{<command>}{<left>}{<before-sep>}{<after-sep>}
 \titlespacing*{\chapter}{0pt}{-30pt}{20pt}
 \titlespacing*{\section}{0pt}{10pt}{0pt}
+
+% Fixes broken section/subsection numbering
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd{\ttlh@hang}{\parindent\z@}{\parindent\z@\leavevmode}{}{}
+\patchcmd{\ttlh@hang}{\noindent}{}{}{}
+\makeatother
