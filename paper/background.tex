@@ -13,7 +13,41 @@ embedding as well as facilitating the ease of this process at the type level wit
 
 \subsection{Proving Termination in Isabelle}
 
-\todo{Type up}
+The official Isabelle tutorial\cite{IsabelleTutorial} describes 3 methods of creating functions using the keywords 
+\textbf{primrec}, \textbf{fun} and \textbf{function}. The first, \textbf{primrec}, allows one to create a 
+\textit{primitive recursive} function - one that returns a constant or removes a datatype constructor from one
+of the arguments to the function in its body, `decreasing' in size every time. These functions are \textit{total}
+and always terminate, removing the need of a termination proof (which is required for all functions within Isabelle,
+unless they are defined to be partial, however this is undesirable).
+Primitive recursive functions however are limited in their expressiveness and are a subset of all computable
+functions, so we cannot rely on them for the general case.
+
+In his tutorial\cite{KraussIsabelle}, Alexander Krauss discusses the details of the latter two of the 3 methods
+of creating functions in Isabelle. The \textbf{fun} keyword instructs Isabelle to try and solve all necessary
+termination proof obligations, rejecting the definition if it fails (either because the definition does not 
+terminate or because Isabelle cannot figure out how to prove it does). In contrast to this, \textbf{funtion}
+requires that the termination proofs be solved manually by the prover.
+
+\subsection{Strictly Positive Types}
+
+Many theorem provers and dependantly typed languages make use of \textit{strictly positive} types, including 
+\textit{Agda}\cite{AgdaStrictlyPositive}, \textit{Coq}\cite{CoqStrictlyPositive} and even
+Isabelle\cite{IsabelleStrictlyPositive}. Their definitions of strictly positive can be summarised as follows.
+
+Given a datatype $T$ and its constructors $C_{1..n}$:
+$$
+T = C_1\; \tau_{11} \; \tau_{12} \; \dots \\
+\hspace{1.2em} \vert\; C_2\; \tau_{21} \; \tau_{22} \; \dots \\
+\hspace{1.2em} \vert\; \dots
+$$
+For every argument $\tau_{ij}$ to any type constructor $C_i$ that is a function,
+T cannot feature to as an argument to that function:
+$$
+\forall\; 1 \leq i,j \leq n.\;
+ (\tau_{ij} = \phi_{1} \rightarrow \dots \rightarrow \phi_{k})
+ \implies T \notin \phi_{1..k-1}
+$$
+
 
 \section{Linear \& Uniqueness Types}
 \todo{Type up}
