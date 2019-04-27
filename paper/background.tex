@@ -1,16 +1,14 @@
-\chapter{Background \& Related Works}\label{ch:background}
-\liam{No ampersands.}\\
-Our investigation of existing works will consider 3\liam{three, not 3} domains;\liam{colon, not semi} The existing tools within Cogent,
-termination and recursive types, \liam{and} linear and uniqueness types.
+\chapter{Background And Related Works}\label{ch:background}
+Our investigation of existing works will consider three domains: The existing tools within Cogent,
+termination and recursive types and linear and uniqueness types.
 
 \section{Cogent Currently}
 \todo{Type up}
 
-\section{Termination \& Recursive Types}
-\liam{No ampersands}\\
+\section{Termination And Recursive Types}
 Our focus for reasoning about termination falls on considering the use of Isabelle to verify our 
 embedding as well as facilitating the ease of this process at the type level within Cogent. 
-\liam{Little unclear on this paragraph. I'll wait till you write more.}
+
 \subsection{Proving Termination in Isabelle}
 
 The official Isabelle tutorial\citep{IsabelleTutorial} describes 3 methods of creating functions using the keywords 
@@ -34,19 +32,25 @@ Many theorem provers and dependently typed languages make use of \textit{strictl
 \textit{Agda}\citep{AgdaStrictlyPositive}, \textit{Coq}\citep{CoqStrictlyPositive} and even
 Isabelle\citep{IsabelleStrictlyPositive}. Their definitions of strictly positive can be summarised as follows.
 
-Given a data type $T$ and its constructors $C_{1..n}$:
-$$
-T = C_1\; \tau_{11} \; \tau_{12} \; \dots \\
-\hspace{1.2em} \vert\; C_2\; \tau_{21} \; \tau_{22} \; \dots \\
-\hspace{1.2em} \vert\; \dots
-$$
-For every argument $\tau_{ij}$ to any type constructor $C_i$ that is a function,
-T cannot feature to as an argument to that function:
-$$
-\forall\; 1 \leq i,j \leq n.\;
+\theoremstyle{definition}
+\begin{definition}
+Given a data type $T$ and its constructors $C_{1..n}$, for every argument $\tau_{ij}$
+to any data constructor $C_i$ that is a function, T is said to be \textit{strictly positive} if 
+T does not occur as an argument to any $\tau_{ij}$:
+
+\label{def:sp}
+\begin{center}
+\begin{tabular}{l}
+$T = C_1\; \tau_{11} \; \tau_{12} \; \dots$ \\
+$\hspace{1.5em} \vert\; C_2\; \tau_{21} \; \tau_{22} \; \dots$ \\
+$\hspace{1.5em} \vert\; \dots$ \\
+\end{tabular} 
+
+$\forall\; 1 \leq i,j \leq n.\;
  (\tau_{ij} = \phi_{1} \rightarrow \dots \rightarrow \phi_{k})
- \implies T \notin \phi_{1..k-1}
-$$
+ \implies T \notin \phi_{1..k-1}$
+\end{center}
+\end{definition}
 
 
 \section{Linear \& Uniqueness Types}
