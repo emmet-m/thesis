@@ -2,8 +2,8 @@
 
 \include{definitions}
 
-\newcommand{\liam}[1]{\hl{\textbf{\textsf{#1}} (Liam)}}
-\newcommand{\amos}[1]{\hl{\textbf{\textsf{#1}} (Amos)}}
+\newcommand{\liam}[1]{\sethlcolor{cyan} \hl{\textbf{\textsf{#1}} (Liam)}\sethlcolor{yellow}}
+\newcommand{\amos}[1]{\sethlcolor{red} \hl{\textbf{\textsf{#1}} (Amos)}\sethlcolor{yellow}}
 
 \begin{document}
 
@@ -11,7 +11,6 @@
 \frontmatter
 \include{titlepage}
 
-% TODO reinclude?
 \include{abstract}
 \include{acknowledgements}
 
@@ -33,7 +32,7 @@
 %% text in the ``backmatter'' is single spaced
 \backmatter
 % Bibliography
-\bibliographystyle{plain}
+\bibliographystyle{unsrt}
 \bibliography{pubs}
 
 %\include{appendix1}
