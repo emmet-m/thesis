@@ -62,9 +62,23 @@ $\tau_{i1}..\tau_{ik}$:
     \end{tabular} 
 \end{center}
 
-A data type $T$ is said to be in a \textit{negative position} if $T$ appears as an argument in a function
-inside $\tau_{ij}$, and is a \textit{negative} data type if it appears in a negative position an odd amount
-of times, or a \textit{positive} data type if it appears an even amount of times.
+\theoremstyle{definition}
+\begin{definition}
+    A data type $T$ is said to be in a \textit{negative position} if $T$ appears as an argument in a function
+    inside $\tau_{ij}$.
+\end{definition}
+
+\theoremstyle{definition}
+\begin{definition}
+    A data type $T$ is a \textit{negative} data type if it appears in a negative position an odd amount
+    of times.
+\end{definition}
+
+\theoremstyle{definition}
+\begin{definition}
+    A data type is a \textit{positive} data type if it appears an even amount of times.
+\end{definition}
+
 In simpler terms, if $T$ appears to the left of a function arrow an odd amount of times, it is negative and if
 to the left an even amount of times then it is positive.
 
@@ -86,31 +100,32 @@ Allowing for negative types in our system allow for data structures that are inf
 which if iterated over would potentially cause non-termination. Consider
 the following example in \textit{Haskell}:
 
-\pagebreak
 \lstinputlisting[language=haskell]{content/NegativeType.hs}
 
-By our definition, we can see that our type \textit{Bad} is \textit{negative} and using it we were able
+By our definition, we can see that our type \textit{Bad} is a \textit{negative} type and using it we were able
 to construct the infinitely recursive expression, \textbf{g (A g)}.
 This is not an issue in Haskell due to its lazy evaluation,
 however as Cogent is not lazily evaluated these expressions would be undesirable in
-our language as they will not terminate.
+our language as iterating over them potentially results in non-termination.
 Although this example was constructed maliciously, situations may arise where
-programmers may accidentally construct such an expression.
+programmers may accidentally construct such an expression, so we must seek a way to
+eliminate them from our language.
 
 Many theorem provers and dependently typed languages make use of \textit{strictly positive} types, which
 prohibit the construction of infinitely recursive data structures that negative types allow.  
 \textit{Agda}\citep{AgdaStrictlyPositive}, \textit{Coq}\citep{CoqStrictlyPositive} and even
-Isabelle\citep{IsabelleStrictlyPositive} do exactly this.
+Isabelle\citep{IsabelleStrictlyPositive} do exactly this, as allowing for negative types introduce logical
+inconsistencies which can be used to prove false statements.
 
 The definition of strictly positive is discussed by Coquand and Paulin~\cite{CoquandTypes}, and is as follows:
 
 \theoremstyle{definition}
 \begin{definition}
+    \label{def:sp}
     Given a data type $T$ and its constructors $C_{1..n}$, for every argument $\tau_{ij}$
-    to any data constructor $C_i$ that is a function, $T$ is said to be \textit{strictly positive} if 
+    of any data constructor $C_i$ wher $\tau_{ij}$ is a function, $T$ is said to be \textit{strictly positive} if 
     $T$ does not occur as an argument to any $\tau_{ij}$:
 
-    \label{def:sp}
     \begin{center}
         $\forall\; 1 \leq i,j \leq n.\;
         (\tau_{ij} = \phi_{1} \rightarrow \dots \rightarrow \phi_{k})
@@ -118,8 +133,10 @@ The definition of strictly positive is discussed by Coquand and Paulin~\cite{Coq
     \end{center}
 \end{definition}
 
-Strictly positive types can also be defined as types where $T$ appears in a negative position more than once 
+Strictly positive types can also be defined as types where $T$ appears in a negative position exactly zero times
 (i.e. it does not appear to the left of any arrow).
+
+In their paper, \todo{Talk about coquand and paulin and eliminators and folds}
 
 \section{Linear \& Uniqueness Types}
 \todo{Type up}
