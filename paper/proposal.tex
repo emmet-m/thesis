@@ -34,7 +34,6 @@ Where:
 Our decision to use Cogent's existing records to house recursive types comes from the fact that they are boxed ---
 Cogent's verification framework does not dynamic stack allocation, therefore disallowing our dynamically sized 
 recursive data structures on the stack. Hence we turn to the heap, where boxed records are stored.
-% \liam{Don't see what this has to do with inputs. Should probably talk about how our C verification framework doesn't support dynamic stack allocation. Explicitly conclude that you can only have dynamically-sized structures by using heap-allocated recursive objects behind a pointer}.
 As records are currently implemented in Cogent, adding recursive types would not require new rules
 or a new implementation for static memory allocation which is already implemented for records.
 
@@ -115,6 +114,12 @@ In addition to this, any \textit{primitive recursive} functions over our recursi
 automatic termination proof due to an easy to reason about functional embedding within Isabelle.
 All other generally recursive functions must be proved manually, however due to our embedding
 the cost of such proofs are drastically reduced.
+
+\amos{The scope isn't clear to me: are you going to restrict functions to be primitive recursive, or allow general recursion?
+Will you implement these primrec restrictions?
+You're planning on modifying the type system and type checker in minigent, if I remember correctly?
+Either way, make it very explicit what parts you will and will not do.
+I think you made the scope clear in your talk, so I'd suggest to include anything else you mentioned in your talk.}
 
 \section{Preservation of Uniqueness}
 
