@@ -44,8 +44,6 @@ You have to prove termination separately, but you can reason about the program a
 
 \subsection{Strictly Positive Types}
 
-\amos{There's not enough intuition in this section: I'd suggest showing an example of a negative datatype and explaining how it allows unbounded recursion, and then explaining the positivity restriction}
-
 Adding recursive types to a type system allows for expressions that are potentially infinitely recursive,
 as discussed by Wadler~\cite{RecursiveTypesForFree}, who explains the potential for recursive expressions
 to cause non-termination through polymorphic lambda calculus. In his paper, he discusses how this
@@ -64,19 +62,21 @@ $\tau_{i1}..\tau_{ik}$:
 
 \theoremstyle{definition}
 \begin{definition}
-    A data type $T$ is said to be in a \textit{negative position} if $T$ appears as an argument in a function
-    inside $\tau_{ij}$.
+    A data type $T$ is said to be in a \textit{negative position} if $T$ appears nested as an argument
+    to a function an odd amount of times inside any $\tau_{ij}$, and said to be in a \textit{positive position}
+    if $T$ appears nested as an argument to a function an even amount of times inside $\tau_{ij}$.
 \end{definition}
 
 \theoremstyle{definition}
 \begin{definition}
-    A data type $T$ is a \textit{negative} data type if it appears in a negative position an odd amount
-    of times.
+    A data type $T$ is a \textit{negative} data type if it appears in a negative position 
+    in one of its constructors.
 \end{definition}
 
 \theoremstyle{definition}
 \begin{definition}
-    A data type is a \textit{positive} data type if it appears an even amount of times.
+    A data type $T$ is a \textit{positive} data type if only appears nested in a positive position
+    in all of its constructors.
 \end{definition}
 
 In simpler terms, if $T$ appears to the left of a function arrow an odd amount of times, it is negative and if
@@ -91,10 +91,10 @@ For example:
     \end{tabular} 
 \end{center}
 
-Here, the data type E is negative as it appears in a negative position (denoted here by an underline)
-to a function in the first argument of C.
-K however is positive as it appears first in a negative position in function 1 ($\rightarrow_1$) and again
-in function 2 ($\rightarrow_2$) for a total of two times.
+Here, the data type $E$ is negative as it appears in a negative position (denoted here by an underline)
+to a function in the first argument of $C$.
+$K$ however is positive as it appears only ever in a positive position as it is nested as an argument
+in function 1 ($\rightarrow_1$) and again in function 2 ($\rightarrow_2$) for a total of two times.
 
 Allowing for negative types in our system allow for data structures that are infinitely recursive,
 which if iterated over would potentially cause non-termination. Consider
@@ -106,16 +106,18 @@ By our definition, we can see that our type \textit{Bad} is a \textit{negative} 
 to construct the infinitely recursive expression, \textbf{g (A g)}.
 This is not an issue in Haskell due to its lazy evaluation,
 however as Cogent is not lazily evaluated these expressions would be undesirable in
-our language as iterating over them potentially results in non-termination.
+our language as iterating over them potentially results in non-termination, and in this
+situation hang when \textit{infiniteExpression} is constructed.
 Although this example was constructed maliciously, situations may arise where
 programmers may accidentally construct such an expression, so we must seek a way to
 eliminate them from our language.
 
 Many theorem provers and dependently typed languages make use of \textit{strictly positive} types, which
-prohibit the construction of infinitely recursive data structures that negative types allow.  
+prohibit the construction of infinitely recursive data structures that under a dependant type system
+both negative and simple positive types allow.
 \textit{Agda}\citep{AgdaStrictlyPositive}, \textit{Coq}\citep{CoqStrictlyPositive} and even
-Isabelle\citep{IsabelleStrictlyPositive} do exactly this, as allowing for negative types introduce logical
-inconsistencies which can be used to prove false statements.
+Isabelle\citep{IsabelleStrictlyPositive} do exactly this, as allowing for negative or simple positive
+types introduce logical inconsistencies which can be used to prove false statements.
 
 The definition of strictly positive is discussed by Coquand and Paulin~\cite{CoquandTypes}, and is as follows:
 
@@ -127,16 +129,59 @@ The definition of strictly positive is discussed by Coquand and Paulin~\cite{Coq
     $T$ does not occur as an argument to any $\tau_{ij}$:
 
     \begin{center}
-        $\forall\; 1 \leq i,j \leq n.\;
+        $\forall\; \tau_{ij}.\;
         (\tau_{ij} = \phi_{1} \rightarrow \dots \rightarrow \phi_{k})
         \implies T \notin \phi_{1..k-1}$
     \end{center}
 \end{definition}
 
-Strictly positive types can also be defined as types where $T$ appears in a negative position exactly zero times
-(i.e. it does not appear to the left of any arrow).
+Strictly positive types can also be defined as types where $T$ appears in a negative or positive 
+position exactly zero times (i.e. it does not appear to the left of any arrow).
 
-In their paper, \todo{Talk about coquand and paulin and eliminators and folds}
+In their paper, Conquand and Paulin further discuss the ability to produce an \textit{eliminator} or a
+\textit{fold} from any strictly positive type --- which corresponds to an induction principle on the type.
+
+Consider a type for natural numbers with two constructors for zero and successor:
+
+\begin{center}
+    \begin{tabular}{l}
+        $Nat = \textsc{Z}\; \vert\; \textsc{S}\; Nat$ \\
+    \end{tabular} 
+\end{center}
+
+We can see $Nat$ is a strictly positive type and the induction principle it produces
+for any predicate over natural numbers, $P$, is:
+
+\[
+    \infer{
+        \forall(N : Nat).\;\; P(N)
+    }{
+        P(Z) \quad & \forall (X : Nat).\; P(X) \implies P(S\; X)
+    }
+\]
+
+That is, to prove any predicate $P$ inductively over nats ($\forall(N : Nat).\; P(N)$)
+we provie it for the base (zero) case $P(Z)$ and then assuming the predicate holds
+for a natural number $X$, we prove it for its successor case $S\; X$: $P(X) \implies P(S\; X)$.
+
+The interactive theorem prover Isabelle does exactly this for any type created in Isabelle. We can 
+get the same induction principle over natural numbers by redefining our $Nat$ type in Isabelle, as in 
+figure \ref{fig:IsabelleNatInduct}.
+
+\begin{center}
+    \begin{figure}
+        \includegraphics[width=\linewidth]{content/isabelleNatInduct.png}
+        \caption{A type for natural numbers defined in Isabelle, and the generated 
+        induction principle associated with the type.}
+        \label{fig:IsabelleNatInduct}
+    \end{figure}
+\end{center}
+
+\FloatBarrier
+
+Considering our Cogent embedding will be within Isabelle, we may potentially be able to 
+get Isabelle to generate an induction principle over our Cogent types, allowing for much 
+simpler reasoning about our Isabelle embedding.
 
 \section{Linear \& Uniqueness Types}
 \todo{Type up}

@@ -5,6 +5,7 @@
 \usepackage{color,soul}
 \usepackage{xcolor}% http://ctan.org/pkg/xcolor
 \usepackage{graphicx}
+\usepackage{placeins}
 \usepackage{setspace}
 
 \usepackage{natbib} %liam
@@ -30,8 +31,9 @@
 \renewcommand{\headrulewidth}{0pt}
 \pagestyle{fancy}
 \fancyhf{}% Clear header/footer
-\fancyhead[L]{\textit{\thesistitle}}
-\fancyhead[R]{\me}
+\fancyfoot{}
+\fancyhead[L]{\me\ --- \textit{\thesistitle}}
+\fancyhead[R]{\thepage}
  
 % Derivation tree styles
 \usepackage{proof}

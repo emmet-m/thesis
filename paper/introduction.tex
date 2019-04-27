@@ -31,10 +31,10 @@ Due to the functional, high level nature of the embedding
   Cogent allows for a much less taxing process of verifying low level systems code.
 
 Cogent is also suitable for low level systems development in contrast to many existing functional languages which operate
-  on layers of abstractions away from the system, as its uniqueness type system allows for both efficient destructive updates
+  on layers of abstractions away from the system, as its uniqueness types allow for both efficient destructive updates
   as well as static memory allocation.
-In addition to this, Cogent presents a C FFI allowing existing C programs to interact with Cogent code, without forcing teams to
-  abandon a project already written in C and already verified.
+In addition to this, Cogent presents a C foreign function interface (FFI) allowing existing C programs
+ to interact with Cogent code, without forcing teams to abandon a project already written in C and already verified.
 
 However, Cogent currently has no support for recursion or iteration.
 Currently, any data type that can be iterated over and its iterators have to be defined externally in C,
