@@ -6,10 +6,18 @@ termination and recursive types and linear and uniqueness types.
 \todo{Type up}
 
 \section{Termination And Recursive Types}
+
+Proving total correctness about the programs we write is a very desirable result,
+as computation performed by a program is useless if the program never returns the
+result of the computation we desire.
+In a systems context, this is especially desirable as an infinitely looping component of a
+system could cause it to hang to hang, ruining the experience for end users of the system.
+
 Our focus for reasoning about termination falls on considering the use of Isabelle to verify our 
 embedding as well as facilitating the ease of this process at the type level within Cogent. 
 
 \subsection{Proving Termination in Isabelle}
+
 
 The official Isabelle tutorial\citep{IsabelleTutorial} describes 3 methods of creating functions using the keywords 
 \textbf{primrec}, \textbf{fun} and \textbf{function}. The first, \textbf{primrec}, allows one to create a 
@@ -24,9 +32,7 @@ In his tutorial\citep{KraussIsabelle}, Alexander Krauss discusses the details of
 of creating functions in Isabelle. The \textbf{fun} keyword instructs Isabelle to try and solve all necessary
 termination proof obligations, rejecting the definition if it fails (either because the definition does not 
 terminate or because Isabelle cannot figure out how to prove it does). In contrast to this, \textbf{function}
-requires that the termination proofs be solved manually by the prover.
-\amos{s/funtion/function/}
-\amos{`prover' here is a bit ambigous, as it could refer to the interactive theorem prover (Isabelle) or the person doing the proofs}
+requires that the termination proofs be solved manually by whoever is writing the proof.
 
 \amos{Worth comparing the `gas' or `clock' approach as well, as used by CakeML (see CakeML: A Verified Implementation of ML, POPL 2014).
 There, the embedding of the program has an extra parameter which is a natural number describing how much time the program has to compute a result.
@@ -34,36 +40,86 @@ At each recursive step, the clock is decremented, and if it reaches zero the pro
 This lets you embed arbitrary programs as primitive recursion on a nat.
 You have to prove termination separately, but you can reason about the program assuming termination (assume that there exists a large enough clock that the program will return a valid value).}
 
-\amos{Something that's unclear to me: do we want to prove termination because we actually want the program to terminate, or do we want to prove termination just because we need to embed it in a theorem prover?}
-
 \todo{Relate to proposal}
 
 \subsection{Strictly Positive Types}
 
 \amos{There's not enough intuition in this section: I'd suggest showing an example of a negative datatype and explaining how it allows unbounded recursion, and then explaining the positivity restriction}
-Many theorem provers and dependently typed languages make use of \textit{strictly positive} types, including 
+
+Adding recursive types to a type system allows for expressions that are potentially infinitely recursive,
+as discussed by Wadler~\cite{RecursiveTypesForFree}, who explains the potential for recursive expressions
+to cause non-termination through polymorphic lambda calculus. In his paper, he discusses how this
+quality can be qualified with positive and negative data types.
+
+Suppose a data type in its general form $T$ and its data constructors $C_{1..n}$, each with a number of arguments 
+$\tau_{i1}..\tau_{ik}$:
+
+\begin{center}
+    \begin{tabular}{l}
+        $T = C_1\; \tau_{11} \; \tau_{12} \; \dots$ \\
+        $\hspace{1.5em} \vert\; C_2\; \tau_{21} \; \tau_{22} \; \dots$ \\
+        $\hspace{1.5em} \vert\; \dots$ \\
+    \end{tabular} 
+\end{center}
+
+A data type $T$ is said to be in a \textit{negative position} if $T$ appears as an argument in a function
+inside $\tau_{ij}$, and is a \textit{negative} data type if it appears in a negative position an odd amount
+of times, or a \textit{positive} data type if it appears an even amount of times.
+In simpler terms, if $T$ appears to the left of a function arrow an odd amount of times, it is negative and if
+to the left an even amount of times then it is positive.
+
+For example:
+
+\begin{center}
+    \begin{tabular}{l}
+        $E = C\; (\underline{E} \rightarrow E)$ \\
+        $K = D\; (\underline{(\underline{K} \rightarrow_1 Int)} \rightarrow_2 K)$
+    \end{tabular} 
+\end{center}
+
+Here, the data type E is negative as it appears in a negative position (denoted here by an underline)
+to a function in the first argument of C.
+K however is positive as it appears first in a negative position in function 1 ($\rightarrow_1$) and again
+in function 2 ($\rightarrow_2$) for a total of two times.
+
+Allowing for negative types in our system allow for data structures that are infinitely recursive,
+which if iterated over would potentially cause non-termination. Consider
+the following example in \textit{Haskell}:
+
+\pagebreak
+\lstinputlisting[language=haskell]{content/NegativeType.hs}
+
+By our definition, we can see that our type \textit{Bad} is \textit{negative} and using it we were able
+to construct the infinitely recursive expression, \textbf{g (A g)}.
+This is not an issue in Haskell due to its lazy evaluation,
+however as Cogent is not lazily evaluated these expressions would be undesirable in
+our language as they will not terminate.
+Although this example was constructed maliciously, situations may arise where
+programmers may accidentally construct such an expression.
+
+Many theorem provers and dependently typed languages make use of \textit{strictly positive} types, which
+prohibit the construction of infinitely recursive data structures that negative types allow.  
 \textit{Agda}\citep{AgdaStrictlyPositive}, \textit{Coq}\citep{CoqStrictlyPositive} and even
-Isabelle\citep{IsabelleStrictlyPositive}. Their definitions of strictly positive can be summarised as follows.
+Isabelle\citep{IsabelleStrictlyPositive} do exactly this.
+
+The definition of strictly positive is discussed by Coquand and Paulin~\cite{CoquandTypes}, and is as follows:
 
 \theoremstyle{definition}
 \begin{definition}
-Given a data type $T$ and its constructors $C_{1..n}$, for every argument $\tau_{ij}$
-to any data constructor $C_i$ that is a function, T is said to be \textit{strictly positive} if 
-T does not occur as an argument to any $\tau_{ij}$:
+    Given a data type $T$ and its constructors $C_{1..n}$, for every argument $\tau_{ij}$
+    to any data constructor $C_i$ that is a function, $T$ is said to be \textit{strictly positive} if 
+    $T$ does not occur as an argument to any $\tau_{ij}$:
 
-\label{def:sp}
-\begin{center}
-\begin{tabular}{l}
-$T = C_1\; \tau_{11} \; \tau_{12} \; \dots$ \\
-$\hspace{1.5em} \vert\; C_2\; \tau_{21} \; \tau_{22} \; \dots$ \\
-$\hspace{1.5em} \vert\; \dots$ \\
-\end{tabular} 
-
-$\forall\; 1 \leq i,j \leq n.\;
- (\tau_{ij} = \phi_{1} \rightarrow \dots \rightarrow \phi_{k})
- \implies T \notin \phi_{1..k-1}$
-\end{center}
+    \label{def:sp}
+    \begin{center}
+        $\forall\; 1 \leq i,j \leq n.\;
+        (\tau_{ij} = \phi_{1} \rightarrow \dots \rightarrow \phi_{k})
+        \implies T \notin \phi_{1..k-1}$
+    \end{center}
 \end{definition}
+
+Strictly positive types can also be defined as types where $T$ appears in a negative position more than once 
+(i.e. it does not appear to the left of any arrow).
 
 \section{Linear \& Uniqueness Types}
 \todo{Type up}

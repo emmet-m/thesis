@@ -76,18 +76,6 @@ embedding within Isabelle. As our type system's constraints will be compatable w
 strict positivity constraint we can more easily achieve an embedding within Isabelle, and potentially
 produce an induction principle within Isabelle to reason about these types directly.
 
-In addition to this, strictly positive types allow us to avoid expressions that are infinitely recursive,
-which if iterated over would potentially cause non-termination. Consider
-the following example in \textit{Haskell}:
-
-\lstinputlisting[language=haskell]{content/NegativeType.hs}
-
-By our definition in \ref{def:sp}, we can see that our type constructor is \textit{negative}, and
-thus allows infinitely recursive expressions. This is not an issue in Haskell due to its lazy evaluation,
-however as Cogent is not lazily evaluated these expressions are undesirable in
-our language as they will not terminate.
-Although this example was constructed maliciously, situations may arise where the
-programmer accidentally constructs such an expression, which strictly positive types prohibit.
 
 Given our definition, we can check the strict positivity of a type with the following judgement:
 $$
