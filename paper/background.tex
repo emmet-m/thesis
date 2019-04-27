@@ -28,6 +28,8 @@ termination proof obligations, rejecting the definition if it fails (either beca
 terminate or because Isabelle cannot figure out how to prove it does). In contrast to this, \textbf{funtion}
 requires that the termination proofs be solved manually by the prover.
 
+\todo{Relate to proposal}
+
 \subsection{Strictly Positive Types}
 
 Many theorem provers and dependantly typed languages make use of \textit{strictly positive} types, including 
@@ -35,6 +37,8 @@ Many theorem provers and dependantly typed languages make use of \textit{strictl
 Isabelle\cite{IsabelleStrictlyPositive}. Their definitions of strictly positive can be summarised as follows.
 
 Given a datatype $T$ and its constructors $C_{1..n}$:
+
+\todo{Check definition environment}
 $$
 T = C_1\; \tau_{11} \; \tau_{12} \; \dots \\
 \hspace{1.2em} \vert\; C_2\; \tau_{21} \; \tau_{22} \; \dots \\

@@ -2,7 +2,7 @@
 
 \include{definitions}
 
-\newcommand{\liam}[1]{\hl{\textbf{\textsf{#1}} (Liam)}}
+\newcommand{\liam}[1]{\sethlcolor{cyan}\hl{\textbf{\textsf{#1}} (Liam)}\sethlcolor{yellow}}
 
 \begin{document}
 
@@ -10,9 +10,7 @@
 \frontmatter
 \include{titlepage}
 
-% TODO reinclude?
-\liam{You should have an abstract.}
-% \include{abstract}
+\include{abstract}
 \include{acknowledgements}
 
 % TODO reinclude?
@@ -33,7 +31,7 @@
 %% text in the ``backmatter'' is single spaced
 \backmatter
 % Bibliography
-\bibliographystyle{plain}
+\bibliographystyle{unsrt}
 \bibliography{pubs}
 
 %\include{appendix1}
