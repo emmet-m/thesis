@@ -37,6 +37,7 @@ This forces the verification effort to again reason about low level C code \liam
 
 This thesis aims to introduce recursive types to Cogent's type system, allowing internal iteration over
   internal data structures without the involvement of C code.
+\amos{personal bugbear: s/whilst/while/: `whilst' is archaic}
 Whilst providing these benefits\liam{``these''? You only listed one benefit.}, we must also respect the existing guarantees that Cogent enjoys,
   particularly simple reasoning\liam{Ambiguous grammar. (particularly simple) reasoning or particularly (simple reasoning). I think you mean the latter, in which case, use ``In particular'' instead.} about functional correctness (especially with respect to termination and totality)\liam{Functional correctness usually = partial correctness, not total.},
   its static memory allocation and destructive updates all while keeping in mind

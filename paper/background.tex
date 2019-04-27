@@ -27,10 +27,22 @@ of creating functions in Isabelle. The \textbf{fun} keyword instructs Isabelle t
 termination proof obligations, rejecting the definition if it fails (either because the definition does not 
 terminate or because Isabelle cannot figure out how to prove it does). In contrast to this, \textbf{funtion}
 requires that the termination proofs be solved manually by the prover.
+\amos{s/funtion/function/}
+\amos{`prover' here is a bit ambigous, as it could refer to the interactive theorem prover (Isabelle) or the person doing the proofs}
+
+\amos{Worth comparing the `gas' or `clock' approach as well, as used by CakeML (see CakeML: A Verified Implementation of ML, POPL 2014).
+There, the embedding of the program has an extra parameter which is a natural number describing how much time the program has to compute a result.
+At each recursive step, the clock is decremented, and if it reaches zero the program runs out of time and throws an exception.
+This lets you embed arbitrary programs as primitive recursion on a nat.
+You have to prove termination separately, but you can reason about the program assuming termination (assume that there exists a large enough clock that the program will return a valid value).}
+
+\amos{Something that's unclear to me: do we want to prove termination because we actually want the program to terminate, or do we want to prove termination just because we need to embed it in a theorem prover?}
 
 \todo{Relate to proposal}
 
 \subsection{Strictly Positive Types}
+
+\amos{There's not enough intuition in this section: I'd suggest showing an example of a negative datatype and explaining how it allows unbounded recursion, and then explaining the positivity restriction}
 
 Many theorem provers and dependantly typed languages make use of \textit{strictly positive} types, including 
 \textit{Agda}\cite{AgdaStrictlyPositive}, \textit{Coq}\cite{CoqStrictlyPositive} and even
