@@ -13,28 +13,28 @@ embedding as well as facilitating the ease of this process at the type level wit
 \liam{Little unclear on this paragraph. I'll wait till you write more.}
 \subsection{Proving Termination in Isabelle}
 
-The official Isabelle tutorial\cite{IsabelleTutorial} describes 3 methods of creating functions using the keywords 
+The official Isabelle tutorial\citep{IsabelleTutorial} describes 3 methods of creating functions using the keywords 
 \textbf{primrec}, \textbf{fun} and \textbf{function}. The first, \textbf{primrec}, allows one to create a 
-\textit{primitive recursive} function - one that returns a constant or removes a datatype constructor from one
+\textit{primitive recursive} function - one that returns a constant or removes a data type constructor from one
 of the arguments to the function in its body, `decreasing' in size every time. These functions are \textit{total}
 and always terminate, removing the need of a termination proof (which is required for all functions within Isabelle,
 unless they are defined to be partial, however this is undesirable).
 Primitive recursive functions however are limited in their expressiveness and are a subset of all computable
 functions, so we cannot rely on them for the general case.
 
-In his tutorial\cite{KraussIsabelle}, Alexander Krauss discusses the details of the latter two of the 3 methods
+In his tutorial\citep{KraussIsabelle}, Alexander Krauss discusses the details of the latter two of the 3 methods
 of creating functions in Isabelle. The \textbf{fun} keyword instructs Isabelle to try and solve all necessary
 termination proof obligations, rejecting the definition if it fails (either because the definition does not 
-terminate or because Isabelle cannot figure out how to prove it does). In contrast to this, \textbf{funtion}
+terminate or because Isabelle cannot figure out how to prove it does). In contrast to this, \textbf{function}
 requires that the termination proofs be solved manually by the prover.
 
 \subsection{Strictly Positive Types}
 
-Many theorem provers and dependantly typed languages make use of \textit{strictly positive} types, including 
-\textit{Agda}\cite{AgdaStrictlyPositive}, \textit{Coq}\cite{CoqStrictlyPositive} and even
-Isabelle\cite{IsabelleStrictlyPositive}. Their definitions of strictly positive can be summarised as follows.
+Many theorem provers and dependently typed languages make use of \textit{strictly positive} types, including 
+\textit{Agda}\citep{AgdaStrictlyPositive}, \textit{Coq}\citep{CoqStrictlyPositive} and even
+Isabelle\citep{IsabelleStrictlyPositive}. Their definitions of strictly positive can be summarised as follows.
 
-Given a datatype $T$ and its constructors $C_{1..n}$:
+Given a data type $T$ and its constructors $C_{1..n}$:
 $$
 T = C_1\; \tau_{11} \; \tau_{12} \; \dots \\
 \hspace{1.2em} \vert\; C_2\; \tau_{21} \; \tau_{22} \; \dots \\

@@ -1,7 +1,7 @@
 \chapter{Proposal and Plan}\label{ch:style}
 
 Considering our investigation, we seek to expand upon the existing Cogent infrastructure keeping in mind
-two major requirements; the necessity for our programs to be easily probavly \textit{total}, and the preservation 
+two major requirements; the necessity for our programs to be easily provably \textit{total}, and the preservation 
 of the benefits Cogent's uniqueness types system guarantees.\liam{use ``guaranteed by Cogent's\dots''}
 
 
@@ -21,7 +21,7 @@ my thesis and extending it? The overline is not defined anywhere. You should pro
 Where:
 \begin{itemize}
     \item
-        \textbf{mu} $T$. is a recursive paramater $T$ that references the following type,
+        \textbf{mu} $T$. is a recursive parameter $T$ that references the following type,
         It may be used in the body of the type
     \item
         \{ \textit{field}: \} is a boxed record with a field in it that has a valid field name
@@ -46,7 +46,7 @@ Consider the following example recursive type for a list:
 
 The alternative\liam{variant, not alternative} type {$\langle$ Nil $\vert$ Cons (\textit{a,T}) $\rangle$} we supply as the type of the field
 \textit{deref} has two type\liam{not type constructor, it's a data constructor or an alternative} constructors, \textit{Nil} for the end of the list and \textit{Cons} for an element
-followed by the remains of the list. Our list also takes a type paramater $a$, allowing our list to be generic.
+followed by the remains of the list. Our list also takes a type parameter $a$, allowing our list to be generic.
 
 We can define a recursive function to sum lists of U32 ints\liam{int is not actually a noun.} by pattern matching on records as so:
 \liam{In my experience in CS writing, we tend not to use in-line figures. Code that is presented in-line is not put in a figure. }
@@ -77,7 +77,7 @@ produce an induction principle within Isabelle to reason about these types direc
 
 In addition to this, \textit{strictly positive}\liam{Why repeat the italics?} types allow us to avoid expressions that are infinitely recursive,
 of which iterating over \liam{grammar, rephrase} would potentially cause non-termination. Consider
-the following example in \textit{Haskell} using GADT\liam{cite for GADTs, or, perhaps better is to not use GADT syntax and just use regular datatypes} syntax:
+the following example in \textit{Haskell} using GADT\liam{cite for GADTs, or, perhaps better is to not use GADT syntax and just use regular data types} syntax:
 
 \liam{Why pagebreak? \LaTeX~usually knows better than you. If you need to add your layout tweaks, do so after finishing writing.}
 \pagebreak
@@ -107,12 +107,12 @@ Where:
         $\phi \rightarrow \psi \sqsubseteq \tau$ is the subtyping relation that $\phi \rightarrow \psi$
         is a subtype of $\tau$ (i.e. $\tau$ has the `shape' of a function, from type $\phi$ to $\psi$) 
     \item
-        $T \notin \phi$ is the constraint that the recursive paramater $T$ does not exist anywhere in the type $\phi$.
+        $T \notin \phi$ is the constraint that the recursive parameter $T$ does not exist anywhere in the type $\phi$.
 \end{itemize}
 
 In addition to this, any \textit{primitive recursive} functions over our recursive types 
 (such as the sum function in figure \ref{fig:sum}) potentially gain the benefit of a guaranteed
-automatic termination proof due to an easy to reason about functional imbedding\liam{embedding} within Isabelle\liam{Talk about how Isabelle 
+automatic termination proof due to an easy to reason about functional embedding\liam{embedding} within Isabelle\liam{Talk about how Isabelle 
 can prove termination for simple recursions first}.
 All other generally recursive functions must be proved manually, however due to our embedding
 the cost of such proofs are drastically reduced.
