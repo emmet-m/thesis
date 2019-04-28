@@ -5,7 +5,7 @@
 Formal verification is the field of computer science that explores the methods that allow us to
   reason rigorously about the functional correctness of programs we write.
 One of the benefits of doing so is a proof of correctness for programs with respect to a specification,
-  and for well specified programs aids in eliminating bugs and unexpected program behaviour.
+  and\liam{which} for well specified programs aids in eliminating bugs and unexpected program behaviour. \liam{Can afford to be a bit stronger. Use the word ``eliminate'' wrt bugs}
 Much effort has specifically been put into the verification of low level systems code
   which is critical to the operation of any computer.
 The presence of bugs in such a system can lead to security vulnerabilities,
@@ -40,13 +40,14 @@ However, Cogent currently has no support for recursion or iteration.
 Currently, any data type that can be iterated over and its iterators have to be defined externally in C,
   and included in the Cogent program via its Cogent's C FFI.
 Proving totality about existing code is desirable as proofs for the correctness of programs only hold
-  if they terminate, however the cost of reasoning about a particular program's termination is
+  if they terminate\liam{Not true. Totality/termination is just a prerequisite for correctness of most systems. But non-terminating systems (e.g. corecursive ones) can be correct too.},
+   however the cost of reasoning about a particular program's termination is
   exacerbated with this overhead, due to iteration being an external construct to the language.
 This forces the the use of low level C code in the verification process, which Cogent strives to avoid.
 
 This thesis aims to introduce recursive types to Cogent's type system, allowing internal iteration over
-  internal data structures without the involvement of C code.
+  internal data structures without the involvement of \liam{handwritten} C code.
 While providing this benefit we must also respect the existing guarantees that Cogent enjoys,
-  in particular, simple reasoning about functional correctness and totality,
-  its static memory allocation and destructive updates all while keeping in mind
-  a possible efficient C representation for the later implementation of Cogent to C.
+  in particular, simple reasoning about functional correctness and \liam{, not and} totality,
+  its static memory allocation\liam{,} and destructive updates\liam{,} all while keeping in mind
+  a possible efficient C representation for the later implementation of Cogent to C\liam{``Cogent to C'' isn't a noun. Talk about compilation}.
