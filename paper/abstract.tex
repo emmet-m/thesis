@@ -5,10 +5,10 @@ It has a certifying compiler that produces C code, a shallow embedding in the Is
 and an Isabelle/HOL proof that the C code refines the shallow embedding.
 Cogent's linear type system ensures desired properties such as memory-safety and it also allows the compiler to generate efficient C code.
 
-Cogent currently has no support for recursion, instead it has a foreign function interface (FFI) to C.
+Cogent currently has no support for recursion; instead it has a foreign function interface (FFI) to C.
 Data-types, as well as iterators over these types, are implemented in C and called by Cogent code using the FFI.
 
 The main task of this project is to add a restricted form of recursion to Cogent while keeping the language total.
-This would enable defining more data-types as well as iterators over these data-types directly in Cogent rather than resorting to C.
+These recursive types would enable defining more data-types as well as iterators over these data-types directly in Cogent rather than resorting to C.
 
 \todo{Revise this}

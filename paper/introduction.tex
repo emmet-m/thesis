@@ -24,7 +24,7 @@ This embedding is a representation of the semantics of the C code within the the
 Cogent~\citep{ICFPCogent}, is a domain specific language that was introduced to replace C as a systems
   implementation language.
 It is a functional, high level language with uniqueness types and a certifying compiler
-  that produces a shallow embedding in Isabelle/HOL as well as low level efficient C code,
+  that produces a shallow embedding in Isabelle/HOL as well as low level efficient C code;
   the semantics of which correspond to the the Isabelle embedding.
 Due to the functional, high level nature of the embedding 
   which is designed to be reasoned about equationally as well as its resemblance to higher order logic,
@@ -33,7 +33,7 @@ Due to the functional, high level nature of the embedding
 Cogent is also suitable for low level systems development in contrast to many existing functional languages which operate
   on layers of abstractions away from the system, as its uniqueness types allow for both efficient destructive updates
   as well as static memory allocation.
-In addition to this, Cogent presents a C foreign function interface (FFI) allowing existing C programs
+In addition to the benefits of uniqueness types, Cogent presents a C foreign function interface (FFI) allowing existing C programs
  to interact with Cogent code, without forcing teams to abandon a project already written in C and already verified.
 
 However, Cogent currently has no support for recursion or iteration.

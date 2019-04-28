@@ -1,17 +1,107 @@
 \chapter{Background And Related Works}\label{ch:background}
-Our investigation of existing works will consider three domains: The existing tools within Cogent,
-termination and recursive types and linear and uniqueness types.
+Our investigation of existing works will consider three domains: The existing types and features
+within Cogent, termination and recursive types and linear and uniqueness types.
 
 \section{Cogent Currently}
-\todo{Type up}
+
+
+%%% Basic syntax
+\begin{figure}
+    \centering
+    \includegraphics[width=350pt]{content/CogentGrammar.png}
+    \caption{The basic syntax for Cogent~\citep{ICFPCogent}}
+    \label{fig:cogentGrammar}
+\end{figure}
+
+%%% Variant syntax
+\begin{figure}
+    \centering
+    \includegraphics[width=400pt]{content/VariantGrammar.png}
+    \caption{The syntax for variant types within Cogent~\citep{ICFPCogent}}
+    \label{fig:variantGrammar}
+\end{figure}
+
+%%% Record syntax
+\begin{figure}
+    \centering
+    \includegraphics[width=400pt]{content/RecordGrammar.png}
+    \caption{The syntax for record types within Cogent~\citep{ICFPCogent}}
+    \label{fig:recordGrammar}
+\end{figure}
+
+
+
+Cogent's uniqueness type system features a variety of basic types as well as the more advanced variants
+and records.
+
+\subsection{Primitive Types}
+
+Cogent's primitive datatypes consist of \textbf{Bools}, and the four unsigned integer types \textbf{U8}, 
+\textbf{U16}, \textbf{U32} and \textbf{U64}. Integer types can be upcast using the \textbf{upcast}
+keyword to convert a smaller integer type into a larger one (e.g. a \textbf{U8} into a \textbf{U32}).
+Details of these types can be seen in the syntax for Cogent's basic grammar in figure \ref{fig:cogentGrammar}.
+
+Each of these primitive types are of fixed size, and thus are \textbf{unboxed}, meaning they are stored on the
+stack. They are not subject to the use exactly once constraint that uniqueness types enforce.
+
+Cogent also features \textbf{tuples} (product types) through the standard tuple syntax across the ML
+family of languages: $(a,b)$, and standard functions, however they are limited to one argument.
+
+\subsection{Variant Types}
+
+Cogent's variant types are inspired from the traditional sum/option types, where a variant type man contain
+one of many specified types, the syntax for which is defined in figure \ref{fig:variantGrammar}.
+
+Consider the following example, we can reconstruct \textit{Haskell's} Maybe type using our variants:
+
+\begin{center}
+    \textbf{type} \textit{Maybe} a = $\langle$ Nothing () $\vert$ Just a $\rangle$
+\end{center}
+
+Or a type to represent a choice of colours:
+
+\begin{center}
+    \textbf{type} \textit{RGB} = $\langle$ Red () $\vert$ Green () $\vert$ Blue () $\rangle$
+\end{center}
+
+Pattern matching on variants must be \textit{complete}, i.e. you must give a case for every possible constructor
+of a variant, a constraint that helps keep functions total.
+
+Variant types work well as a potential constructor for our recursive types. If we were to reference a
+recursive parameter inside the variant, we would be able to create a recursive structure similar to Haskell.
+However, as variants are \textit{unboxed} (stored on the fixed size stack), we cannot allow for dynamically sized structues
+using only variants, so we must look elsewhere for a solution.
+
+\subsection{Record Types}
+
+Cogent's record types are similar to \textit{structs} with names fields. They come in two forms, \textit{boxed}
+(stored dynamically on the heap) or \textit{unboxed} (stored statically in the stack), the syntax of both is
+as in figure \ref{fig:recordGrammar}.
+
+For example, consider a record to bundle together user information:
+
+\begin{center}
+    \begin{tabular}{l}
+    \textbf{type} \textit{User} = \{ \\
+                    \hspace{1.5em} name: \textit{String},\\
+                    \hspace{1.5em} age: \textit{U32}, \\
+                    \hspace{1.5em} favouriteColour: \textit{RGB}\\
+                    \} \\
+    \end{tabular}
+\end{center}
+
+Records allow for us to create dynamically sized objects, as we can used boxed records to chain together a
+combination of records on the heap. With the aid of variant types, records can allow us to construct our recursive 
+types with a recursive paramater included to reference the type overall type, using variants to give the 
+differing construction cases for the type.
 
 \section{Termination And Recursive Types}
 
 Proving total correctness about the programs we write is a very desirable result,
 as computation performed by a program is useless if the program never returns the
 result of the computation we desire.
-In a systems context, this is especially desirable as an infinitely looping component of a
-system could cause it to hang to hang, ruining the experience for end users of the system.
+In a systems context, termination is especially desirable as an infinitely looping component of a
+system could cause it to hang, ruining the experience for end users of the system.
 
 Our focus for reasoning about termination falls on considering the use of Isabelle to verify our 
 embedding as well as facilitating the ease of this process at the type level within Cogent. 
@@ -21,7 +111,7 @@ embedding as well as facilitating the ease of this process at the type level wit
 
 The official Isabelle tutorial\citep{IsabelleTutorial} describes 3 methods of creating functions using the keywords 
 \textbf{primrec}, \textbf{fun} and \textbf{function}. The first, \textbf{primrec}, allows one to create a 
-\textit{primitive recursive} function - one that returns a constant or removes a data type constructor from one
+\textit{primitive recursive} function --- one that returns a constant or removes a data type constructor from one
 of the arguments to the function in its body, `decreasing' in size every time. These functions are \textit{total}
 and always terminate, removing the need of a termination proof (which is required for all functions within Isabelle,
 unless they are defined to be partial, however this is undesirable).
@@ -31,7 +121,7 @@ functions, so we cannot rely on them for the general case.
 In his tutorial\citep{KraussIsabelle}, Alexander Krauss discusses the details of the latter two of the 3 methods
 of creating functions in Isabelle. The \textbf{fun} keyword instructs Isabelle to try and solve all necessary
 termination proof obligations, rejecting the definition if it fails (either because the definition does not 
-terminate or because Isabelle cannot figure out how to prove it does). In contrast to this, \textbf{function}
+terminate or because Isabelle cannot figure out how to prove it does). In contrast to \textbf{fun}, \textbf{function}
 requires that the termination proofs be solved manually by whoever is writing the proof.
 
 \amos{Worth comparing the `gas' or `clock' approach as well, as used by CakeML (see CakeML: A Verified Implementation of ML, POPL 2014).
@@ -96,7 +186,7 @@ to a function in the first argument of $C$.
 $K$ however is positive as it appears only ever in a positive position as it is nested as an argument
 in function 1 ($\rightarrow_1$) and again in function 2 ($\rightarrow_2$) for a total of two times.
 
-Allowing for negative types in our system allow for data structures that are infinitely recursive,
+Allowing for negative types in our system allows for data structures that are infinitely recursive,
 which if iterated over would potentially cause non-termination. Consider
 the following example in \textit{Haskell}:
 
@@ -116,8 +206,9 @@ Many theorem provers and dependently typed languages make use of \textit{strictl
 prohibit the construction of infinitely recursive data structures that under a dependant type system
 both negative and simple positive types allow.
 \textit{Agda}\citep{AgdaStrictlyPositive}, \textit{Coq}\citep{CoqStrictlyPositive} and even
-Isabelle\citep{IsabelleStrictlyPositive} do exactly this, as allowing for negative or simple positive
-types introduce logical inconsistencies which can be used to prove false statements.
+Isabelle\citep{IsabelleStrictlyPositive} features this exact constraint, as allowing for negative
+or normal positive types introduce logical inconsistencies which can be used to prove false statements,
+something that is unacceptable for a theorem prover.
 
 The definition of strictly positive is discussed by Coquand and Paulin~\cite{CoquandTypes}, and is as follows:
 
@@ -139,7 +230,7 @@ Strictly positive types can also be defined as types where $T$ appears in a nega
 position exactly zero times (i.e. it does not appear to the left of any arrow).
 
 In their paper, Conquand and Paulin further discuss the ability to produce an \textit{eliminator} or a
-\textit{fold} from any strictly positive type --- which corresponds to an induction principle on the type.
+\textit{fold} from any strictly positive type, which corresponds to an induction principle on the type.
 
 Consider a type for natural numbers with two constructors for zero and successor:
 
@@ -160,13 +251,15 @@ for any predicate over natural numbers, $P$, is:
     }
 \]
 
+Where in order to prove our predicate $P$, we prove it for each case of how our type $T$ could have been
+constructed, which each constructor for our our type supplies.
 That is, to prove any predicate $P$ inductively over nats ($\forall(N : Nat).\; P(N)$)
-we provie it for the base (zero) case $P(Z)$ and then assuming the predicate holds
+we prove it for the base (zero) case $P(Z)$ and then assuming the predicate holds
 for a natural number $X$, we prove it for its successor case $S\; X$: $P(X) \implies P(S\; X)$.
 
-The interactive theorem prover Isabelle does exactly this for any type created in Isabelle. We can 
-get the same induction principle over natural numbers by redefining our $Nat$ type in Isabelle, as in 
-figure \ref{fig:IsabelleNatInduct}.
+The interactive theorem prover Isabelle generates the same induction principle for any type created in
+Isabelle. We can get the same induction principle over natural numbers by redefining our $Nat$
+type in Isabelle, as in figure \ref{fig:IsabelleNatInduct}.
 
 \begin{center}
     \begin{figure}
@@ -179,9 +272,84 @@ figure \ref{fig:IsabelleNatInduct}.
 
 \FloatBarrier
 
-Considering our Cogent embedding will be within Isabelle, we may potentially be able to 
-get Isabelle to generate an induction principle over our Cogent types, allowing for much 
+Considering our Cogent embedding will be within Isabelle, if we can embed our native
+Cogent types into an Isabelle type then we gain Isabelle's automatically generated
+induction principle over our Cogent types, allowing for much 
 simpler reasoning about our Isabelle embedding.
 
-\section{Linear \& Uniqueness Types}
-\todo{Type up}
+\section{Linear And Uniqueness Types}
+
+Linear types are a kind of substructural type system as discussed by\newline David Walker~\citep{Substructural}.
+Many standard programming languages such as \textit{C}, \textit{Java} and \textit{Haskell} feature
+three standard structural typing rules, described in figure \ref{def:structural}.
+
+\begin{figure}
+    \centering
+    $$
+        \infer[Exchange]{
+            \Gamma_1\Gamma_2 \vdash e : \tau
+        }{
+            \Gamma_2\Gamma_1 \vdash e : \tau
+        }\quad
+        \infer[Weakening]{
+            \Gamma_1\Gamma_2 \vdash e : \tau
+        }{
+            \Gamma_1 \vdash e : \tau
+        }\quad
+        \infer[Contraction]{
+            \Gamma_1\Gamma_2 \vdash e : \tau
+        }{
+            \Gamma_1\Gamma_1\Gamma_2 \vdash e : \tau
+        }
+    $$
+    \caption{Structural typing rules}
+    \label{def:structural}
+\end{figure}
+
+\textit{Exchange} is the rule that states that the order in which we add variables in an environment
+is irrelevant. A conclusion of this is that if a term $e$ typechecks under environment $\Gamma$,
+then any permutation of $\Gamma$ will also typecheck $e$.
+
+\textit{Weakening} states that if a term $e$ typechecks under the assumptions
+in $\Gamma_1$, then $e$ will also typecheck if extra assumptions are added to the environment.
+
+\textit{Contraction} states that if we can typecheck a term $e$ using two identical
+assumptions, then we are able to check $e$ with just one of those two assumptions.
+
+Substructural type systems however control access to information within the program by limiting which
+of the structural typing rules are allowed under certain contexts. Linear types ban the use of the
+contraction and weakening rules, which has the consequence that all linear variables must be used 
+at least once (by lack of weakening) and at most once (by lack of contraction), hence exactly one time.
+
+One powerful benefit that linear types allow is \textit{static allocation} of objects, which Cogent
+features. Predicting when an object in a program will be last used (and after deallocated)
+is undecidable as it is a nontrivial semantic property by Rice's Theorem~\citep{Sipser},
+however in a linear type system we know exactly when an object will be freed,
+which is exactly after its first use by the use once rule. The result is a langauge that does
+not require a garbage collector, and doesn't require users to explicitly declare memory allocation,
+as this can now be determined statically.
+
+Wadler~\cite{LinearTypesChangeTheWorld} also describes the performance benefits of destructive updates
+that linear types grant. As we have a guarantee that no other part of a program is referencing a particular
+object (variables must be used exactly once), when performing an operation on an object, the resultant
+object can be our old object with the result of our operation performed in place (i.e. destructively
+mutated).
+
+Consider the following program in Java:
+
+\lstinputlisting[language=Java,basicstyle=\small]{content/destructive.java}
+
+In this example we attempt to double a copy of a list of numbers in place by use of the \verb|doubleNumbers|
+function on \verb|copyOfNumbers|, however by updating it in place has changed the original variable outside
+the function \verb|oldNumbers|. If a programmer mistakenly uses \verb|oldNumbers| again without realising that
+\verb|doubleNumbers| has mutated it instead of a copy of it, it would most likely cause an error. In 
+Java this kind of destructive update cannot be done safely whilst \verb|oldNumbers| still exists, and we
+must resort to copying.
+
+Linear types prevent this kind of mistake, as the duplicate reference that
+\verb|oldNumbers| and \verb|copyOfNumbers| share would be eliminated once \verb|oldNumbers| is used once,
+which in turn allows for a desctructive update on \verb|oldNumbers| to take place with the result stored in
+copyOfNumbers.
+
+While Cogent already features these guarantees, \todo{Difference between uniqueness and linear, link back to
+Cogent}

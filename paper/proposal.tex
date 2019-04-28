@@ -21,7 +21,7 @@ my thesis and extending it? The overline is not defined anywhere. You should pro
 
 Where:
 \begin{itemize}
-    \item
+   \item
         \textbf{mu} $T$. is a recursive parameter $T$ that references the following type,
         It may be used in the body of the type
     \item
@@ -32,10 +32,11 @@ Where:
 \end{itemize}
 
 Our decision to use Cogent's existing records to house recursive types comes from the fact that they are boxed ---
-Cogent's verification framework does not dynamic stack allocation, therefore disallowing our dynamically sized 
-recursive data structures on the stack. Hence we turn to the heap, where boxed records are stored.
-As records are currently implemented in Cogent, adding recursive types would not require new rules
-or a new implementation for static memory allocation which is already implemented for records.
+Cogent's verification framework does not allow for dynamic stack allocation, thereby prohibiting
+our dynamically sized recursive data structures on the stack. Hence we turn to the heap,
+where boxed records are stored. As records are currently implemented in Cogent, adding recursive
+types would not require new rules or a new implementation for static memory allocation which
+is already implemented for records.
 
 Consider the following example recursive type for a list:
 \begin{center}
@@ -97,11 +98,11 @@ Where:
         does not exist anywhere in the type $\phi$.
 \end{itemize}
 
-In addition to this, any \textit{primitive recursive} functions over our recursive types 
-(such as the sum function in figure \ref{fig:sum}) potentially gain the benefit of a guaranteed
-automatic termination proof due to an easy to reason about functional embedding within Isabelle.
-All other generally recursive functions must be proved manually, however due to our embedding
-the cost of such proofs are drastically reduced.
+In addition to our strict positivity constraint, any \textit{primitive recursive} functions over
+our recursive types (such as the sum function in figure \ref{fig:sum}) potentially gain the
+benefit of a guaranteed automatic termination proof due to an easy to reason about functional
+embedding within Isabelle. All other generally recursive functions must be proved manually,
+however due to our embedding the cost of such proofs are drastically reduced.
 
 \amos{The scope isn't clear to me: are you going to restrict functions to be primitive recursive, or allow general recursion?
 Will you implement these primrec restrictions?
