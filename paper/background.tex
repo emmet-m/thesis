@@ -351,5 +351,18 @@ Linear types prevent this kind of mistake, as the duplicate reference that
 which in turn allows for a desctructive update on \verb|oldNumbers| to take place with the result stored in
 copyOfNumbers.
 
-While Cogent already features these guarantees, \todo{Difference between uniqueness and linear, link back to
-Cogent}
+Wadler however shows that mere linearity is not enough to guarantee safe destructive updates, as nonlinear
+variables with multiple references may be cast to linear ones, breaking the single reference guarantee
+for linear types. This is from the result that adding typecasting to and from linear variables grants 
+controlled access to the contraction and weakening rules that linear types explicitly prohibit.
+
+He further discusses seperately~\cite{WadlerLinearLogic} that with the removal of
+the ability to perform such an action, one can gain the \textit{uniqueness} types that Cogent 
+exibits. With uniqueness types, it is truly impossible for linear variables to have multiple references,
+and thus destructive updates on these variables are safe. 
+
+All boxed types in Cogent are linear, and therefore must have at most one reference to each,
+however unboxed objects are only linear if they contain other linear values.
+With our implementation of recursive types, we must consider maintaining the linear and uniqueness constraints
+that Cogent features, and create these types in such a way that they integrate nicely with the existing
+system.
