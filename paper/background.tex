@@ -4,11 +4,29 @@ within Cogent, termination and recursive types and linear and uniqueness types.
 
 \section{Cogent Currently}
 
-
 %%% Basic syntax
 \begin{figure}
     \centering
-    \includegraphics[width=350pt]{content/CogentGrammar.png}
+    %\includegraphics[width=350pt]{content/CogentGrammar.png}
+
+    \begin{align*}
+    \text{expressions}\quad e\; ::&= x\;\; |\;\; \ell & \text{(variables or literals)} \\
+                &|\; e_1 \text{ \textasteriskcentered } e_2 & \text{(primitive operations)} \\
+                &|\; e_1\; e_2 & \text{(function application)} \\
+                &|\; \textbf{let } x = e_1 \textbf{ in } e_2 & \text{(let statements)} \\
+                &|\; \textbf{if } e_1\; \textbf{ then } e_2 \textbf{ else } e_3 & \text{(conditional)} \\
+                &|\; e_1\; e_2 & \text{(function application)} \\
+                &|\; e_1 :: \tau & \text{(type signatures)} \\
+                &|\; \dots \\
+        \text{types}\quad \tau\; ::&= a & \text{(type variables)} \\
+              &|\; \tau_1 \rightarrow \tau_2 & \text{(functions)} \\
+              &|\; \mathcal{T} \\
+              &|\; \dots \\
+        \text{primitive types}\quad \mathcal{T}\; ::&= \textsc{ U8 } | \textsc{ U16 } | \textsc{ U32 } | \textsc{ U64 } |\; \textsc{Bool} \\
+        \text{operators \ \ \ \textasteriskcentered }\; ::&= +\; |\; \leq\; |\; \geq\; |\; \neq\; |\; \dots \\
+        \text{literals}\quad \ell\; ::&= \textsc{True } | \textsc{ False } |\; \mathbb{N}  \\
+    \end{align*}
+
     \caption{The basic syntax for Cogent~\citep{ICFPCogent}}
     \label{fig:cogentGrammar}
 \end{figure}
@@ -16,7 +34,16 @@ within Cogent, termination and recursive types and linear and uniqueness types.
 %%% Variant syntax
 \begin{figure}
     \centering
-    \includegraphics[width=400pt]{content/VariantGrammar.png}
+
+    \begin{align*}
+        \text{expressions}\quad e\; 
+            ::&= \dots\; |\; \kappa\; e & \text{(variant constructor)} \\
+              &|\; \textbf{case } e_1 \textbf{ of } \kappa\; e_2\; \dots & \text{(pattern matching)} \\
+        \text{types}\quad \tau\;
+            ::&= \dots\; |\; \langle \overline{\kappa^n\; \tau} \rangle & \text{(variant types)} \\
+        \text{constructors}\quad \kappa
+    \end{align*}
+
     \caption{The syntax for variant types within Cogent~\citep{ICFPCogent}}
     \label{fig:variantGrammar}
 \end{figure}
@@ -24,7 +51,16 @@ within Cogent, termination and recursive types and linear and uniqueness types.
 %%% Record syntax
 \begin{figure}
     \centering
-    \includegraphics[width=400pt]{content/RecordGrammar.png}
+    \begin{align*}
+        \text{expressions}\quad e\; 
+            ::&= \dots\; |\; \#\{\overline{f_i = e_i}\} & \text{(unboxed records)} \\
+              &|\; \textbf{take } x\; \{ f = y\} = e_1 \textbf{ in } e_2 & \text{(record patterns)} \\
+              &|\; \textbf{put } e_1.f = e_2 & \text{(record updates)} \\
+              &|\; e_1.f & \text{(read record field)} \\
+        \text{types}\quad \tau\;
+            ::&= \dots\; |\; \{ \overline{f_i^n\; \tau_i} \} & \text{(variant types)} \\
+        \text{field names } f
+    \end{align*}
     \caption{The syntax for record types within Cogent~\citep{ICFPCogent}}
     \label{fig:recordGrammar}
 \end{figure}
@@ -36,23 +72,23 @@ and records.
 
 \subsection{Primitive Types}
 
-Cogent's primitive datatypes consist of \textbf{Bools}\liam{Bool can't be pluralised, it's a special identifier. Try ``Boolean types (\texttt{Bool})'', also, these primitive types should use texttt not textbf}, and the four unsigned integer types \textbf{U8}, 
-\textbf{U16}, \textbf{U32} and \textbf{U64}. Integer types can be upcast using the \textbf{upcast}\liam{This should be written using textbf and textsf not just textbf}
-keyword to convert a smaller integer type into a larger one (e.g. a \textbf{U8} into a \textbf{U32}).
+Cogent's primitive datatypes consist of Boolean types (\texttt{Bool}), and the four unsigned integer types \texttt{U8}, 
+\texttt{U16}, \texttt{U32} and \texttt{U64}. Integer types can be upcast using the \texttt{\textsf{upcast}}
+keyword to convert a smaller integer type into a larger one (e.g. a \texttt{U8} into a \texttt{U32}).
 Details of these types can be seen in the syntax for Cogent's basic grammar in figure \ref{fig:cogentGrammar}.
 
-Each of these primitive types are of fixed size, and thus are \textbf{unboxed}\liam{Use emph for emphasis not textbf}, meaning they are stored on the
-stack. They are not subject to the use exactly once constraint that uniqueness types enforce. \liam{You should probably mention that constraint before now. Explicitly introduce uniqueness types}
+Each of these primitive types are of fixed size, and thus are \emph{unboxed}, meaning they are stored on the
+stack and are not linear variables.
 
-Cogent also features \textbf{tuples} \liam{no bold, emph if you want} (product types) through the standard tuple syntax across the ML
-family of languages: $(a,b)$, and standard functions, however they are limited to one argument \liam{All ML family functions are limited to one argument}.
+Cogent also features \emph{tuples} (product types) through the standard tuple syntax across the ML
+family of languages: $(a,b)$, and standard functions.
 
 \subsection{Variant Types}
 
-Cogent's variant types are inspired from the traditional sum/option types\liam{option types are a type of sum type, not an alternative term for them}, where a variant type man\liam{can} contain
-one of many specified types, the syntax for which is defined in figure \ref{fig:variantGrammar}\liam{Use autoref. Autoref should handle it, but Figure should be capitalised.}.
+Cogent's variant types are inspired from the traditional sum types, where a variant type can contain
+one of many specified types, the syntax for which is defined in \autoref{fig:variantGrammar}.
 
-Consider the following example, we can reconstruct \textit{Haskell's}\liam{Why italic?} Maybe\liam{texttt or textit} type using our variants:
+Consider the following example, we can reconstruct Haskell's \texttt{Maybe} type using our variants:
 
 \begin{center}
     \textbf{type} \textit{Maybe} a = $\langle$ Nothing () $\vert$ Just a $\rangle$
@@ -68,69 +104,77 @@ Pattern matching on variants must be \textit{complete}, i.e. you must give a cas
 of a variant, a constraint that helps keep functions total.
 
 Variant types work well as a potential constructor for our recursive types. If we were to reference a
-recursive parameter inside the variant, we would be able to create a recursive structure similar to Haskell.
-However, as variants are \textit{unboxed} (stored on the fixed size stack), we cannot allow for dynamically sized structues\liam{structures}
+recursive parameter inside a variant type, we would be able to create a recursive structure as in Haskell.
+However, as variants are \textit{unboxed} (stored on the fixed size stack), we cannot allow for dynamically sized structures
 using only variants, so we must look elsewhere for a solution.
 
 \subsection{Record Types}
 
-Cogent's record types are similar to \textit{structs}\liam{Has structs been introduced before? Otherwise this gives no intuition} with names\liam{named} fields. They come in two forms, \textit{boxed}
-(stored dynamically on the heap) or \textit{unboxed} (stored statically in the stack),\liam{. not ,} the syntax of both is
-as in figure \ref{fig:recordGrammar}\liam{autoref}.
+Cogent's record types are objects that contain values via named fields. They come in two forms, \textit{boxed}
+(stored dynamically on the heap) or \textit{unboxed} (stored statically in the stack). The syntax of both is
+as in \autoref{fig:recordGrammar}.
 
 For example, consider a record to bundle together user information:
 
 \begin{center}
     \begin{tabular}{l}
     \textbf{type} \textit{User} = \{ \\
-                    \hspace{1.5em} name: \textit{String},\\
-                    \hspace{1.5em} age: \textit{U32}\liam{Should be texttt}, \\
-                    \hspace{1.5em} favouriteColour: \textit{RGB}\\
+                    \hspace{1.5em} name: \texttt{String},\\
+                    \hspace{1.5em} age: \texttt{U32}, \\
+                    \hspace{1.5em} favouriteColour: \texttt{RGB}\\
                     \} \\
     \end{tabular}
 \end{center}
 
 Records allow for us to create dynamically sized objects, as we can used boxed records to chain together a
-combination of records on the heap. With the aid of variant types, records can allow us to construct our recursive 
-types with a recursive paramater\liam{parameter} included to reference the type overall type\liam{huh? rephrase perhaps with an example}, using variants to give the 
+combination of records on the heap. With the aid of variant types, records can allow us to construct 
+our recursive types with a recursive parameter, using variants to give the 
 differing construction cases for the type.
 
 \section{Termination And Recursive Types}
 
-Proving total correctness about the programs we write is a very desirable result,
-as computation performed by a program is useless if the program never returns the
-result of the computation we desire\liam{This sentence seems unnecessarily verbose}.
+Proving total correctness about the programs we write is a very desirable result.
+Computation performed by a program is useless if the program never returns the
+result of the computation.
 In a systems context, termination is especially desirable as an infinitely looping component of a
-system could cause it to hang, ruining the experience for end users of the system\liam{Don't talk about UX. Just say it could deny service to other parts of the system which could be vital for its function. Imagine in a flight control system hanged.}.
+system could cause it to hang, denying services to other parts of a system which could be core to
+system's function.
 
-Our focus for reasoning about termination falls on considering the use of Isabelle to verify our 
-embedding as well as facilitating the ease of this process at the type level within Cogent. \liam{Not sure what this sentence means.}
+To deal with termination, we must consider the environment where we will prove termination for
+Cogent programs, the Isabelle embedding, and how we can make this process easier on the type
+level within Cogent.
 
 \subsection{Proving Termination in Isabelle}
 
 
-The official Isabelle tutorial\liam{non breakable space (\textasciitilde) should go here}\citep{IsabelleTutorial} describes 3\liam{three} methods of creating functions using the keywords 
-\textbf{primrec}, \textbf{fun} and \textbf{function}. The first, \textbf{primrec}, allows one to create a 
-\textit{primitive recursive} function --- one that returns a constant or removes a data type constructor from one
-of the arguments to the function in its body, `decreasing' in size every time. These functions are \textit{total} \liam{by construction,} \liam{also why textit? You've used the term before}
-and \liam{therefore} always terminate, removing the need of a\liam{n explicit} termination proof (which is required \liam{to reason inductively about any Isabelle function. End of parenthetical.} for all functions within Isabelle,
-unless they are defined to be partial, however this is undesirable\liam{Scrap this `is undesirable', `is desirable' language.}).
+The official Isabelle tutorial~\citep{IsabelleTutorial} describes three methods of creating functions using
+the keywords \textbf{primrec}, \textbf{fun} and \textbf{function}. The first, \textbf{primrec},
+allows one to create a \textit{primitive recursive} function --- one that returns a constant or removes
+a data type constructor from one of the arguments to the function in its body, `decreasing' in size every time.
+These functions are total by construction, and therefore always terminate, removing the need of
+an explicit termination proof (which is required to reason inductively about any Isabelle function.)
+for all functions within Isabelle, unless they are defined to be partial, however as partial functions
+may not terminate we do not want to consider them using them for our verification.
 Primitive recursive functions however are limited in their expressiveness and are a subset of all computable
 functions, so we cannot rely on them for the general case.
 
-In his tutorial\liam{\textasciitilde}\citep{KraussIsabelle}, Alexander Krauss\liam{In his tutorial, citet is better} discusses the details of the latter two of the 3\liam{three} methods
+In his tutorial, Krauss~\citep{KraussIsabelle} discusses the details of the latter two of the three methods
 of creating functions in Isabelle. The \textbf{fun} keyword instructs Isabelle to try and solve all necessary
 termination proof obligations, rejecting the definition if it fails (either because the definition does not 
-terminate or because Isabelle cannot figure out\liam{colloquial} how to prove it does). In contrast to \textbf{fun}, \textbf{function}
-requires that the termination proofs be solved manually by whoever is writing the proof\liam{function, not proof}.
+terminate or because Isabelle cannot prove it does alone). In contrast to \textbf{fun}, \textbf{function}
+requires that the termination proofs be solved manually by whoever is writing the function.
 
-\amos{Worth comparing the `gas' or `clock' approach as well, as used by CakeML (see CakeML: A Verified Implementation of ML, POPL 2014).
-There, the embedding of the program has an extra parameter which is a natural number describing how much time the program has to compute a result.
-At each recursive step, the clock is decremented, and if it reaches zero the program runs out of time and throws an exception.
-This lets you embed arbitrary programs as primitive recursion on a nat.
-You have to prove termination separately, but you can reason about the program assuming termination (assume that there exists a large enough clock that the program will return a valid value).}
+% Perhaps another time :(
+%\amos{Worth comparing the `gas' or `clock' approach as well, as used by CakeML (see CakeML: A Verified Implementation of ML, POPL 2014).
+%There, the embedding of the program has an extra parameter which is a natural number describing how much time the program has to compute a result.
+%At each recursive step, the clock is decremented, and if it reaches zero the program runs out of time and throws an exception.
+%This lets you embed arbitrary programs as primitive recursion on a nat.
+%You have to prove termination separately, but you can reason about the program assuming termination (assume that there exists a large enough clock that the program will return a valid value).}
 
-\todo{Relate to proposal}
+Due to their automatic termination proofs, we would like as many Cogent functions as possible to be
+primitive. For all others, we can achieve an embedding via \textbf{fun} to see if Isabelle can find
+a termination proof for us, and as a last resort use \textbf{function} and have the proof writer
+manually prove termination. 
 
 \subsection{Strictly Positive Types}
 
@@ -188,35 +232,44 @@ in function 1 ($\rightarrow_1$) and again in function 2 ($\rightarrow_2$) for a 
 
 Allowing for negative types in our system allows for data structures that are infinitely recursive,
 which if iterated over would potentially cause non-termination. Consider
-the following example in \textit{Haskell}:
-\liam{That arrow still looks really naff. Consider typesetting it manually.}
-\lstinputlisting[language=haskell]{content/NegativeType.hs}
+the following example in \textsc{Haskell}:
+
+\begin{center}
+    \begin{tabular}{l}
+            \textbf{data} \textsf{Bad = A (Bad $\rightarrow$ Bad)} \\ \\
+
+            \textsf{g :: Bad $\rightarrow$ Bad} \\
+            \textsf{g (A f) = f (A f)} \\ \\
+
+            \textsf{infiniteExpression = g (A g)}
+    \end{tabular} 
+\end{center}
 
 By our definition, we can see that our type \textit{Bad} is a \textit{negative} type and using it we were able
-to construct the infinitely recursive expression, \textbf{g (A g)}\liam{Why textbf? It's textsf in the code}.
-This is not an issue in Haskell due to its lazy evaluation\liam{Also that it just doesn't care if stuff doesn't terminate anyway. You can write infinite loops in haskell and that's not a problem.},
-however as Cogent is not lazily evaluated these expressions would be undesirable\liam{Stop saying that} in
-our language\liam{Our language? Not Cogent??} as iterating over them potentially results in non-termination, and in this
-situation \liam{will} hang when \textit{infiniteExpression} is constructed.
-Although this example was constructed maliciously\liam{You mean artificially}, situations may arise where
+to construct the infinitely recursive expression, \textsf{g (A g)}
+This is not an issue in Haskell due to its lazy evaluation and Haskell allows its programmers to write
+infinite loops freely, however in Cogent these expressions would be detrimental to our termination
+proofs as iterating over them potentially results in non-termination, and in this
+situation will hang when \textit{infiniteExpression} is constructed.
+Although this example was constructed artificially, situations may arise where
 programmers may accidentally construct such an expression, so we must seek a way to
 eliminate them from our language.
 
 Many theorem provers and dependently typed languages make use of \textit{strictly positive} types, which
-prohibit the construction of infinitely recursive data structures\liam{,} that under a dependant type system
+prohibit the construction of infinitely recursive data structures, that under a dependant type system
 both negative and simple positive types allow.
-\textit{Agda}\citep{AgdaStrictlyPositive}, \textit{Coq}\citep{CoqStrictlyPositive} and even
-Isabelle\citep{IsabelleStrictlyPositive}\liam{Typically languages are either left in plaintext or put in textsc, not textit} features\liam{no `s'} this exact constraint, as allowing for negative
-or normal\liam{non-strictly} positive types introduce logical inconsistencies which can be used to prove false statements,
+\textsc{Agda}\citep{AgdaStrictlyPositive}, \textsc{Coq}\citep{CoqStrictlyPositive} and even
+Isabelle\citep{IsabelleStrictlyPositive} feature this exact constraint, as allowing for negative
+or non-strictly positive types introduce logical inconsistencies which can be used to prove false statements,
 something that is unacceptable for a theorem prover.
 
-The definition of strictly positive is discussed by Coquand and Paulin~\cite{CoquandTypes}, and is as follows:
+The definition of strictly positive is discussed by Conquand and Paulin~\citep{CoquandTypes}, and is as follows:
 
 \theoremstyle{definition}
 \begin{definition}
     \label{def:sp}
     Given a data type $T$ and its constructors $C_{1..n}$, for every argument $\tau_{ij}$
-    of any data constructor $C_i$ wher\liam{e} $\tau_{ij}$ is a function, $T$ is said to be \textit{strictly positive} if 
+    of any data constructor $C_i$ where $\tau_{ij}$ is a function, $T$ is said to be \textit{strictly positive} if 
     $T$ does not occur as an argument to any $\tau_{ij}$:
 
     \begin{center}
@@ -279,9 +332,9 @@ simpler reasoning about our Isabelle embedding.
 
 \section{Linear And Uniqueness Types}
 
-Linear types are a kind of substructural type system as discussed by\newline\liam{DO NOT second guess \LaTeX} David Walker~\citep{Substructural}\liam{use citet not citep here}.
-Many standard programming languages such as \textit{C}, \textit{Java} and \textit{Haskell}\liam{Once again, textsc is OK but definitely not textit} feature
-three standard structural typing rules, described in figure \ref{def:structural}\liam{autoref}.
+Linear types are a kind of substructural type system as discussed by Walker~\citep{Substructural}.
+Many standard programming languages such as \textsc{C}, \textsc{Java} and \textsc{Haskell} feature
+three standard structural typing rules, described in figure \autoref{def:structural}.
 
 \begin{figure}
     \centering
@@ -324,16 +377,16 @@ at least once (by lack of weakening) and at most once (by lack of contraction), 
 One powerful benefit that linear types allow is \textit{static allocation} of objects, which Cogent
 features. Predicting when an object in a program will be last used (and after deallocated)
 is undecidable as it is a nontrivial semantic property by Rice's Theorem~\citep{Sipser},
-however in a linear type system we know exactly when an object will be freed,
-which is exactly after its first use by the use once rule\liam{This is not actually true of all linear type systems. Just say that they make it possible.}. The result is a langauge that does
-not require a garbage collector, and doesn't require users to explicitly declare memory allocation,
-as this can now be determined statically\liam{We do have to declare memory allocation, that's how it can do it statically. It can check that programs appropriately handle allocated resources.}.
+however a linear type system can make it possible to deallocate this memory after its first use
+by the use once rule. The result is a langauge that does not require a garbage collector,
+can check that programs appropriately handle allocated resources statically as this can now
+be determined statically.
 
-Wadler~\cite{LinearTypesChangeTheWorld}\liam{citet} also describes the performance benefits of destructive updates
-that linear types grant\liam{This is specifically uniqueness types, but the term didn't exist yet}. As we have a guarantee that no other part of a program is referencing a particular
-object (variables must be used exactly once), when performing an operation on an object, the resultant
-object can be our old object with the result of our operation performed in place (i.e. destructively
-mutated).
+Wadler~\citep{LinearTypesChangeTheWorld} also describes the performance benefits of destructive updates
+that linear types potentially grant. As we have a guarantee that no other part of a program is
+referencing a particular object (variables must be used exactly once), when performing
+an operation on an object, the resultant object can be our old object with the result
+of our operation performed in place (i.e. destructively mutated).
 
 Consider the following program in Java:
 
@@ -348,7 +401,7 @@ must resort to copying.
 
 Linear types prevent this kind of mistake, as the duplicate reference that
 \verb|oldNumbers| and \verb|copyOfNumbers| share would be eliminated once \verb|oldNumbers| is used once,
-which in turn allows for a desctructive\liam{spelling} update on \verb|oldNumbers| to take place with the result stored in
+which in turn allows for a destructive update on \verb|oldNumbers| to take place with the result stored in
 copyOfNumbers.
 
 Wadler however shows that mere linearity is not enough to guarantee safe destructive updates, as nonlinear
@@ -356,7 +409,7 @@ variables with multiple references may be cast to linear ones, breaking the sing
 for linear types. This is from the result that adding typecasting to and from linear variables grants 
 controlled access to the contraction and weakening rules that linear types explicitly prohibit.
 
-He further discusses seperately~\cite{WadlerLinearLogic} that with the removal of
+He further discusses seperately~\citep{WadlerLinearLogic} that with the removal of
 the ability to perform such an action, one can gain the \textit{uniqueness} types that Cogent 
 exibits. With uniqueness types, it is truly impossible for linear variables to have multiple references,
 and thus destructive updates on these variables are safe. 
