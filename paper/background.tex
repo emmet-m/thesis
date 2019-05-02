@@ -378,7 +378,7 @@ One powerful benefit that linear types allow is \textit{static allocation} of ob
 features. Predicting when an object in a program will be last used (and after deallocated)
 is undecidable as it is a nontrivial semantic property by Rice's Theorem~\citep{Sipser},
 however a linear type system can make it possible to deallocate this memory after its first use
-by the use once rule. The result is a langauge that does not require a garbage collector,
+by the use once rule. The result is a language that does not require a garbage collector,
 can check that programs appropriately handle allocated resources statically as this can now
 be determined statically.
 
@@ -409,9 +409,9 @@ variables with multiple references may be cast to linear ones, breaking the sing
 for linear types. This is from the result that adding typecasting to and from linear variables grants 
 controlled access to the contraction and weakening rules that linear types explicitly prohibit.
 
-He further discusses seperately~\citep{WadlerLinearLogic} that with the removal of
+He further discusses separately~\citep{WadlerLinearLogic} that with the removal of
 the ability to perform such an action, one can gain the \textit{uniqueness} types that Cogent 
-exibits. With uniqueness types, it is truly impossible for linear variables to have multiple references,
+exhibits. With uniqueness types, it is truly impossible for linear variables to have multiple references,
 and thus destructive updates on these variables are safe. 
 
 All boxed types in Cogent are linear, and therefore must have at most one reference to each,
