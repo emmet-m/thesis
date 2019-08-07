@@ -2,6 +2,7 @@
 
 ## Lexer:
 * [x] Add myu as keyword
+* [x] Modify existing record type
 
 ## Parser
 * [x] Add rec type to Type in Syntax
@@ -14,4 +15,3 @@
 * [ ] Test! 
 
 ## TC
-* [ ] Strict positivity check
