@@ -1,0 +1,54 @@
+\chapter{Project Description}\label{ch:intro}
+
+\todo{Revise this}
+
+Formal verification is the field of computer science that explores the methods that allow us to
+  reason rigorously about the functional correctness of programs we write.
+One of the benefits of doing so is a proof of correctness for programs with respect to a specification,
+  and which for well specified programs aids in eliminating bugs and unexpected program behaviour.
+Much effort has specifically been put into the verification of low level systems code
+  which is critical to the operation of any computer.
+The presence of bugs in such a system can lead to security vulnerabilities,
+  system crashes and invalid system behaviour, which for mission critical systems is unacceptable and
+  for everyday use causes frustration for end users.
+
+Using C to implement this code is a very popular choice in the systems community,
+  and there have been many attempts to verify systems code written in C using tools such as 
+  AutoCorres~\citep{AutoCorres}, which takes parsed C code and produces a \textit{shallow embedding}
+  inside the theorem prover Isabelle/HOL~\cite{IsabelleTutorial}.
+This embedding is a representation of the semantics of the C code within the theorem prover,
+  however due to the nature of the C language many difficulties arise when trying to
+  reason about its functional properties, due to its lack of memory and type safety 
+  and its mutable state.
+
+Cogent~\citep{ICFPCogent}, is a domain specific language that was introduced to replace C as a systems
+  implementation language.
+It is a functional, high level language with uniqueness types and a certifying compiler
+  that produces a shallow embedding in Isabelle/HOL as well as low level efficient C code;
+  the semantics of which correspond to the the Isabelle embedding.
+Due to the functional, high level nature of the embedding 
+  which is designed to be reasoned about equationally as well as its resemblance to higher order logic,
+  Cogent allows for a much less taxing process of verifying low level systems code.
+
+Cogent is also suitable for low level systems development in contrast to many existing functional languages which operate
+  on layers of abstractions away from the system, as its uniqueness types allow for both efficient destructive updates
+  as well as static memory allocation.
+In addition to the benefits of uniqueness types, Cogent presents a C foreign function interface (FFI) allowing existing C programs
+ to interact with Cogent code, without forcing teams to abandon a project already written in C and already verified.
+
+However, Cogent currently has no support for recursion or iteration.
+Currently, any data type that can be iterated over and its iterators have to be defined externally in C,
+  and included in the Cogent program via its Cogent's C FFI.
+Proving totality about existing code is a guarantee that a system will not hang,
+  or deny services to other systems, which is a great benefit.
+However the cost of reasoning about a particular program's termination is
+  exacerbated with the overhead of handwritten C code, due to iteration being an external construct to the language.
+This forces the the use of low level C code in the verification process, which Cogent strives to avoid.
+
+This thesis aims to introduce recursive types to Cogent's type system, allowing internal iteration over
+  internal data structures without the involvement of handwritten C code.
+While providing this benefit we must also respect the existing guarantees that Cogent enjoys,
+  in particular, simple reasoning about functional correctness, totality,
+  its static memory allocation, destructive updates, all while keeping in mind
+  a possible efficient C representation for the later implementation of the compilation of Cogent
+  code to C code.
