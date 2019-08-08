@@ -7,7 +7,7 @@
 ## Parser
 * [x] Add rec type to Type in Syntax
 * [x] roll, unroll, etc. to Expr (Done, via put and take)
-* [ ] Add grammars
+* [x] Add grammars
 
 ## Reorg
 * [ ] Check recursive type variables in scope
