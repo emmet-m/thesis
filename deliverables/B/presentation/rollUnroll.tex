@@ -1,0 +1,60 @@
+\documentclass{article}
+
+\usepackage[margin=7em,top=8em,headsep=3em]{geometry}
+
+\usepackage{xcolor}
+\usepackage{listings}             % Include the listings-package
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{proof}
+\begin{document}
+\lstset{language=Pascal}          % Set your language (you can change the language for each code-block optionally)
+
+\lstdefinestyle{mystyle}{
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=true,                
+    showstringspaces=false,
+    tabsize=2
+}
+
+
+\textbf{type} List a = \textbf{mu} \textit{T} \{ deref: $\langle$ Nil $\vert$ Cons (\textit{a,T}) $\rangle$ \} \\ \\
+
+\[
+    \infer{
+        \Gamma \vdash \textbf{roll } x : \textbf{mu } \textit{t}.\; \tau
+    }{
+        \Gamma \vdash x : \textbf{mu } \textit{t}.\; \tau[ t := \tau]
+    }
+\]
+
+\[
+    \infer{
+        \Gamma \vdash \textbf{unroll } x : \textbf{mu } \textit{t}.\; \tau[ t := \tau]\; 
+    }{
+        \Gamma \vdash x : \textbf{mu } \textit{t}.\; \tau
+    }
+\]
+
+\[
+    \infer{
+        \Gamma \vdash \textbf{roll } x : \textbf{mu } \textit{t } \{ \text{ deref}: \langle \text{ Nil } \vert \text{ Cons } \{ \text{data}: a, \text{rest}: t \}\textit{\#} \rangle \} 
+    }{
+        \Gamma \vdash x : \textbf{mu } \textit{t } \{ \text{ deref}: \langle \text{ Nil } \vert \text{ Cons } \{ \text{data}: a, \text{rest}: {\color{red} \textbf{mu } \textit{t } \{ \text{ deref}: \langle \text{ Nil } \vert \text{ Cons } \{ \text{data}: a, \text{rest}: t \}\textit{\#} \rangle \} } \}\textit{\#} \rangle \} 
+    }
+\]
+
+\[
+    \infer{
+        \Gamma \vdash \textbf{unroll } x : \textbf{mu } \textit{t } \{ \text{ deref}: \langle \text{ Nil } \vert \text{ Cons } \{ \text{data}: a, \text{rest}: {\color{red} \textbf{mu } \textit{t } \{ \text{ deref}: \langle \text{ Nil } \vert \text{ Cons } \{ \text{data}: a, \text{rest}: t \}\textit{\#} \rangle \} } \}\textit{\#} \rangle \} 
+    }{
+        \Gamma \vdash x : \textbf{mu } \textit{t } \{ \text{ deref}: \langle \text{ Nil } \vert \text{ Cons } \{ \text{data}: a, \text{rest}: {\color{red} t} \}\textit{\#} \rangle \} 
+    }
+\]
+
+\end{document}
