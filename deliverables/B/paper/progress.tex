@@ -1,4 +1,4 @@
-\chapter{Progress Report}\label{ch:progress}
+\chapter{Project Progress}\label{ch:progress}
 
 Previously in thesis A we elected Minigent as the place to design our new recursive types for Cogent.
 Our design was to introduce a new recursive parameter to Minigent's boxed records, in order to allow
@@ -7,12 +7,12 @@ definition in \todo{insert definition}, to prevent the programmer constructing i
 objects that would lead to termination issues, thus allowing for ease of verification in
 the Isabelle embedding.
 
-I have completed work to incorporate the design into the parser, lexer and reorganiser compiler phases of
-Minigent, and I have begun work on beginning integration into the type checking phase.
-I have also added a test suits to test the correctness of my implementation, 
-in addition to the existing suite of tests in the Minigent compiler.
+Work has been completed to incorporate the design into the parser, lexer and reorganiser compiler phases of
+Minigent, and work has begun work on integrating updatin the type checking phase.
+In addition to the existing suite of tests in the Minigent compiler, additional tests have 
+been added to test the newly added extension.
 
-\todo{I'm starting to think this isn't very relevant to the thesis report. Remove?}
+\todo{I'm starting to think this isn't very relevant to the thesis report, let alone the project. Remove?} \\
 In order to increase my work efficiency, I created an extension in VSCode that provides syntax highlighting
 for both Cogent and Minigent files, which allowed for an easier experience when constructing Minigent programs,
 and hence made it easier to write tests for new features.
@@ -54,14 +54,30 @@ shadowing of recursive parameter variables, in the event a nested boxed record d
 parameter shadows the parent record's parameter. These new recursive parameters are now distinguished from
 regular type variables, and the reorganiser no longer counts them as type variables.
 
-\todo{Functions calling themselves}
-\todo{Unused recursive parameter variables}
+Functions that also call themselves successfully typecheck as their type signature provides enough information
+to check the argument passed to the function, so basic recursion works as expected.
+
+\todo{Unused recursive parameter variables?}
 
 \section{Type Checker}
+
+Work has begun on the type checker to check the types of records.
 
 \todo{Talk about the stuff}
 
 \section{Testing}
+
+A suite of tests has been added to the existing Minigent test suite in order to test the new extension's 
+expected behaviour.
+
+The tests aim to test the intended functionality of our recursive types, including constructing and manipulating
+recursive data structures (such as lists), as well as recursive functions that do not use our recursive types 
+(such as functions recursing on U32 integers, etc.).
+
+These tests also test the intended effects of our new types, such as the strict positivity guarantee they provide
+and their interaction with the existing type system. Whilst the existing tests test the backwards compatability of
+record types, our new tests check that no recursive parameters are used non-strictly positive, that shadowing of recursive
+parameters behaves as intended, and that recursive parameters are seperate from quantified type variables.
 
 \todo{talk about the tests}
 
