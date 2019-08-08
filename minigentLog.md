@@ -6,11 +6,12 @@
 
 ## Parser
 * [x] Add rec type to Type in Syntax
-* [x] roll, unroll, etc. to Expr (Done, via put and take)
+* [x] roll, unroll, etc. to Expr
 * [x] Add grammars
+* [ ] Test! 
 
 ## Reorg
-* [ ] Check recursive type variables in scope
-* [ ] Strict positivity check
+* [x] Add strict positivity check
+* [ ] Test! 
 
 ## TC
