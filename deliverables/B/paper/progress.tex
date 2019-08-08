@@ -36,7 +36,7 @@ as seen in \autoref{fig:recursiveParameter}.
 This new syntax is backwards compatible with the previous record syntax, so records without this new
 syntax in old code will not have to be changed in order for the change to be implemented.
 
-\todo{Should I talk about the code I wrote here?}
+\todo{Should I talk about the code I wrote here? Feel this section is very short on a high level.}
 
 \section{Reorganiser}
 
@@ -50,13 +50,13 @@ regular type variables, and the reorganiser no longer counts them as type variab
 Functions that also call themselves successfully typecheck as their type signature provides enough information
 to check the argument passed to the function, so basic recursion works as expected.
 
-\todo{Unused recursive parameter variables?}
+\todo{Unused recursive parameter variables? I could implement this pretty quickly but not sure if we want it}
 
 \section{Type Checker}
+\label{sec:typecheckingprogress}
 
-Work has begun on the type checker to check the types of records.
-
-\todo{Talk about the stuff}
+\todo{Talk about the stuff} \\
+\todo{\LaTeX\; up the equations, also expain rolling/unrolling}
 
 \section{Testing}
 
@@ -81,8 +81,24 @@ and their interaction with the existing type system. Whilst the existing tests t
 record types, our new tests check that no recursive parameters are used non-strictly positive, that shadowing of recursive
 parameters behaves as intended, and that recursive parameters are seperate from quantified type variables.
 
-\todo{talk about sp testing and such}
+\autoref{fig:test2} shows a function with a non-strictly positive occurence of a recursive parameter nested in 
+a negative position as the return type of a a function that is an argument. This program is rejected by the reorganiser
+as shown in \autoref{fig:test2result}, which shows the recursive parameter $t$ that occurrs non-strictly positive.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.8\linewidth]{content/test2.png}
+    \caption{A non-strictly positive function}
+    \label{fig:test2}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\linewidth]{content/test2result.png}
+    \caption{Running the Minigent typechecker on the program in \autoref{fig:test2}}
+    \label{fig:test2result}
+\end{figure}
 
 \section{Work efficiency}
 
-\todo{talk about syntax highlighting, but also potentially remove}
+\todo{talk about syntax highlighting, but also potentially remove?}
