@@ -1,4 +1,7 @@
 \chapter{Background And Related Works}\label{ch:background}
+
+\todo{Should I update things in here such as new extensions, or should I keep this exactly as in thesis A?}
+
 Our investigation of existing works will consider three domains: The existing types and features
 within Cogent, termination and recursive types and linear and uniqueness types.
 
@@ -179,7 +182,7 @@ manually prove termination.
 \subsection{Strictly Positive Types}
 
 Adding recursive types to a type system allows for expressions that are potentially infinitely recursive,
-as discussed by Wadler~\cite{RecursiveTypesForFree}, who explains the potential for recursive expressions
+as discussed by \citet{RecursiveTypesForFree}, who explains the potential for recursive expressions
 to cause non-termination through polymorphic lambda calculus. In his paper, he discusses how this
 quality can be qualified with positive and negative data types.
 
@@ -258,12 +261,12 @@ eliminate them from our language.
 Many theorem provers and dependently typed languages make use of \textit{strictly positive} types, which
 prohibit the construction of infinitely recursive data structures, that under a dependant type system
 both negative and simple positive types allow.
-\textsc{Agda}\citep{AgdaStrictlyPositive}, \textsc{Coq}\citep{CoqStrictlyPositive} and even
-Isabelle\citep{IsabelleStrictlyPositive} feature this exact constraint, as allowing for negative
+\textsc{Agda}~\citep{AgdaStrictlyPositive}, \textsc{Coq}~\citep{CoqStrictlyPositive} and even
+Isabelle~\citep{IsabelleStrictlyPositive} feature this exact constraint, as allowing for negative
 or non-strictly positive types introduce logical inconsistencies which can be used to prove false statements,
 something that is unacceptable for a theorem prover.
 
-The definition of strictly positive is discussed by Conquand and Paulin~\citep{CoquandTypes}, and is as follows:
+The definition of strictly positive is discussed by \citet{CoquandTypes}, and is as follows:
 
 \theoremstyle{definition}
 \begin{definition}
@@ -332,7 +335,7 @@ simpler reasoning about our Isabelle embedding.
 
 \section{Linear And Uniqueness Types}
 
-Linear types are a kind of substructural type system as discussed by Walker~\citep{Substructural}.
+Linear types are a kind of substructural type system as discussed by \citet{Substructural}.
 Many standard programming languages such as \textsc{C}, \textsc{Java} and \textsc{Haskell} feature
 three standard structural typing rules, described in figure \autoref{def:structural}.
 
@@ -382,7 +385,7 @@ by the use once rule. The result is a language that does not require a garbage c
 can check that programs appropriately handle allocated resources statically as this can now
 be determined statically.
 
-Wadler~\citep{LinearTypesChangeTheWorld} also describes the performance benefits of destructive updates
+\citet{LinearTypesChangeTheWorld} also describes the performance benefits of destructive updates
 that linear types potentially grant. As we have a guarantee that no other part of a program is
 referencing a particular object (variables must be used exactly once), when performing
 an operation on an object, the resultant object can be our old object with the result
@@ -404,7 +407,7 @@ Linear types prevent this kind of mistake, as the duplicate reference that
 which in turn allows for a destructive update on \verb|oldNumbers| to take place with the result stored in
 copyOfNumbers.
 
-Wadler however shows that mere linearity is not enough to guarantee safe destructive updates, as nonlinear
+Wadler, however shows that mere linearity is not enough to guarantee safe destructive updates, as nonlinear
 variables with multiple references may be cast to linear ones, breaking the single reference guarantee
 for linear types. This is from the result that adding typecasting to and from linear variables grants 
 controlled access to the contraction and weakening rules that linear types explicitly prohibit.

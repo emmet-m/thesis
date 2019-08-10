@@ -12,3 +12,5 @@ Liams_thesis.pdf
 *.log
 *.toc
 *.dvi
+*.bcf
+*.run.xml

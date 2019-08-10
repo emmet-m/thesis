@@ -1,6 +1,8 @@
 % Fix margins
 \usepackage[margin=7em,top=8em,headsep=3em]{geometry}
 
+\usepackage[utf8]{inputenc}
+
 % Various packages
 \usepackage{color,soul}
 \usepackage{xcolor}% http://ctan.org/pkg/xcolor
@@ -12,7 +14,10 @@
 \usepackage{hyperref}
 \usepackage[all]{hypcap}
 
-\usepackage{natbib} %liam
+\usepackage{pdfpages}
+\usepackage[ backend=biber, natbib=true, style=authoryear, maxbibnames=99]{biblatex} %liam
+\addbibresource{pubs.bib}
+
 \usepackage{hyperref} %liam
 \hypersetup{
   colorlinks=true,

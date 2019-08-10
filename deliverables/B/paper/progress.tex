@@ -23,18 +23,23 @@ thesis C to allow more time for extensions, which are outlined in \autoref{ch:pl
 
 \section{Parser and Lexer}
 
-The Minigent lexer and parser now accepts a new recursive parameter extension to boxed records,
-as seen in \autoref{fig:recursiveParameter}.
-
-\begin{figure}
-    \centering
-    \includegraphics[width=0.5\linewidth]{content/recursive_parameter.png}
-    \caption{The new recursive parameter grammar for boxed records}
-    \label{fig:recursiveParameter}
-\end{figure}
+The Minigent lexer and parser now accepts a new recursive parameter extension to boxed records. 
+This syntax extends the grammar for types in Minigent, as described in \autoref{fig:recursivetypegrammar}.
 
 This new syntax is backwards compatible with the previous record syntax, so records without this new
 syntax in old code will not have to be changed in order for the change to be implemented.
+
+
+\begin{figure}
+    \centering
+    \begin{align*}
+        \text{types}\quad \tau\;
+            ::&= \dots\; |\; [\textbf{mu}\; t]\; \{ \overline{f_i^n\; \tau_i} \} \\
+    \end{align*}
+    \todo{is there a better way to describe the optional mu $t$ other than writing the two options explictly? [ ] feels dodgy}
+    \caption{The new syntax for the type of a boxed record, featuring our recurive parameter $t$}
+    \label{fig:recursivetypegrammar}
+\end{figure}
 
 \todo{Should I talk about the code I wrote here? Feel this section is very short on a high level.}
 
@@ -55,10 +60,75 @@ to check the argument passed to the function, so basic recursion works as expect
 \section{Type Checker}
 \label{sec:typecheckingprogress}
 
-\todo{Talk about the stuff} \\
-\todo{\LaTeX\; up the equations, also expain rolling/unrolling}
+During the typechecking phase, originally we planned to implement two primitives into Minigent to allow referencing
+recursive structures; the rules \textsf{roll} and \textsf{unroll} (see \autoref{def:rollunroll}), to insert into and take from recursive structres respectively.
+
+\textsf{roll} works by expanding a recursive parameter 
+in the type of a structure by replacing it with the entire type it is nested in - this `adds' one 
+layer of recursion to the object. In a list, this would correspond to expanding the type parameter
+that is nested in the list to make the list one layer longer on the type level, as in \autoref{fig:rollexample}.
+
+\textsf{unroll} works the opposite way, by removing a layer of recursion from the object. In our
+list example, this corresponds to collapsing one layer of our nested list occurence into the
+recursive parameter, as in \autoref{fig:unrollexample}. 
+
+\begin{figure}
+    \centering
+    \begin{align*}
+        \infer{
+            \Gamma \vdash \textbf{roll } x : \textbf{mu } \textit{t}.\; \tau
+        }{
+            \Gamma \vdash x : \textbf{mu } \textit{t}.\; \tau[ t := \tau]
+        }
+        && \infer{
+            \Gamma \vdash \textbf{unroll } x : \textbf{mu } \textit{t}.\; \tau[ t := \tau]\; 
+        }{
+            \Gamma \vdash x : \textbf{mu } \textit{t}.\; \tau
+        }
+    \end{align*}
+    \caption{The rules for roll and unroll}
+    \label{def:rollunroll}
+\end{figure}
+
+\begin{figure}
+    \todo{Fix this goddamn long equation (How?)}
+    \centering
+    \begin{align*}
+        \infer{
+            \Gamma \vdash \textbf{roll } x : \textbf{mu } \textit{t } \{ \text{ deref}: \langle \text{ Nil } \vert \text{ Cons } \{ \text{data}: a, \text{rest}: {\color{red} t} \}\textit{\#} \rangle \} 
+        }{
+            \Gamma \vdash x : \textbf{mu } \textit{t } \{ \text{ deref}: \langle \text{ Nil } \vert \text{ Cons } \{ \text{data}: a, \text{rest}: {\color{red} \textbf{mu } \textit{t } \{ \text{ deref}: \langle \text{ Nil } \vert \text{ Cons } \{ \text{data}: a, \text{rest}: t \}\textit{\#} \rangle \} } \}\textit{\#} \rangle \} 
+        }
+    \end{align*}
+    \caption{Rolling a list}
+    \label{fig:rollexample}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \begin{align*}
+        \infer{
+            \Gamma \vdash \textbf{unroll } x : \textbf{mu } \textit{t } \{ \text{ deref}: \langle \text{ Nil } \vert \text{ Cons } \{ \text{data}: a, \text{rest}: {\color{red} \textbf{mu } \textit{t } \{ \text{ deref}: \langle \text{ Nil } \vert \text{ Cons } \{ \text{data}: a, \text{rest}: t \}\textit{\#} \rangle \} } \}\textit{\#} \rangle \} 
+        }{
+            \Gamma \vdash x : \textbf{mu } \textit{t } \{ \text{ deref}: \langle \text{ Nil } \vert \text{ Cons } \{ \text{data}: a, \text{rest}: {\color{red} t} \}\textit{\#} \rangle \} 
+        }
+    \end{align*}
+    \caption{Unrolling a list}
+    \label{fig:unrollexample}
+\end{figure}
+
+Normally we would need to implement these primitives and then later use type inference so that
+the programmer would not need to explicitly roll or unroll a structure However,
+in Minigent we may bypass adding these new primitives alltogether by using the primitives
+that already exist in the language. Minigent's \textsf{take} and \textsf{put} are primitives to
+operate on boxed records which our recursive types inhabit, so we may facilitate the behaviour
+of roll and unroll by adding it into take and put when we perform operations on a recursive record.
+
+\todo{\LaTeX\; up the equations for putting/taking, further describe}
 
 \section{Testing}
+
+\todo{Remove the screenshots and write \LaTeX}
 
 A suite of tests has been added to the existing Minigent test suite in order to test the new extension's 
 expected behaviour.
@@ -67,12 +137,13 @@ The tests aim to test the intended functionality of our recursive types, includi
 recursive data structures (such as lists), as well as recursive functions that do not use our recursive types 
 (such as functions recursing on U32 integers, etc.).
 
-An example of such a test is seen in \autoref{fig:test1}, which constructs an empty list given the presence of an external allocation function.
+An example of such a test is seen in \autoref{fig:test1}, which constructs an empty list given the presence
+of an external allocation function.
 
 \begin{figure}
     \centering
     \includegraphics[width=\linewidth]{content/test1.png}
-    \caption{Testing the construction of an empty list}
+    \caption{Testing the construction of an empty list \todo{Replace images with LaTeX'd code?}}
     \label{fig:test1}
 \end{figure}
 

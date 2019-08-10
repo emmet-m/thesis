@@ -33,10 +33,10 @@ recursion cannot cover all primitive recursive functions \todo{Is this true? I'm
 that there is no general algorithm to prove such a thing}, and thus can only cover more and more
 functions inside the domain of primitive recursive functions.
 
-\todo{Should I be talking about reasearch into this sort of stuff now? Or leave it for next term?}
+\todo{Should I be talking about reasearch into this sort of stuff now? Or should I move it to the background and then reference
+it here?}
 \citet{AboutPrimrecAlgorithms}, in his paper on primitive recursive algorithms describes the
-an inductive definition of primitive recursive functions via
-combinators on the natural numbers:
+an inductive definition of primitive recursive functions via combinators on the natural numbers:
 
 \theoremstyle{definition}
 \begin{definition}
@@ -46,7 +46,7 @@ combinators on the natural numbers:
 
     \begin{itemize}
         \item 
-            \textsf{O}, the \textit{null} or \textit{contant} combinator that takes zero arguemnts.
+            \textsf{O}, the \textit{null} or \textit{constant} combinator that takes zero arguemnts.
         \item 
             \textsf{Succ}, the \textit{successor} combinator that takes one argument, and returns the successor
             of that argument.
@@ -63,3 +63,5 @@ combinators on the natural numbers:
             combinator with base case $b$ and recursive step $n$.
     \end{itemize}
 \end{definition}
+
+\todo{Talk about other ways to check primitive recursive (structurally recursive too), and how we would do this in Minigent}
