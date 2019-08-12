@@ -123,7 +123,40 @@ that already exist in the language. Minigent's \textsf{take} and \textsf{put} ar
 operate on boxed records which our recursive types inhabit, so we may facilitate the behaviour
 of roll and unroll by adding it into take and put when we perform operations on a recursive record.
 
-\todo{\LaTeX\; up the equations for putting/taking, further describe}
+Our automatic rolling/unrolling can be implemented in Minigent's constraint generation when we attempt a \textsf{take}/\textsf{put}.
+When we insert a recursive record into a field that has the type of a recursive parameter, we must prove that the type of the record
+we are inserting is equal to the type of the parameter. To do this, we automatically roll
+when we attempt a \textsf{put} to a recursive boxed record, as in \autoref{fig:automaticroll}.
+Likewise for when we \textsf{take} from a recursive boxed record, 
+we automatically unroll as in \autoref{fig:automaticunroll}.
+
+\begin{figure}
+    \centering
+    \begin{align*}
+        \infer{
+            \textbf{mu } t\; \{ \overline{f_i : \tau_i} \} = \textbf{mu } t'\; \{ \overline{f_i : \rho_i} \}
+        }{
+            \textbf{mu } t\; \{ \overline{f_i : \tau_i[\sfrac{ \textbf{mu } t \{\overline{f_i : \tau_i} \}}{t}]} \} = \textbf{mu } t\; \{ \overline{f_i : \rho_i[\sfrac{ \textbf{mu } t' \{\overline{f_i : \rho_i} \}}{t'}]} \}
+        }
+    \end{align*}
+    \caption{The method for proving type equality for putting, by replacing recursive parameters with the 
+             definition of the recursive record they reference}
+    \label{fig:automaticroll}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \begin{align*}
+        \infer{
+            \textbf{mu } t\; \{ \overline{f_i : \tau_i} \} = \textbf{mu } t'\; \{ \overline{f_i : \rho_i} \}
+        }{
+            \textbf{mu } t\; \{ \overline{f_i : \tau_i[\sfrac{t}{ \textbf{mu } t \{\overline{f_i : \tau_i} \}}]} \} = \textbf{mu } t\; \{ \overline{f_i : \rho_i[\sfrac{t'}{ \textbf{mu } t' \{\overline{f_i : \rho_i} \}}]} \}
+        }
+    \end{align*}
+    \caption{The method for proving type equality for putting, by replacing a nested recursive record
+             with a recursive parameter that references the parent record}
+    \label{fig:automaticunroll}
+\end{figure}
 
 \section{Testing}
 
