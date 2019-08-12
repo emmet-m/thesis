@@ -132,30 +132,42 @@ we automatically unroll as in \autoref{fig:automaticunroll}.
 
 \begin{figure}
     \centering
+    \todo{ @Liam, should I also include the information about sigils, etc. Here? I didn't want to be extremely verbose,
+     but it feels like I'm leaving important info out}
     \begin{align*}
         \infer{
-            \textbf{mu } t\; \{ \overline{f_i : \tau_i} \} = \textbf{mu } t'\; \{ \overline{f_i : \rho_i} \}
+            A; e_1 ::\; \textbf{mu } t\; \{ \overline{f_i : \tau_i} \}, \Gamma \vdash \textsf{take } r \{ f_i = y \} = e1 \textbf{ in } e_2 : \tau
         }{
-            \textbf{mu } t\; \{ \overline{f_i : \tau_i[\sfrac{ \textbf{mu } t \{\overline{f_i : \tau_i} \}}{t}]} \} = \textbf{mu } t\; \{ \overline{f_i : \rho_i[\sfrac{ \textbf{mu } t' \{\overline{f_i : \rho_i} \}}{t'}]} \}
+            A \vdash \Gamma \rightsquigarrow \Gamma_1 \boxplus \Gamma_2
+            &
+            \dots
+            &
+            A; \dots, y : \tau_k[\sfrac{ \textbf{mu } t \{\overline{f_i : \tau_i} \}}{t}], \Gamma_1 \vdash e_2 : \tau
+            %\textbf{mu } t\; \{ \overline{f_i : \tau_i} \} = \textbf{mu } t\; \{ \overline{f_i : \rho_i[\sfrac{t'}{ \textbf{mu } t' \{\overline{f_i : \rho_i} \}}]} \}
         }
     \end{align*}
-    \caption{The method for proving type equality for putting, by replacing recursive parameters with the 
-             definition of the recursive record they reference}
-    \label{fig:automaticroll}
+    \caption{In addition to regular typechecking rules for boxed records, we check that when taking a field from a recursive
+             record, the value taken out will be the value of the field expanded one recursive level for typechecking the following expression}
+    \label{fig:automaticunroll}
 \end{figure}
 
 \begin{figure}
     \centering
     \begin{align*}
         \infer{
-            \textbf{mu } t\; \{ \overline{f_i : \tau_i} \} = \textbf{mu } t'\; \{ \overline{f_i : \rho_i} \}
+            A;\Gamma \vdash \textsf{put } e_1.f_k  = e_2 : \; \textbf{mu } t\; \{ \overline{f_i : \tau_i} \}
         }{
-            \textbf{mu } t\; \{ \overline{f_i : \tau_i[\sfrac{t}{ \textbf{mu } t \{\overline{f_i : \tau_i} \}}]} \} = \textbf{mu } t\; \{ \overline{f_i : \rho_i[\sfrac{t'}{ \textbf{mu } t' \{\overline{f_i : \rho_i} \}}]} \}
+            A \vdash \Gamma \rightsquigarrow \Gamma_1 \boxplus \Gamma_2
+            &
+            \dots
+            &
+            A;\Gamma \vdash e2 : \tau_k[\sfrac{ \textbf{mu } t \{\overline{f_i : \tau_i} \}}{t}]
+            %\textbf{mu } t\; \{ \overline{f_i : \tau_i[\sfrac{t}{ \textbf{mu } t \{\overline{f_i : \tau_i} \}}]} \} = \textbf{mu } t\; \{ \overline{f_i : \rho_i[\sfrac{t'}{ \textbf{mu } t' \{\overline{f_i : \rho_i} \}}]} \}
         }
     \end{align*}
-    \caption{The method for proving type equality for putting, by replacing a nested recursive record
-             with a recursive parameter that references the parent record}
-    \label{fig:automaticunroll}
+    \caption{In addition to regular typechecking rules for boxed records, we check that when inserting a field into a recursive
+             record will have the same type when expanded (rolled) as the type of the expression we're inserting}
+    \label{fig:automaticroll}
 \end{figure}
 
 \section{Testing}
