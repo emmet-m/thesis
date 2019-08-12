@@ -53,7 +53,7 @@ parameter shadows the parent record's parameter. These new recursive parameters 
 regular type variables, and the reorganiser no longer counts them as type variables.
 
 Functions that also call themselves successfully typecheck as their type signature provides enough information
-to check the argument passed to the function, so basic recursion works as expected.
+to check the argument passed to the function, so basic recursion typechecks as expected.
 
 \todo{Unused recursive parameter variables? I could implement this pretty quickly but not sure if we want it}
 
@@ -91,16 +91,15 @@ recursive parameter, as in \autoref{fig:unrollexample}.
 \end{figure}
 
 \begin{figure}
-    \todo{Fix this goddamn long equation (How?)}
     \centering
     \begin{align*}
         \infer{
             \Gamma \vdash \textbf{roll } x : \textbf{mu } \textit{t } \{ \text{ deref}: \langle \text{ Nil } \vert \text{ Cons } \{ \text{data}: a, \text{rest}: {\color{red} t} \}\textit{\#} \rangle \} 
         }{
-            \Gamma \vdash x : \textbf{mu } \textit{t } \{ \text{ deref}: \langle \text{ Nil } \vert \text{ Cons } \{ \text{data}: a, \text{rest}: {\color{red} \textbf{mu } \textit{t } \{ \text{ deref}: \langle \text{ Nil } \vert \text{ Cons } \{ \text{data}: a, \text{rest}: t \}\textit{\#} \rangle \} } \}\textit{\#} \rangle \} 
+            \Gamma \vdash x : \textbf{mu } \textit{t } \{ \text{ deref}: \langle \text{ Nil } \vert \text{ Cons } \{ \text{data}: a, \text{rest}: {\color{red} \pi} \}\textit{\#} \rangle \} 
         }
     \end{align*}
-    \caption{Rolling a list}
+    \caption{Rolling a list, where: \newline \protect\phantom{Figure x.x:} $\pi = \textbf{mu } \textit{t } \{ \text{ deref}: \langle \text{ Nil } \vert \text{ Cons } \{ \text{data}: a, \text{rest}: t \}\textit{\#} \rangle \}$}
     \label{fig:rollexample}
 \end{figure}
 
@@ -108,12 +107,12 @@ recursive parameter, as in \autoref{fig:unrollexample}.
     \centering
     \begin{align*}
         \infer{
-            \Gamma \vdash \textbf{unroll } x : \textbf{mu } \textit{t } \{ \text{ deref}: \langle \text{ Nil } \vert \text{ Cons } \{ \text{data}: a, \text{rest}: {\color{red} \textbf{mu } \textit{t } \{ \text{ deref}: \langle \text{ Nil } \vert \text{ Cons } \{ \text{data}: a, \text{rest}: t \}\textit{\#} \rangle \} } \}\textit{\#} \rangle \} 
+            \Gamma \vdash \textbf{unroll } x : \textbf{mu } \textit{t } \{ \text{ deref}: \langle \text{ Nil } \vert \text{ Cons } \{ \text{data}: a, \text{rest}: {\color{red} \pi}  \}\textit{\#} \rangle \} 
         }{
             \Gamma \vdash x : \textbf{mu } \textit{t } \{ \text{ deref}: \langle \text{ Nil } \vert \text{ Cons } \{ \text{data}: a, \text{rest}: {\color{red} t} \}\textit{\#} \rangle \} 
         }
     \end{align*}
-    \caption{Unrolling a list}
+    \caption{Unrolling a list, where: \newline \protect\phantom{Figure x.x:} $\pi = \textbf{mu } \textit{t } \{ \text{ deref}: \langle \text{ Nil } \vert \text{ Cons } \{ \text{data}: a, \text{rest}: t \}\textit{\#} \rangle \}$}
     \label{fig:unrollexample}
 \end{figure}
 
