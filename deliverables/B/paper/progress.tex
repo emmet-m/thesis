@@ -1,4 +1,5 @@
 \chapter{Project Progress}\label{ch:progress}
+\liam{Merge with previous chapter?}
 
 Previously in thesis A we elected Minigent as the place to design our new recursive types for Cogent.
 Our design was to introduce a new recursive parameter to Minigent's boxed records, in order to allow
@@ -13,6 +14,7 @@ In addition to the existing suite of tests in the Minigent compiler, additional 
 been added to test the newly added extension.
 
 \todo{I'm starting to think this isn't very relevant to the thesis report, let alone the project. Remove?} \\
+\liam{Yeah, not relevant.}
 In order to increase my work efficiency, I created an extension in VSCode that provides syntax highlighting
 for both Cogent and Minigent files, which allowed for an easier experience when constructing Minigent programs,
 and hence made it easier to write tests for new features.
@@ -37,25 +39,29 @@ syntax in old code will not have to be changed in order for the change to be imp
             ::&= \dots\; |\; [\textbf{mu}\; t]\; \{ \overline{f_i^n\; \tau_i} \} \\
     \end{align*}
     \todo{is there a better way to describe the optional mu $t$ other than writing the two options explictly? [ ] feels dodgy}
+\liam{No, add two options}
     \caption{The new syntax for the type of a boxed record, featuring our recurive parameter $t$}
     \label{fig:recursivetypegrammar}
 \end{figure}
 
 \todo{Should I talk about the code I wrote here? Feel this section is very short on a high level.}
+\liam{No code. Vivian wrote one sentence for her section on lexer/parser.}
 
 \section{Reorganiser}
+\liam{Did you describe the reorganiser's role before?}
 
 In the reorganiser, a strict positivity check has been added to prevent the construction of infinitely
-recursive objects. This check recursively evaluates all of the functions in a Minigent program, and
+recursive objects. This check recursively evaluates \liam{evaluates!?} all of the functions in a Minigent program, and
 checks that their types do not contain a non-strictly positve type. This check also accounts for the
 shadowing of recursive parameter variables, in the event a nested boxed record declaration's recursive
 parameter shadows the parent record's parameter. These new recursive parameters are now distinguished from
-regular type variables, and the reorganiser no longer counts them as type variables.
+regular type variables, and the reorganiser no longer counts them as type variables.\liam{Didn't say that it did before?}
 
-Functions that also call themselves successfully typecheck as their type signature provides enough information
+Functions that also\liam{also?} call themselves successfully typecheck as their type signature provides enough information
 to check the argument passed to the function, so basic recursion typechecks as expected.
 
 \todo{Unused recursive parameter variables? I could implement this pretty quickly but not sure if we want it}
+\liam{What's that?}
 
 \section{Type Checker}
 \label{sec:typecheckingprogress}
@@ -63,8 +69,9 @@ to check the argument passed to the function, so basic recursion typechecks as e
 During the typechecking phase, originally we planned to implement two primitives into Minigent to allow referencing
 recursive structures; the rules \textsf{roll} and \textsf{unroll} (see \autoref{def:rollunroll}), to insert into and take from recursive structres respectively.
 
+\liam{Don't start paragraphs or sentences with identifiers}
 \textsf{roll} works by expanding a recursive parameter 
-in the type of a structure by replacing it with the entire type it is nested in - this `adds' one 
+in the type of a structure by replacing it with the entire type it is nested in \liam{do not end a sentence with a preposition. "in which it is nested"} -\liam{emdash, not hyphen} this `adds' one 
 layer of recursion to the object. In a list, this would correspond to expanding the type parameter
 that is nested in the list to make the list one layer longer on the type level, as in \autoref{fig:rollexample}.
 
