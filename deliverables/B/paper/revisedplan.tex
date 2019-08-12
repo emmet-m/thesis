@@ -64,4 +64,32 @@ an inductive definition of primitive recursive functions via combinators on the 
     \end{itemize}
 \end{definition}
 
-\todo{Talk about other ways to check primitive recursive (structurally recursive too), and how we would do this in Minigent}
+In addition to a means to translate our Cogent and Minigent programs into the above combinators,
+we seek a method to map expressions to natural numbers that the above combinators can
+operate on. Constructing this mapping correctly is a proof that our function is primitive recursive and
+therefore terminates, otherwise however gives us no information about our function.
+
+Alternatively or in conjunction with the primitive recursive approach, we may consider using
+structurally recursive methods as discussed by \citet{StrucrecStructures} and \citet{PredicateStructrec}.
+In this case our goal is to find a \textit{termination order} upon which our functions terminate --- An ordering
+where each recursive call operates on arguments that are `smaller' than the previous. 
+As we don't have infinite objects in our recursive types due to their strictly positive condition, 
+we know that are datatypes are finite in size, so functions that are  structurally recursive must
+merely descend on the structure of the datatype, as measured by our termination order.
+
+\citet{PredicateStructrec} talks in particular about \textit{structural ordering}, by measuring term size in
+terms of constructors. They describe two axioms to measue this order, the first being given
+a term $e$ and a constructor $C$, the transitive closure of:
+$$
+    e < C (\dots, e, \dots)
+$$
+And for measuring the size of function expressions, given a function $f$ of type $\alpha \longrightarrow \tau$,
+and an argument $a$ of type $\alpha$:
+$$
+    f\; a \leq f
+$$
+Where the justification for this comes from set theory --- as a function is represented as the set of all pairs of
+arguments and results, the result of one function application ($f\; a$) is less than or equal to the set containing
+all possible results ($f$).
+
+\todo{lexicographical ordering}

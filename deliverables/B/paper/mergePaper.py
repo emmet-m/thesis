@@ -9,6 +9,7 @@ def replace(f):
 print("""
 % Please note this document is compiled from a bunch of seperate files.
 % My original thesis document looks different!
+% Check it on github.com/emmet-m/thesis
 """)
 
 with open("thesis.tex") as thesis:
