@@ -1,15 +1,5 @@
-\chapter{Revised Plan}\label{ch:plan}
-
-In light of our discoveries \todo{ $<$- wording, phrasing} on changing the type checker,
-the project of the schedule has been updated to reflect the time needed to change the project,
-seen in \autoref{fig:revisedplan}.
-
-\begin{figure}
-    \centering
-    \includegraphics[height=0.50\textheight, angle=90]{content/revised_plan.jpg}
-    \caption{The timeline for the project}
-    \label{fig:revisedplan}
-\end{figure}
+\chapter{Revised Plan}
+\label{ch:plan}
 
 Extra time has been allocated to update the type checking phase of Minigent in order to deal with
 adding extra typechecking measure to \textsf{take} and \textsf{put}, in exchange of the time
@@ -18,7 +8,14 @@ we must finalise the work in the type checker for automatically \textsf{roll}/\t
 as explained in \autoref{sec:typecheckingprogress}.
 
 As we no longer need to infer the use of \textsf{roll} and \textsf{unroll}, we have gained an extra
-few weeks to work on the extensions of the project outlined in \autoref{sec:proposedextensions}.
+few weeks to work on the extensions for the project outlined in \autoref{sec:proposedextensions}.
+
+\begin{figure}
+    \centering
+    \includegraphics[height=0.50\textheight, angle=90]{content/revised_plan.jpg}
+    \caption{The timeline for the project}
+    \label{fig:revisedplan}
+\end{figure}
 
 The most important extension is to add primitive recursion detection for functions marked by
 a \textsf{primrec} keyword, so that the programmer can get a guarantee from Minigent that
@@ -28,14 +25,10 @@ This would allow programmers increased proof-concious development while writing 
 and upon integration with the Cogent embedding a potential termination proof for free for
 functions that Cogent can guarantee are primitive recursive.
 
-The primitive recursion extension is unbounded however, as writing an algorithm to detect primitive
-recursion cannot cover all primitive recursive functions \todo{Is this true? I'm pretty sure I read
-that there is no general algorithm to prove such a thing}\liam{primitive recursion is the solvable case. General termination is not provable.}, and thus can only cover more and more
-functions inside the domain of primitive recursive functions.
+While the primitive recursion extension detects termination for a the class of primitive recursive functions,
+it will not allow for any generally recursive functions outside the class of primitive recursive functions to
+be admitted, regardless of whether they terminate or not, so this extension is not feasible for all possible functions.
 
-\todo{Should I be talking about reasearch into this sort of stuff now? Or should I move it to the background and then reference
-it here?}
-\liam{Feel free to talk about it here}
 \citet{AboutPrimrecAlgorithms}, in his paper on primitive recursive algorithms describes the
 an inductive definition of primitive recursive functions via combinators on the natural numbers:
 
@@ -78,7 +71,7 @@ As we don't have infinite objects in our recursive types due to their strictly p
 we know that are datatypes are finite in size, so functions that are  structurally recursive must
 merely descend on the structure of the datatype, as measured by our termination order.
 
-\citet{PredicateStructrec} talks in particular about \textit{structural ordering}, by measuring term size in
+\citet{PredicateStructrec} talk in particular about \textit{structural ordering}, by measuring term size in
 terms of constructors. They describe two axioms to measue this order, the first being given
 a term $e$ and a constructor $C$, the transitive closure of:
 $$
@@ -90,7 +83,7 @@ $$
     f\; a \leq f
 $$
 Where the justification for this comes from set theory --- as a function is represented as the set of all pairs of
-arguments and results, the result of one function application ($f\; a$) is less than or equal to the set containing
+arguments and results, the result of one function application ($f\; a$) is less than or equal to the set of
 all possible results ($f$).
 
 \todo{lexicographical ordering}

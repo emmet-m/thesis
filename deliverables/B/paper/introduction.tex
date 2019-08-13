@@ -25,28 +25,28 @@ Cogent~\citep{ICFPCogent}, is a domain specific language that was introduced to 
 It is a functional, high level language with uniqueness types and a certifying compiler
   that produces a shallow embedding in Isabelle/HOL as well as low level efficient C code;
   the semantics of which correspond to the the Isabelle embedding.
-Due to the functional, high level nature of the embedding\liam{,}
-  which is designed to be reasoned about equationally\liam{,} as well as its resemblance to higher order logic,
+Due to the functional, high level nature of the embedding,
+  which is designed to be reasoned about equationally, as well as its resemblance to higher order logic,
   Cogent allows for a much less taxing process of verifying low level systems code.
 
-\liam{Swap clauses in this sentence: In contrast....which operate, Cogent is suitable for low level...., as its uniqueness...}Cogent is also suitable for low level systems development in contrast to many existing functional languages which operate
-  on layers of abstractions away from the system, as its uniqueness types allow for both efficient destructive updates
-  as well as static memory allocation.
+in contrast to many existing functional languages which operate
+  on layers of abstractions away from the system Cogent is suitable for low level systems development,
+  as its uniqueness types allow for both efficient destructive updates as well as static memory allocation.
 In addition to the benefits of uniqueness types, Cogent presents a C foreign function interface (FFI) allowing existing C programs
  to interact with Cogent code, without forcing teams to abandon a project already written in C and already verified.
 
 However, Cogent currently has no support for recursion or iteration.
 Currently, any data type that can be iterated over and its iterators have to be defined externally in C,
-  and included in the Cogent program via \liam{no its or no Cogent's}its Cogent's C FFI.
+  and included in the Cogent program via Cogent's C FFI.
 Proving totality about existing code is a guarantee that a system will not hang,
   or deny services to other systems, which is a great benefit.
-However\liam{put however between commas after exacerbated? Strunk and White recommend not starting with However} the cost of reasoning about a particular program's termination is
-  exacerbated \liam{by}with the overhead of handwritten C code, due to iteration being an external construct to the language.
+The cost of reasoning about a particular program's termination is exacerbated, however, by the overhead of
+ handwritten C code, due to iteration being an external construct to the language.
 This forces the the use of low level C code in the verification process, which Cogent strives to avoid.
 
 This thesis aims to introduce recursive types to Cogent's type system, allowing internal iteration over
   internal data structures without the involvement of handwritten C code.
-While providing this benefit we must also respect the existing guarantees that Cogent enjoys,\liam{not all of these particulars are guarantees}
+While providing this benefit we must also respect the existing guarantees and benefits that Cogent enjoys,
   in particular, simple reasoning about functional correctness, totality,
   its static memory allocation, destructive updates, all while keeping in mind
   a possible efficient C representation for the later implementation of the compilation of Cogent

@@ -143,11 +143,11 @@ Proving total correctness about the programs we write is a very desirable result
 Computation performed by a program is useless if the program never returns the
 result of the computation.
 In a systems context, termination is especially desirable as an infinitely looping component of a
-system could cause it to hang, denying services to other parts of a system which could be core to \liam{the?}
+system could cause it to hang, denying services to other parts of a system which could be core to the
 system's function.
 
 To deal with termination, we must consider the environment where we will prove termination for
-Cogent programs, \liam{emdashes, not commas} the Isabelle embedding, and how we can make this process easier on the type
+Cogent programs --- the Isabelle embedding, and how we can make this process easier on the type
 level within Cogent.
 
 \subsection{Proving Termination in Isabelle}
@@ -158,17 +158,16 @@ the keywords \textbf{primrec}, \textbf{fun} and \textbf{function}. The first, \t
 allows one to create a \textit{primitive recursive} function --- one that returns a constant or removes
 a data type constructor from one of the arguments to the function in its body, `decreasing' in size every time.
 These functions are total by construction, and therefore always terminate, removing the need of
-an explicit termination proof (which is required to reason inductively about any Isabelle function.) \liam{something's weird punctuationally here}
-for all functions within Isabelle, unless they are defined to be partial, however as partial functions
-may not terminate we do not want to consider them using them for our verification.
-Primitive recursive functions however are limited in their expressiveness and are a subset of all computable
-functions, so we cannot rely on them for the general case.
+an explicit termination proof. This is required to reason inductively about any Isabelle function,
+unless they are defined to be partial, however as partial functions may not terminate we do not want
+to consider them using them for our verification. Primitive recursive functions however are limited
+in their expressiveness and are a subset of all computable functions, so we cannot rely on them for the general case.
 
-In his tutorial, Krauss~\citep{KraussIsabelle}\liam{no date?} discusses the details of the latter two of the three methods
+In his tutorial, Krauss~\citep{KraussIsabelle} discusses the details of the latter two of the three methods
 of creating functions in Isabelle. The \textbf{fun} keyword instructs Isabelle to try and solve all necessary
 termination proof obligations, rejecting the definition if it fails (either because the definition does not 
-terminate or because Isabelle cannot prove it does alone\liam{no alone}). In contrast to \textbf{fun}, \textbf{function}
-requires that the termination proofs be solved\liam{provided?} manually by whoever is writing the function.
+terminate or because Isabelle cannot prove it). In contrast to \textbf{fun}, \textbf{function}
+requires that the termination proofs be provided manually by whoever is writing the function.
 
 % Perhaps another time :(
 %\amos{Worth comparing the `gas' or `clock' approach as well, as used by CakeML (see CakeML: A Verified Implementation of ML, POPL 2014).
@@ -215,7 +214,7 @@ $\tau_{i1}..\tau_{ik}$:
 
 \theoremstyle{definition}
 \begin{definition}
-    A data type $T$ is a \textit{positive} data type if \liam{it?} only appears nested in a positive position
+    A data type $T$ is a \textit{positive} data type if it? only appears nested in a positive position
     in all of its constructors.
 \end{definition}
 
@@ -253,23 +252,21 @@ the following example in \textsc{Haskell}:
 
 By our definition, we can see that our type \textit{Bad} is a \textit{negative} type and using it we were able
 to construct the infinitely recursive expression, \textsf{g (A g)}
-This is not an issue in Haskell due to its lazy evaluation and \liam{"permissiveness of general recursion" rather than "Haskell allows..freely"} Haskell allows its programmers to write
-infinite loops freely, however in Cogent these expressions would be detrimental to our termination
+This is not an issue in Haskell due to its lazy evaluation and  Haskell's permissiveness of general unbounded recursion,
+however in Cogent these expressions would be detrimental to our termination
 proofs as iterating over them potentially results in non-termination, and in this
-situation will hang when \textit{infiniteExpression} is constructed\liam{evaluated?}.
+situation will hang when \textit{infiniteExpression} is evaluated.
 Although this example was constructed artificially, situations may arise where
-programmers may accidentally construct such an expression, so we must seek a way to
-eliminate them from our language \liam{It doesn't matter if it's accidental or not}.
+programmers may construct such an expression, so we must seek a way to
+eliminate them from our language.
 
 Many theorem provers and dependently typed languages make use of \textit{strictly positive} types, which
-prohibit the construction of infinitely recursive data structures, that under a dependant\liam{dependent} type system
-both negative and simple positive types allow.\liam{Didn't explain how non-strictly positive types allow this?}
+prohibit the construction of infinitely recursive data structures that regular types allow.
 \textsc{Agda}~\citep{AgdaStrictlyPositive}, \textsc{Coq}~\citep{CoqStrictlyPositive} and even
 Isabelle~\citep{IsabelleStrictlyPositive} feature this exact constraint, as allowing for negative
-or non-strictly positive types introduce logical inconsistencies which can be used to prove false statements,\liam{That's what logical inconsistencies are, don't need to define them}
-something that is unacceptable for a theorem prover.
+or non-strictly positive types introduce logical inconsistencies, something that is unacceptable for a theorem prover.
 
-The definition of strictly positive is \liam{given by Coquand and Paulin as follows:}discussed by \citet{CoquandTypes}, and is as follows:
+The definition of strictly positive is given by \citet{CoquandTypes} as follows:
 
 \theoremstyle{definition}
 \begin{definition}
@@ -312,14 +309,22 @@ for any predicate over natural numbers, $P$, is:
 
 Where in order to prove our predicate $P$, we prove it for each case of how our type $T$ could have been
 constructed, which each constructor for our our type supplies.
-That is, to prove any predicate $P$ inductively over nats\liam{nats?} ($\forall(N : Nat).\; P(N)$)
+That is, to prove any predicate $P$ inductively over natural numbers ($\forall(N : Nat).\; P(N)$)
 we prove it for the base (zero) case $P(Z)$ and then assuming the predicate holds
 for a natural number $X$, we prove it for its successor case $S\; X$: $P(X) \implies P(S\; X)$.
 
-\liam{I would describe the type of an eliminator on nats too, to show the similarity to the induction principle}
+\citet{CoquandTypes} describe the eliminator for natural numbers, a means to realise a predicate over
+natural numbers, as follows:
+\[
+    eliminator : P \rightarrow P (0) \rightarrow (x : Nat \rightarrow P (x) \rightarrow P(S(x))) \rightarrow P(Nat)    
+\]
+Which, given a predicate $P$, a proof of the predicate for $0$, $P(0)$, and the proof of the predicate
+for the successor of any natural number $x  \rightarrow P (x) \rightarrow P(S(x))$, we receive a proof
+of the given predicate $P$ for all natural numbers. This eliminator is indeed similar to the induction
+principle we previously defined, which is no coincidence due to their correspondence.
 
-The interactive theorem prover Isabelle generates the same induction principle for any type created in
-Isabelle\liam{As opposed to types created outside Isabelle?}. We can get the same induction principle over natural numbers by redefining our $Nat$
+The interactive theorem prover Isabelle generates the same induction principle for any type created.
+We can get the same induction principle over natural numbers by redefining our $Nat$
 type in Isabelle, as in figure \ref{fig:IsabelleNatInduct}.
 
 \begin{center}
@@ -385,10 +390,8 @@ at least once (by lack of weakening) and at most once (by lack of contraction), 
 One powerful benefit that linear types allow is \textit{static allocation} of objects, which Cogent
 features. Predicting when an object in a program will be last used (and after deallocated)
 is undecidable as it is a nontrivial semantic property by Rice's Theorem~\citep{Sipser},
-however a linear type system can make it possible to deallocate this memory after its first use
-by the use once rule\liam{That's not what happens. It just means that there is only ever one pointer to a particular allocation, so if you allow the pointer to go out of scope without using it you know it has been leaked}. The result is a language that does not require a garbage collector,
-can check that programs appropriately handle allocated resources statically as this can now
-be determined statically. \liam{This is called uniqueness types.}
+however as a uniqueness types system only ever allows a single pointer to a given allocation, we
+can check that programs appropriately handle allocated resources statically.
 
 \citet{LinearTypesChangeTheWorld} also describes the performance benefits of destructive updates
 that linear types potentially grant. As we have a guarantee that no other part of a program is
@@ -410,17 +413,17 @@ must resort to copying.
 Linear types prevent this kind of mistake, as the duplicate reference that
 \verb|oldNumbers| and \verb|copyOfNumbers| share would be eliminated once \verb|oldNumbers| is used once,
 which in turn allows for a destructive update on \verb|oldNumbers| to take place with the result stored in
-copyOfNumbers.\liam{font}
+\verb|copyOfNumbers|.
 
 Wadler, however shows that mere linearity is not enough to guarantee safe destructive updates, as nonlinear
 variables with multiple references may be cast to linear ones, breaking the single reference guarantee
 for linear types. This is from the result that adding typecasting to and from linear variables grants 
 controlled access to the contraction and weakening rules that linear types explicitly prohibit.
 
-He further discusses separately~\citep{WadlerLinearLogic} that with the removal of
-the ability to perform such an action, one can gain the \textit{uniqueness} types that Cogent 
-exhibits. With uniqueness types, it is truly impossible for linear variables to have multiple references,
-and thus destructive updates on these variables are safe. \liam{That's not totally accurate. His "Change the World" system is also a system of uniqueness types.}
+He further discusses that with the removal of the ability to perform such an action,
+one can gain the \textit{uniqueness} types that Cogent exhibits. 
+As uniqueness types prohibit multiple references to allocated objects, 
+destructive updates upon these object become safe.
 
 All boxed types in Cogent are linear, and therefore must have at most one reference to each,
 however unboxed objects are only linear if they contain other linear values.
