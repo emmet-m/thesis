@@ -18,8 +18,13 @@ few weeks to work on the extensions for the project outlined in \autoref{sec:pro
 \end{figure}
 
 The most important extension is to add primitive recursion detection for functions marked by
-a \textsf{primrec} keyword, so that the programmer can get a guarantee from Minigent that
+a \textsf{primrec} keyword, so that the programmer can get a guarantee from Cogent that
 a function terminates before considering any kind of proof of termination.
+
+A perhaps better design of this extension is to force all functions to require a termination guarantee
+\textit{by default} or otherwise result in a compiler error, and allow use of a keyword e.g. \textbf{dangerous}
+if the programmer wishes to acknowledge the function they wrote requires a manual proof of termination, or
+may not even terminate at all.
 
 This would allow programmers increased proof-concious development while writing Cogent code,
 and upon integration with the Cogent embedding a potential termination proof for free for
@@ -58,7 +63,7 @@ an inductive definition of primitive recursive functions via combinators on the 
     \end{itemize}
 \end{definition}
 
-In addition to a means to translate our Cogent and Minigent programs into the above combinators,
+In addition to a means to translate our Cogent programs into the above combinators,
 we seek a method to map expressions to natural numbers that the above combinators can
 operate on. Constructing this mapping correctly is a proof that our function is primitive recursive and
 therefore terminates, otherwise however gives us no information about our function.
@@ -86,4 +91,8 @@ Where the justification for this comes from set theory --- as a function is repr
 arguments and results, the result of one function application ($f\; a$) is less than or equal to the set of
 all possible results ($f$).
 
-\todo{lexicographical ordering}
+With this means to order expressions in our language, we may apply various techniques for finding a termination
+order - such as finding a \textit{lexicographical order} on the arguments of the function or measuring the \textit{size change}
+of the arguments. Being able to construct a means to do this mechanically will allow the Cogent typechecker to automatically
+find a termination proof for a certain subclass of functions, allowing the resulting Isabelle embedding to contain free
+proofs about the termination of functions in this subclass. 

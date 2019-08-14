@@ -122,7 +122,6 @@ $$
    \forall \tau.\; \Gamma \vdash (\tau \sqsubseteq \phi \rightarrow \psi) \implies T \notin \phi
 }
 $$
-
 Where:
 \begin{itemize}
     \item 
@@ -231,48 +230,71 @@ of roll and unroll by adding it into take and put when we perform operations on 
 Our automatic rolling/unrolling can be implemented in Minigent's constraint generation when we attempt a \textsf{take}/\textsf{put}.
 When we insert a recursive record into a field that has the type of a recursive parameter, we must check that the type of the record
 we are inserting is equal to the type of the recursive parameter. To do this, we automatically roll
-when we attempt a \textsf{put} to a recursive boxed record, as in \autoref{fig:automaticroll}.
+when we attempt a \textsf{put} to a recursive boxed record, like so: 
+
+\begin{align*}
+    \infer{
+        A;\Gamma \vdash \textsf{put } e_1.f_k  = e_2 : \; \textbf{mu } t\; \{ \overline{f_i : \tau_i}, f_k^\circ : \tau_k[\sfrac{ \textbf{mu } t \{\overline{f_i : \tau_i} \}}{t}] \} s
+    }{
+        \begin{array}{c@{}c@{}c@{}c@{}}
+            A \vdash \Gamma \rightsquigarrow \Gamma_1 \boxplus \Gamma_2 \hspace{2em}
+            &
+            A;\Gamma \vdash e2 : \tau_k \hspace{2em}
+            &
+            s \neq \text{\textcircled{r}}   \vspace{0.25em} \\
+            &
+            \hspace{-5em}A;\Gamma_1 \vdash e_1\; : \textbf{mu } t\; \{ \overline{f_i : \tau_i}, f_k^\bullet : \tau_k \}\; s 
+        \end{array}
+    }
+\end{align*}
+
+Where:
+\begin{itemize}
+    \item $A \vdash \Gamma \rightsquigarrow \Gamma_1 \boxplus \Gamma_2$ splits the context $\Gamma$ into two contexts, so that linear assumptions aren't used 
+          more than once
+    \item $A;\Gamma_1 \vdash e_1\; : \textbf{mu } t\; \{ \overline{f_i : \tau_i}, f_k^\bullet : \tau_k \}\; s$ States that the record we are putting into $e_1$
+          has the type of a record with a field $f_k$ with type $\tau_k$ that is currently not available,
+    \item $s \neq \text{\textcircled{r}}   \vspace{0.5em}$ States that the record is not a read only record (i.e. we can mutate the record),
+    \item $A;\Gamma \vdash e2 : \tau_k$ states that
+          the value we are putting into field $f_k$ has type $\tau_k$, and
+    \item The type of our resulting record $\textbf{mu } t\; \{ \overline{f_i : \tau_i}, f_k^\circ : \tau_k[\sfrac{ \textbf{mu } t \{\overline{f_i : \tau_i} \}}{t}] \} s$
+          has field $f_k$ available, which has type $\tau_k$ \textit{where all recursive variables have been rolled}, i.e. the same type of $e_2$.
+\end{itemize}
+
 Likewise for when we \textsf{take} from a recursive boxed record, 
-we automatically unroll as in \autoref{fig:automaticunroll}.
+we automatically unroll like so:
+\begin{align*}
+    \infer{
+        A;\Gamma \vdash \textsf{take } r \{ f_k = y \} = e1 \textbf{ in } e_2 : \tau
+    }{
+        \begin{array}{c@{}c@{}c@{}c@{}}
+            A \vdash \Gamma \rightsquigarrow \Gamma_1 \boxplus \Gamma_2 
+            &
+            A;\Gamma_1 \vdash e_1\; : \textbf{mu } t\; \{ \overline{f_i : \tau_i}, f_k^\circ : \tau_k \}\; s 
+            &
+            s \neq \text{\textcircled{r}}   \vspace{0.25em} \\
+            &
+            \hspace{-5em}A; r : \textbf{mu } t \{ \overline{f_i : \tau_i}, f_k^\bullet : \rho \}\; s
+            ,\; y : \tau_k[\sfrac{ \textbf{mu } t\; \{\overline{f_i : \tau_i} \}}{t}], \Gamma_2 \vdash e_2 : \tau
+        \end{array}
+    }
+\end{align*}
 
-\begin{figure}
-    \centering
-    \todo{Include the rest of the rules}
-    \begin{align*}
-        \infer{
-            A; e_1 ::\; \textbf{mu } t\; \{ \overline{f_i : \tau_i} \}, \Gamma \vdash \textsf{take } r \{ f_i = y \} = e1 \textbf{ in } e_2 : \tau
-        }{
-            A \vdash \Gamma \rightsquigarrow \Gamma_1 \boxplus \Gamma_2
-            &
-            \dots
-            &
-            A; \dots, y : \tau_k[\sfrac{ \textbf{mu } t \{\overline{f_i : \tau_i} \}}{t}], \Gamma_1 \vdash e_2 : \tau
-            %\textbf{mu } t\; \{ \overline{f_i : \tau_i} \} = \textbf{mu } t\; \{ \overline{f_i : \rho_i[\sfrac{t'}{ \textbf{mu } t' \{\overline{f_i : \rho_i} \}}]} \}
-        }
-    \end{align*}
-    \caption{In addition to regular typechecking rules for boxed records, we check that when taking a field from a recursive
-             record, the value taken out will be the value of the field expanded one recursive level for typechecking the following expression}
-    \label{fig:automaticunroll}
-\end{figure}
+Where:
+\begin{itemize}
+    \item $A \vdash \Gamma \rightsquigarrow \Gamma_1 \boxplus \Gamma_2$ splits the context $\Gamma$ into two contexts, so that linear assumptions aren't used 
+          more than once
+    \item $A;\Gamma_1 \vdash e_1\; : \textbf{mu } t\; \{ \overline{f_i : \tau_i}, f_k^\circ : \tau_k \}\; s$ States that the record we are taking from $e_1$
+          has the type of a record with a field $f_k$ with type $\tau_k$ that has not been taken yet,
+    \item $s \neq \text{\textcircled{r}}   \vspace{0.5em}$ States that the record is not a read only record (i.e. we can mutate the record), and
+    \item $A; r : \textbf{mu } t \{ \overline{f_i : \tau_i}, f_k^\bullet : \tau_k \}\; s
+            ,\; y : \tau_k[\sfrac{ \textbf{mu } t\; \{\overline{f_i : \tau_i} \}}{t}], \Gamma_2 \vdash e_2 : \tau$
+          states that given our resulting record $r$ has a taken field $f_k$ and our new variable $y$ has the type $\tau_k$ \textit{where all recursive variables have been rolled},
+          we can conclude the following expression $e_2$ has type $\tau$.
+\end{itemize}
 
-\begin{figure}
-    \centering
-    \begin{align*}
-        \infer{
-            A;\Gamma \vdash \textsf{put } e_1.f_k  = e_2 : \; \textbf{mu } t\; \{ \overline{f_i : \tau_i} \}
-        }{
-            A \vdash \Gamma \rightsquigarrow \Gamma_1 \boxplus \Gamma_2
-            &
-            \dots
-            &
-            A;\Gamma \vdash e2 : \tau_k[\sfrac{ \textbf{mu } t \{\overline{f_i : \tau_i} \}}{t}]
-            %\textbf{mu } t\; \{ \overline{f_i : \tau_i[\sfrac{t}{ \textbf{mu } t \{\overline{f_i : \tau_i} \}}]} \} = \textbf{mu } t\; \{ \overline{f_i : \rho_i[\sfrac{t'}{ \textbf{mu } t' \{\overline{f_i : \rho_i} \}}]} \}
-        }
-    \end{align*}
-    \caption{In addition to regular typechecking rules for boxed records, we check that when inserting a field into a recursive
-             record will have the same type when expanded (rolled) as the type of the expression we're inserting}
-    \label{fig:automaticroll}
-\end{figure}
+The difference here between the implicit \textsf{take} roll and the automatic \textsf{put} roll, is that \textsf{take} rolls on the variable that is removed from the record
+(which is equivalent to unrolling), wheras \textsf{put} rolls on the record field that is being inserted into.
 
 \section{Testing}
 
