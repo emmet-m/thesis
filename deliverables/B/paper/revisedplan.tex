@@ -4,8 +4,8 @@
 Extra time has been allocated to update the type checking phase of Minigent in order to deal with
 adding extra typechecking measure to \textsf{take} and \textsf{put}, in exchange of the time
 needed to add type inference to remove \textsf{roll} and \textsf{unroll}. To complete this,
-we must finalise the work in the type checker for automatically \textsf{roll}/\textsf{unroll} recursive type expressions
-as explained in \autoref{sec:typecheckingprogress}.
+we must finalise the work in the type checker to automatically \textsf{roll}/\textsf{unroll} recursive type expressions
+as explained in \autoref{sec:typecheckingprogress}. The updated timeline for the plan can be seen in \autoref{fig:revisedplan}.
 
 As we no longer need to infer the use of \textsf{roll} and \textsf{unroll}, we have gained an extra
 few weeks to work on the extensions for the project outlined in \autoref{sec:proposedextensions}.
@@ -27,7 +27,7 @@ if the programmer wishes to acknowledge the function they wrote requires a manua
 may not even terminate at all.
 
 This would allow programmers increased proof-concious development while writing Cogent code,
-and upon integration with the Cogent embedding a potential termination proof for free for
+and upon integration with the Cogent embedding, a potential termination proof for free for
 functions that Cogent can guarantee are primitive recursive.
 
 While the primitive recursion extension detects termination for a the class of primitive recursive functions,
@@ -93,6 +93,6 @@ all possible results ($f$).
 
 With this means to order expressions in our language, we may apply various techniques for finding a termination
 order - such as finding a \textit{lexicographical order} on the arguments of the function or measuring the \textit{size change}
-of the arguments. Being able to construct a means to do this mechanically will allow the Cogent typechecker to automatically
+of the arguments in the recursive calls of the function. Being able to construct a means to do this mechanically will allow the Cogent typechecker to automatically
 find a termination proof for a certain subclass of functions, allowing the resulting Isabelle embedding to contain free
 proofs about the termination of functions in this subclass. 

@@ -1,15 +1,9 @@
 \chapter{Background And Related Works}\label{ch:background}
 
-\todo{Should I update things in here such as new extensions, or should I keep this exactly as in thesis A?}
-\liam{Doesn't have to be the same. Not sure what new stuff you have though?}
-
 Our investigation of existing works will consider three domains: The existing types and features
 within Cogent, termination and recursive types and linear and uniqueness types.
 
 \section{Cogent Currently}
-
-\liam{If you want to get the alignment right in the figures, just use an 
-array environment inside a math environment.}
 %%% Basic syntax
 \begin{figure}
     \centering
@@ -17,7 +11,7 @@ array environment inside a math environment.}
 
     \begin{align*}
     \text{expressions}\quad e\; ::&= x\;\; |\;\; \ell & \text{(variables or literals)} \\
-                &|\; e_1 \text{ \textasteriskcentered } e_2 & \text{(primitive operations)} \\
+                &|\; e_1 \text{ \textasteriskcentered }\; e_2 & \text{(primitive operations)} \\
                 &|\; e_1\; e_2 & \text{(function application)} \\
                 &|\; \textbf{let } x = e_1 \textbf{ in } e_2 & \text{(let statements)} \\
                 &|\; \textbf{if } e_1\; \textbf{ then } e_2 \textbf{ else } e_3 & \text{(conditional)} \\
@@ -78,16 +72,16 @@ and records.
 
 \subsection{Primitive Types}
 
-Cogent's primitive datatypes consist of Boolean types (\texttt{Bool}), and the four unsigned integer types \texttt{U8}, 
+Cogent's primitive datatypes consist of Boolean types (\texttt{Bool}) and the four unsigned integer types \texttt{U8}, 
 \texttt{U16}, \texttt{U32} and \texttt{U64}. Integer types can be upcast using the \texttt{\textsf{upcast}}
 keyword to convert a smaller integer type into a larger one (e.g. a \texttt{U8} into a \texttt{U32}).
 Details of these types can be seen in the syntax for Cogent's basic grammar in figure \ref{fig:cogentGrammar}.
 
-Each of these primitive types are of fixed size, and thus are \emph{unboxed}, meaning they are stored on the
+Each of these primitive types are of fixed size and thus are \emph{unboxed}, meaning they are stored on the
 stack and are not linear variables.
 
 Cogent also features \emph{tuples} (product types) through the standard tuple syntax across the ML
-family of languages: $(a,b)$, and standard functions.
+family of languages: $(a,b)$ and standard functions.
 
 \subsection{Variant Types}
 
@@ -147,18 +141,17 @@ system could cause it to hang, denying services to other parts of a system which
 system's function.
 
 To deal with termination, we must consider the environment where we will prove termination for
-Cogent programs --- the Isabelle embedding, and how we can make this process easier on the type
+Cogent programs --- the Isabelle embedding and how we can make this process easier on the type
 level within Cogent.
 
 \subsection{Proving Termination in Isabelle}
-
 
 The official Isabelle tutorial~\citep{IsabelleTutorial} describes three methods of creating functions using
 the keywords \textbf{primrec}, \textbf{fun} and \textbf{function}. The first, \textbf{primrec},
 allows one to create a \textit{primitive recursive} function --- one that returns a constant or removes
 a data type constructor from one of the arguments to the function in its body, `decreasing' in size every time.
-These functions are total by construction, and therefore always terminate, removing the need of
 an explicit termination proof. This is required to reason inductively about any Isabelle function,
+These functions are total by construction and therefore always terminate, removing the need for
 unless they are defined to be partial, however as partial functions may not terminate we do not want
 to consider them using them for our verification. Primitive recursive functions however are limited
 in their expressiveness and are a subset of all computable functions, so we cannot rely on them for the general case.
@@ -172,14 +165,14 @@ requires that the termination proofs be provided manually by whoever is writing 
 % Perhaps another time :(
 %\amos{Worth comparing the `gas' or `clock' approach as well, as used by CakeML (see CakeML: A Verified Implementation of ML, POPL 2014).
 %There, the embedding of the program has an extra parameter which is a natural number describing how much time the program has to compute a result.
-%At each recursive step, the clock is decremented, and if it reaches zero the program runs out of time and throws an exception.
+%At each recursive step, the clock is decremented and if it reaches zero the program runs out of time and throws an exception.
 %This lets you embed arbitrary programs as primitive recursion on a nat.
 %You have to prove termination separately, but you can reason about the program assuming termination (assume that there exists a large enough clock that the program will return a valid value).}
 
 Due to their automatic termination proofs, we would like as many Cogent functions as possible to be
 primitive. For all others, we can achieve an embedding via \textbf{fun} to see if Isabelle can find
-a termination proof for us, and as a last resort use \textbf{function} and have the proof writer
-manually prove termination. 
+a termination proof for us and as a last resort use \textbf{function} and have the proof writer
+manually give a proof of termination. 
 
 \subsection{Strictly Positive Types}
 
@@ -202,7 +195,7 @@ $\tau_{i1}..\tau_{ik}$:
 \theoremstyle{definition}
 \begin{definition}
     A data type $T$ is said to be in a \textit{negative position} if $T$ appears nested as an argument
-    to a function an odd amount of times inside any $\tau_{ij}$, and said to be in a \textit{positive position}
+    to a function an odd amount of times inside any $\tau_{ij}$ and said to be in a \textit{positive position}
     if $T$ appears nested as an argument to a function an even amount of times inside $\tau_{ij}$.
 \end{definition}
 
@@ -254,7 +247,7 @@ By our definition, we can see that our type \textit{Bad} is a \textit{negative} 
 to construct the infinitely recursive expression, \textsf{g (A g)}
 This is not an issue in Haskell due to its lazy evaluation and  Haskell's permissiveness of general unbounded recursion,
 however in Cogent these expressions would be detrimental to our termination
-proofs as iterating over them potentially results in non-termination, and in this
+proofs as iterating over them potentially results in non-termination and in this
 situation will hang when \textit{infiniteExpression} is evaluated.
 Although this example was constructed artificially, situations may arise where
 programmers may construct such an expression, so we must seek a way to
@@ -264,7 +257,7 @@ Many theorem provers and dependently typed languages make use of \textit{strictl
 prohibit the construction of infinitely recursive data structures that regular types allow.
 \textsc{Agda}~\citep{AgdaStrictlyPositive}, \textsc{Coq}~\citep{CoqStrictlyPositive} and even
 Isabelle~\citep{IsabelleStrictlyPositive} feature this exact constraint, as allowing for negative
-or non-strictly positive types introduce logical inconsistencies, something that is unacceptable for a theorem prover.
+or non-strictly positive types introduces logical inconsistencies, something that is unacceptable for a theorem prover.
 
 The definition of strictly positive is given by \citet{CoquandTypes} as follows:
 
@@ -318,7 +311,7 @@ natural numbers, as follows:
 \[
     eliminator : P \rightarrow P (0) \rightarrow (x : Nat \rightarrow P (x) \rightarrow P(S(x))) \rightarrow P(Nat)    
 \]
-Which, given a predicate $P$, a proof of the predicate for $0$, $P(0)$, and the proof of the predicate
+Which, given a predicate $P$, a proof of the predicate for $0$, $P(0)$ and the proof of the predicate
 for the successor of any natural number $x  \rightarrow P (x) \rightarrow P(S(x))$, we receive a proof
 of the given predicate $P$ for all natural numbers. This eliminator is indeed similar to the induction
 principle we previously defined, which is no coincidence due to their correspondence.
@@ -330,7 +323,7 @@ type in Isabelle, as in figure \ref{fig:IsabelleNatInduct}.
 \begin{center}
     \begin{figure}
         \includegraphics[width=\linewidth]{content/isabelleNatInduct.png}
-        \caption{A type for natural numbers defined in Isabelle, and the generated 
+        \caption{A type for natural numbers defined in Isabelle and the generated 
         induction principle associated with the type.}
         \label{fig:IsabelleNatInduct}
     \end{figure}
@@ -382,13 +375,13 @@ in $\Gamma_1$, then $e$ will also typecheck if extra assumptions are added to th
 \textit{Contraction} states that if we can typecheck a term $e$ using two identical
 assumptions, then we are able to check $e$ with just one of those two assumptions.
 
-Substructural type systems however control access to information within the program by limiting which
+Substructural type systems control access to information within the program by limiting which
 of the structural typing rules are allowed under certain contexts. Linear types ban the use of the
 contraction and weakening rules, which has the consequence that all linear variables must be used 
 at least once (by lack of weakening) and at most once (by lack of contraction), hence exactly one time.
 
 One powerful benefit that linear types allow is \textit{static allocation} of objects, which Cogent
-features. Predicting when an object in a program will be last used (and after deallocated)
+features. Predicting when an object in a program will be last used (and afterwards deallocated)
 is undecidable as it is a nontrivial semantic property by Rice's Theorem~\citep{Sipser},
 however as a uniqueness types system only ever allows a single pointer to a given allocation, we
 can check that programs appropriately handle allocated resources statically.
@@ -404,10 +397,10 @@ Consider the following program in Java:
 \lstinputlisting[language=Java,basicstyle=\small]{content/destructive.java}
 
 In this example we attempt to double a copy of a list of numbers in place by use of the \verb|doubleNumbers|
-function on \verb|copyOfNumbers|, however by updating it in place has changed the original variable outside
+function on \verb|copyOfNumbers|, however, updating it in place has changed the original variable outside
 the function \verb|oldNumbers|. If a programmer mistakenly uses \verb|oldNumbers| again without realising that
 \verb|doubleNumbers| has mutated it instead of a copy of it, it would most likely cause an error. In 
-Java this kind of destructive update cannot be done safely whilst \verb|oldNumbers| still exists, and we
+Java this kind of destructive update cannot be done safely whilst \verb|oldNumbers| still exists and we
 must resort to copying.
 
 Linear types prevent this kind of mistake, as the duplicate reference that
@@ -425,8 +418,8 @@ one can gain the \textit{uniqueness} types that Cogent exhibits.
 As uniqueness types prohibit multiple references to allocated objects, 
 destructive updates upon these object become safe.
 
-All boxed types in Cogent are linear, and therefore must have at most one reference to each,
+All boxed types in Cogent are linear and therefore must have at most one reference to each,
 however unboxed objects are only linear if they contain other linear values.
 With our implementation of recursive types, we must consider maintaining the linear and uniqueness constraints
-that Cogent features, and create these types in such a way that they integrate nicely with the existing
+that Cogent features and create these types in such a way that they integrate nicely with the existing
 system.

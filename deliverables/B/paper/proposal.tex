@@ -12,7 +12,7 @@ As the compilation of an Isabelle embedding and C code is out of scope for this 
 using Minigent will not hinder the potential of this project.
 
 Work has been completed to incorporate our proposed design into the parser, lexer and reorganiser compiler phases of
-Minigent, and work has begun work on integrating updatin the type checking phase.
+Minigent, and work has begun work on updating the type checking phase.
 In addition to the existing suite of tests in the Minigent compiler, additional tests have 
 been added to test the newly added recursive types.
 
@@ -138,12 +138,12 @@ Where:
 
 In the reorganiser, a strict positivity check has been added to prevent the construction of infinitely
 recursive objects. This check recursively analyses all of the functions in a Minigent program, and
-checks that their types do not contain a non-strictly positve type. This check also accounts for the
+checks that their types do not contain a non-strictly positive type. This check also accounts for the
 shadowing of recursive parameter variables, in the event a nested boxed record declaration's recursive
 parameter shadows the parent record's parameter. These new recursive parameters are also distinguished from
 regular type variables, and the reorganiser will not count them as type variables.
 
-Functions that call themselves successfully typecheck as their type signature provides enough information
+Functions that call themselves also successfully typecheck as their type signature provides enough information
 to check the argument passed to the function, so basic recursion typechecks as expected.
 
 \section{Preservation of Uniqueness}
@@ -161,8 +161,8 @@ we prevent our uniqueness guarantees from being broken.
 \section{Progress on Type Checking}
 \label{sec:typecheckingprogress}
 
-During the typechecking phase, originally we planned to implement two primitives into Minigent to allow manipulation
-recursive structures; the rules \textsf{roll} and \textsf{unroll} (defined in \autoref{def:rollunroll}),
+During the typechecking phase, we originally planned to implement two primitives into Minigent to allow manipulation
+recursive structures: the rules \textsf{roll} and \textsf{unroll} (defined in \autoref{def:rollunroll}),
 to insert into and take from recursive structres respectively. We have now researched a way to allow
 for this manipulation without the need for \textsf{roll} and \textsf{unroll}, by using the existing primitives
 in Minigent and Cogent.
@@ -173,7 +173,7 @@ layer of recursion to the object. In a list, this would correspond to expanding 
 that is nested in the list to make the list one layer deeper on the type level, as in \autoref{fig:rollexample}.
 
 \textsf{unroll} works the opposite way, by removing a layer of recursion from the object. In our
-list example, this corresponds to collapsing one layer of our nested list occurence into the
+list example, this corresponds to collapsing one layer of our nested list occurrence into the
 recursive parameter, as in \autoref{fig:unrollexample}. 
 
 \begin{figure}
@@ -221,9 +221,9 @@ recursive parameter, as in \autoref{fig:unrollexample}.
 \end{figure}
 
 Normally we would need to implement these as primitives and then later use type inference so that
-the programmer would not need to explicitly roll or unroll a structure However,
+the programmer would not need to explicitly roll or unroll a structure. However,
 in Minigent and in Cogent we may bypass adding these new primitives alltogether by using the primitives
-that already exist in the language. Minigent's \textsf{take} and \textsf{put} are primitives to
+that already exist in the language. Minigent's \textsf{take} and \textsf{put} are primitives which
 operate on boxed records which our recursive types inhabit, so we may facilitate the behaviour
 of roll and unroll by adding it into take and put when we perform operations on a recursive record.
 
@@ -301,7 +301,7 @@ The difference here between the implicit \textsf{take} roll and the automatic \t
 A suite of tests has been added to the existing Minigent test suite in order to test the new extension's 
 expected behaviour.
 
-The tests aim to test the intended functionality of our recursive types, including constructing and manipulating
+The tests aim to check the intended functionality of our recursive types, including constructing and manipulating
 recursive data structures (such as lists), as well as recursive functions that do not use our recursive types 
 (such as functions recursing on U32 integers, etc.).
 
@@ -310,24 +310,25 @@ of an external allocation function.
 
 \begin{figure}
     \centering
-    \includegraphics[width=\linewidth]{content/test1.png}
-    \caption{Testing the construction of an empty list \todo{Replace images with LaTeX'd code?}}
+    \lstinputlisting[language=Haskell,basicstyle=\small]{content/createEmptyList.minigent}
+    \caption{A Minigent program testing the construction of an empty list}
     \label{fig:test1}
 \end{figure}
 
-These tests also test the intended effects of our new types, such as the strict positivity guarantee they provide
-and their interaction with the existing type system. Whilst the existing tests test the backwards compatability of
+These tests also check the intended effects of our new types, such as the strict positivity guarantee they provide
+and their interaction with the existing type system. Whilst the existing tests check the backwards compatability of
 record types, our new tests check that no recursive parameters are used non-strictly positive, that shadowing of recursive
 parameters behaves as intended, and that recursive parameters are seperate from quantified type variables.
 
-\autoref{fig:test2} shows a function with a non-strictly positive occurence of a recursive parameter nested in 
-a negative position as the return type of a a function that is an argument. This program is rejected by the reorganiser
+\autoref{fig:test2} shows a function with a non-strictly positive occurrence of a recursive parameter, which is nested in 
+a negative position of the return type of a function that is an argument, in field $b$ of the \textbf{Right} constructor.
+This program is rejected by the reorganiser
 as shown in \autoref{fig:test2result}, which shows the recursive parameter $t$ that occurrs non-strictly positive.
 
 \begin{figure}
     \centering
-    \includegraphics[width=0.8\linewidth]{content/test2.png}
-    \caption{A non-strictly positive function}
+    \lstinputlisting[language=Haskell,basicstyle=\small]{content/negativePosition.minigent}
+    \caption{A non-strictly positive Minigent program}
     \label{fig:test2}
 \end{figure}
 
@@ -345,8 +346,8 @@ This project allows for multiple potential extensions after the initial core dev
 Some potential extensions if time allows are:
 
 \begin{itemize}
-    \item Adding a check that functions are primitive recursive within minigent, introduce a new keyword
-          to require that a function is primitive recursive in minigent (i.e. the same as
+    \item Adding a check that functions are primitive recursive within Minigent, introduce a new keyword
+          to require that a function is primitive recursive in Minigent (i.e. the same as
           Isabelle's \textbf{primrec}).
     \item Write a small standard library of recursive data types, e.g. lists, binary trees, 
           sets.
