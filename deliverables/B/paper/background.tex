@@ -150,14 +150,14 @@ The official Isabelle tutorial~\citep{IsabelleTutorial} describes three methods 
 the keywords \textbf{primrec}, \textbf{fun} and \textbf{function}. The first, \textbf{primrec},
 allows one to create a \textit{primitive recursive} function --- one that returns a constant or removes
 a data type constructor from one of the arguments to the function in its body, `decreasing' in size every time.
+These primitive recursive functions are total by construction and therefore always terminate, removing the need for
 an explicit termination proof. This is required to reason inductively about any Isabelle function,
-These functions are total by construction and therefore always terminate, removing the need for
 unless they are defined to be partial, however as partial functions may not terminate we do not want
 to consider them using them for our verification. Primitive recursive functions however are limited
-in their expressiveness and are a subset of all computable functions, so we cannot rely on them for the general case.
+in their expressiveness and are a subset of computable functions, so we cannot rely on them for the general case.
 
-In his tutorial, Krauss~\citep{KraussIsabelle} discusses the details of the latter two of the three methods
-of creating functions in Isabelle. The \textbf{fun} keyword instructs Isabelle to try and solve all necessary
+In his tutorial, Krauss~\citep{KraussIsabelle} discusses the details of creating functions using the \textbf{fun}
+and \textbf{function} keywords in Isabelle. The \textbf{fun} keyword instructs Isabelle to try and solve all necessary
 termination proof obligations, rejecting the definition if it fails (either because the definition does not 
 terminate or because Isabelle cannot prove it). In contrast to \textbf{fun}, \textbf{function}
 requires that the termination proofs be provided manually by whoever is writing the function.
@@ -170,14 +170,14 @@ requires that the termination proofs be provided manually by whoever is writing 
 %You have to prove termination separately, but you can reason about the program assuming termination (assume that there exists a large enough clock that the program will return a valid value).}
 
 Due to their automatic termination proofs, we would like as many Cogent functions as possible to be
-primitive. For all others, we can achieve an embedding via \textbf{fun} to see if Isabelle can find
-a termination proof for us and as a last resort use \textbf{function} and have the proof writer
+primitive. For all others, we can achieve an embedding via \textbf{fun} in the hope that Isabelle can find
+a termination proof. As a last resort we use \textbf{function} and have the proof engineer 
 manually give a proof of termination. 
 
 \subsection{Strictly Positive Types}
 
 Adding recursive types to a type system allows for expressions that are potentially infinitely recursive,
-as discussed by \citet{RecursiveTypesForFree}, who explains the potential for recursive expressions
+as discussed by \citet{RecursiveTypesForFree}. Wadler explains the potential for recursive expressions
 to cause non-termination through polymorphic lambda calculus. In his paper, he discusses how this
 quality can be qualified with positive and negative data types.
 
@@ -207,12 +207,12 @@ $\tau_{i1}..\tau_{ik}$:
 
 \theoremstyle{definition}
 \begin{definition}
-    A data type $T$ is a \textit{positive} data type if it? only appears nested in a positive position
+    A data type $T$ is a \textit{positive} data type if it only appears nested in a positive position
     in all of its constructors.
 \end{definition}
 
-In simpler terms, if $T$ appears to the left of a function arrow an odd amount of times, it is negative and if
-to the left an even amount of times then it is positive.
+In simpler terms, if $T$ appears to the left of a function arrow an odd number of times, it is negative,
+and if it appears to the left an even amount of times then it is positive.
 
 For example:
 
@@ -223,14 +223,13 @@ For example:
     \end{tabular} 
 \end{center}
 
-Here, the data type $E$ is negative as it appears in a negative position (denoted here by an underline)
+The data type $E$ is negative as it appears in a negative position (denoted here by an underline)
 to a function in the first argument of $C$.
-$K$ however is positive as it appears only ever in a positive position as it is nested as an argument
+$K$ is positive as it only every appears in a positive position as it is nested as an argument
 in function 1 ($\rightarrow_1$) and again in function 2 ($\rightarrow_2$) for a total of two times.
 
 Allowing for negative types in our system allows for data structures that are infinitely recursive,
-which if iterated over would potentially cause non-termination. Consider
-the following example in \textsc{Haskell}:
+which if iterated over may cause non-termination. Consider the following example in \textsc{Haskell}:
 
 \begin{center}
     \begin{tabular}{l}
@@ -243,7 +242,7 @@ the following example in \textsc{Haskell}:
     \end{tabular} 
 \end{center}
 
-By our definition, we can see that our type \textit{Bad} is a \textit{negative} type and using it we were able
+By definition, we can see that the type \textit{Bad} is a \textit{negative} type and using it we were able
 to construct the infinitely recursive expression, \textsf{g (A g)}
 This is not an issue in Haskell due to its lazy evaluation and  Haskell's permissiveness of general unbounded recursion,
 however in Cogent these expressions would be detrimental to our termination

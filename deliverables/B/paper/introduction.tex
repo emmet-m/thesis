@@ -35,14 +35,14 @@ in contrast to many existing functional languages, which operate
 In addition to the benefits of uniqueness types, Cogent presents a C foreign function interface (FFI) allowing existing C programs
  to interact with Cogent code, without forcing teams to abandon a project already written in C and already verified.
 
-However, Cogent currently has no support for recursion or iteration.
+However, Cogent has no support for recursion or iteration.
 Currently, any data type that can be iterated over and its iterators have to be defined externally in C
   and included in the Cogent program via Cogent's C FFI.
-Proving totality about existing code is a guarantee that a system will not hang,
-  or deny services to other systems, which is a great benefit.
+Proving totality of code is necessary to ensure desired properties, for instance that a system will not hang
+  or deny services to other systems.
 The cost of reasoning about a particular program's termination is exacerbated, however, by the overhead of
  handwritten C code, due to iteration being an external construct to the language.
-This forces the the use of low level C code in the verification process, which Cogent strives to avoid.
+This forces the the use of low level C code in the verification process, which programmers should strive to avoid.
 
 This thesis aims to introduce recursive types to Cogent's type system, allowing internal iteration over
   internal data structures without the involvement of handwritten C code.
