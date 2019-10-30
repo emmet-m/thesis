@@ -58,7 +58,12 @@ within Cogent, termination and recursive types and linear and uniqueness types.
               &|\; \textbf{put } e_1.f = e_2 & \text{(record updates)} \\
               &|\; e_1.f & \text{(read record field)} \\
         \text{types}\quad \tau\;
-            ::&= \dots\; |\; \{ \overline{f_i^n\; \tau_i} \} & \text{(variant types)} \\
+            ::&= \dots\; |\; \{ \overline{f_i^n\; \tau_i} \}\; s & \text{(record types)} \\
+        \text{sigils}\quad s\;
+            ::&= \text{\textcircled{w}} & \text{(writable)} \\
+            &|\quad\, \text{\textcircled{r}} & \text{(readable)}\\
+            &|\quad\, \text{\textcircled{u}} & \text{(unboxed)}\\
+            &|\quad\; \alpha & \text{(unkown)}\\
         \text{field names } f
     \end{align*}
     \caption{The syntax for record types within Cogent~\citep{ICFPCogent}. An $\overline{\text{overline}}$ indicates a set of 1 or more options}
