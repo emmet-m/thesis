@@ -1,0 +1,14 @@
+\chapter*{Abstract}\label{abstract}
+
+Cogent is a functional programming language with uniqueness types written in Haskell for writing trustworthy and efficient systems code.
+It has a certifying compiler that produces C code, a shallow embedding in the Isabelle/HOL theorem prover,
+and an Isabelle/HOL proof that the C code refines the shallow embedding.
+Cogent's uniqueness type system ensures desired properties such as memory-safety and it also allows the compiler to generate efficient C code.
+
+Cogent currently has no support for recursion; instead it has a foreign function interface (FFI) to C.
+Datatypes, as well as iterators over these types, are implemented in C and called by Cogent code using the FFI.
+
+The main task of this project is to add a restricted form of recursion to Cogent while keeping the language total.
+These recursive types would enable defining more datatypes as well as iterators over these datatypes directly in Cogent rather than resorting to C.
+This would enable programmers to write more programs in Cogent without using external C, thus easing the verification effort
+by allowing more use of Cogent's shallow embedding.
