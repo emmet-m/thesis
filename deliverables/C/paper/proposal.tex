@@ -47,7 +47,7 @@ Where:
     \begin{align*}
         \text{types } \tau
             ::&= \dots\; |\; \mu\; \{ \overline{f_i^n\; \tau_i} \} \\
-        \text{recursive parameters }\mu ::&= \textbf{mu}\; a\; |\; \epsilon
+        \text{recursive parameters }\mu ::&= \textbf{mu}\; t\; |\; \epsilon
     \end{align*}
     \caption{Extending our record syntax with recursive parameters}
     \label{fig:mu}
@@ -259,20 +259,20 @@ when we attempt a \textsf{put} to a recursive boxed record, like so:
 
 \begin{align*}
     \infer{
-        A;\Gamma \vdash \textsf{put } e_1.f_k  = e_2 : \; \mu \; \{ \overline{f_i : \tau_i}, f_k^\circ : \tau_k[\sfrac{ \mu \{\overline{f_i : \tau_i} \}}{t}] \} s
+        A;\Gamma \vdash \textsf{put } e_1.f_k  = e_2 : \; \mu \; \{ \overline{f_i : \tau_i}, f_k^\circ : \tau_k \} s
     }{
         \begin{array}{c@{}c@{}c@{}c@{}c@{}}
             A \vdash \Gamma \rightsquigarrow \Gamma_1 \boxplus \Gamma_2 \hspace{2em}
             &
             A;\Gamma \vdash e2 : \tau_k \hspace{2em}
             &
-            s \neq \text{\textcircled{r}}   \vspace{0.25em} \\
+            s \neq \text{\textcircled{r}}   \vspace{0.2em} \\
             &
-            \hspace{-5em}s = \text{\textcircled{u}} \implies \mu = \epsilon \\
+            \hspace{-5em} \mu \textit{ s } \textbf{UnboxedNotRecursive} \\
             &
             \hspace{-5em}A;\Gamma_1 \vdash e_1\; : \mu\; \{ \overline{f_i : \tau_i}, f_k^\bullet : \tau_k \}\; s 
         \end{array}
-    }
+    } \\ \\
 \end{align*}
 \todo{Insert the general $\mu$ here, use roll, add UnboxedNoRecurse constraint}
 
@@ -293,17 +293,19 @@ Likewise for when we \textsf{take} from a recursive boxed record,
 we automatically unroll like so:
 \begin{align*}
     \infer{
-        A;\Gamma \vdash \textsf{take } r \{ f_k = y \} = e1 \textbf{ in } e_2 : \tau
+        A;\Gamma \vdash \textsf{take } r \{ f_k = y \} = e1 \textsf{ in } e_2 : \tau
     }{
         \begin{array}{c@{}c@{}c@{}c@{}}
-            A \vdash \Gamma \rightsquigarrow \Gamma_1 \boxplus \Gamma_2 
+            A \vdash \Gamma \rightsquigarrow \Gamma_1 \boxplus \Gamma_2 \hspace{2em}
             &
-            A;\Gamma_1 \vdash e_1\; : \textbf{mu } t\; \{ \overline{f_i : \tau_i}, f_k^\circ : \tau_k \}\; s 
+            A;\Gamma_1 \vdash e_1\; : \mu\; \{ \overline{f_i : \tau_i}, f_k^\circ : \tau_k \}\; s \hspace{2em}
             &
-            s \neq \text{\textcircled{r}}   \vspace{0.25em} \\
+            s \neq \text{\textcircled{r}}   \vspace{0.2em} \\
             &
-            \hspace{-5em}A; r : \textbf{mu } t \{ \overline{f_i : \tau_i}, f_k^\bullet : \tau_k \}\; s
-            ,\; y : \tau_k[\sfrac{ \textbf{mu } t\; \{\overline{f_i : \tau_i} \}}{t}], \Gamma_2 \vdash e_2 : \tau
+            \hspace{-5em} \mu \textit{ s } \textbf{UnboxedNotRecursive} \\
+            &
+            \hspace{-5em}A; r : \mu\; \{ \overline{f_i : \tau_i}, f_k^\bullet : \tau_k \}\; s
+            ,\; y : \tau_k, \Gamma_2 \vdash e_2 : \tau
         \end{array}
     }
 \end{align*}
@@ -328,6 +330,24 @@ The difference here between the implicit \textsf{take} roll and the automatic \t
 
 \subsection{Constraint Generation}
 
+\begin{figure}
+    \centering
+    $$
+        \infer{
+            \mu \text{ \textcircled{u} } \textbf{UnboxedNotRecursive}
+        }{
+            \mu = \epsilon
+        }
+    $$
+    $$
+        \infer{
+            (\textbf{mu } t) \text{ s } \textbf{UnboxedNotRecursive}
+        }{
+            s \neq \text{\textcircled{u}}
+        }
+    $$
+    \caption{A constraint for checking that recursive parameters are used only with boxed records}
+\end{figure}
 \subsection{Rewriting Rules and Updated Solver}
 
 In addition to our new typing rules, we have added additional rules to the constraint
@@ -338,9 +358,12 @@ recursive parameters are boxed records only.
 
 \begin{figure}
     \centering
-    $$
-        \simp
-    $$
+    \begin{align*}
+       t \subtype \tau && \simp  && \textbf{unroll } t \subtype \tau \\
+       \tau \subtype t && \simp  && \tau \subtype \textbf{unroll } t \\
+       t \typeeq \tau  && \simp  && \textbf{unroll } t \typeeq \tau \\
+       \tau \typeeq t  && \simp  && \tau \typeeq \textbf{unroll } t \\
+    \end{align*}
     \todo{finish this}
     \caption{The new simplification rules}
     \label{fig:simprules}
