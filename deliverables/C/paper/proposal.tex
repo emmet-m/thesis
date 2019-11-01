@@ -24,10 +24,10 @@ been added to test the newly added recursive types.
 We have extended our record grammar with an optional recursive parameter \textbf{mu} as in \autoref{fig:mu} to add 
 recursive type parameters to Cogent's boxed records.
 
-Using these recursive boxed records, we can construct a recursive type by combining them with variant types like so:
+Using these recursive boxed records, we can construct a recursive type by combining them with variant types like so: \\
 
 \begin{center}
-    \textbf{type} Recursive = \textbf{mu} $t$ \{ \textit{field}: $\langle \overline{\kappa^n\; \tau} \rangle$ \}
+    \textbf{type} Recursive = \textbf{mu} $t$ \{ \textit{field}: $\langle \text{A } t\; |\; \text{B } \textsc{U8} \rangle$ \}
 \end{center}
 
 Where:
