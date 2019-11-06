@@ -14,3 +14,6 @@ Liams_thesis.pdf
 *.dvi
 *.bcf
 *.run.xml
+bin/
+scratch.pdf
+scratch.synctex.gz
