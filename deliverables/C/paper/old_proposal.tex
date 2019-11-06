@@ -1,272 +1,34 @@
 \chapter{Completed Work}\label{ch:style}
 
 Considering our investigation, we have expanded upon the existing Cogent infrastructure keeping in mind
-three major requirements: the ability for programmers to create recursive, iterable data structures via
-recursive types, the necessity for our programs to be easily proven \textit{total},
+two major requirements: the necessity for our programs to be easily provably \textit{total},
 and the preservation of the benefits guaranteed by Congent's uniqueness types system.
 
 Our proposed design has been implemented in \textit{Minigent}, a stripped down version of Cogent that
-features only the type checking component of Cogent in order to focus on integrating smoothly with the 
-existing project. This also allows us to focus on the design of our recursive types without having to change
-the C code generation and Isabelle embedding of Cogent.
+features only the parsing, type checking and type inference components of Cogent in order to
+focus on integrating smoothly with the existing project, allowing us to focus on the design
+of our recursive types without having to change the C code generation and Isabelle embedding of Cogent.
+As the compilation of an Isabelle embedding and C code is out of scope for this project,
+using Minigent will not hinder the potential of this project.
 
-Work has been completed to incorporate our proposed design into the parsing, lexing, reorganising and 
-typechecking compiler phases of Minigent, with a rough design of a potential termination checking extension.
-In addition to the existing suite of tests in the Minigent typechecker, additional tests have 
+Work has been completed to incorporate our proposed design into the parser, lexer and reorganiser compiler phases of
+Minigent, and work has begun work on updating the type checking phase.
+In addition to the existing suite of tests in the Minigent compiler, additional tests have 
 been added to test the newly added recursive types.
 
-\todo{Address the below addresses the above `three major requirements'}
-
-\section{Grammar and Syntax}
-
-\begin{figure}
-    \centering
-    \begin{align*}
-        \text{types } \tau
-            ::= \dots\; &|\; \mu\; \{ \overline{f_i^n\; \tau_i} \} \\
-                        &|\; t_r \\
-        \text{recursive parameters }\mu ::&= \textbf{mu}\; t\; |\; \epsilon
-    \end{align*}
-    \caption{Extending our record syntax with recursive parameters}
-    \vspace{2em}
-    \label{fig:mu}
-\end{figure}
-
-\begin{figure}
-    \centering
-    \begin{center}
-        \textbf{type} List = \textbf{mu} $t$ \{ \textit{l}: $\langle\; \text{Cons } (t,\textsc{U32})\; |\; \text{Nil } ()\; \rangle$ \}
-    \end{center}
-    \caption{Extending our record syntax with recursive parameters}
-    \label{fig:muexample}
-\end{figure}
-
-We have extended the existing record grammar with an optional recursive parameter \textbf{mu} as in
-\autoref{fig:mu} to add recursive type parameters to Cogent's boxed records, and enabled the use
-of recursive parameter variables in the language.
-
-Boxed records now feature an optional recursive type variable bound by the \textbf{mu} keyword, which may
-feature in a record type in which they are bound. This also our new record syntax to be backwards
-compatible with the previous record syntax, enabling existing Cogent programs to remain unchanged.
-
-\autoref{fig:muexample} demostrates the use of our new grammar to construct an integer list datatype,
-with the use of a variant type in a recursive record field \textit{l} that is either Nil,
-the end of the list, or Cons, the current integer and the rest of the list.
-
-\todo{more examples here? Maybe at the end of this chapter?}
-
-\section{Strictly Positive Types}
-
-\begin{figure}
-    \centering
-    \begin{gather*}
-    \infer[\textsc{sp-rec}]{
-        \mathcal{S}; \mathcal{B} \vdash \textbf{mu}\; t\; \{\overline { f_i : \tau_i } \} \textbf{ SP}
-    }{
-        \forall \tau_i.\; \mathcal{S}\setminus\{t\}, \mathcal{B} \cup \{t\} \vdash \tau_i \textbf{ SP}
-    }
-    \hspace{3em}
-    \infer[\textsc{sp-var}]{
-        \mathcal{S}; \mathcal{B} \vdash \langle\overline{\kappa_i : \tau_i}\rangle \textbf{ SP}
-    }{
-        \forall \tau_i.\; \mathcal{S}; \mathcal{B} \vdash \tau_i \textbf{ SP}
-    } \\[10pt]
-    \infer[\textsc{sp-func}]{
-        \mathcal{S}; \mathcal{B} \vdash \tau_1 \rightarrow \tau_2 \textbf{ SP}
-    }{
-        \mathcal{S} \cup \mathcal{B}; \mathcal{B} \vdash \tau_1 \textbf{ SP}
-        &
-        \mathcal{S}; \mathcal{B} \vdash \tau_2 \textbf{ SP}
-    } \\
-    \infer[\textsc{sp-rvar}]{
-        \mathcal{S}; \mathcal{B} \vdash t_r \textbf{ SP}
-    }{
-        t_r \notin \mathcal{S}
-    }
-    \hspace{2em}
-    \infer[\textsc{sp-prim}]{
-        \mathcal{S}; \mathcal{B} \vdash \mathcal{T} \textbf{ SP}
-    }{}
-    \hspace{2em}
-    \infer[\textsc{sp-tvar}]{
-        \mathcal{S}; \mathcal{B} \vdash a \textbf{ SP}
-    }{}
-    \end{gather*}
-    \caption{The rules for checking that Cogent types are strictly positive}
-    \label{fig:strictlypositivecheck}
-\end{figure}
-
-Checking that all types occur only strictly positive has been implemented in the reorganisation phase of the compiler
-instead of during type checking. This allows for a simple one-pass algorithm to analyse all the types in the program
-at once, and a simpler contraint generation and solving phases.
-
-\autoref{fig:strictlypositivecheck} describes the strictly positive check over Cogent's types.
-This algorithm keeps track of a set of in scope bound recursive parameters $\mathcal{B}$ and a set of recursive
-parameters currently in a non-strictly positive position $\mathcal{S}$.
-
-Rule \textsc{sp-rec} describes checking a record bound with a recursive parameter $t$, where parameter 
-is added to the bound set $\mathcal{B}$, and removed from the non-strictly positive set $\mathcal{S}$
-(as these variables can shadow previous variables).
-
-Rule \textsc{sp-func} describes checking a function type, where checking the argument position $\tau_1$ adds
-all currently bound ($\mathcal{B}$) parameters to the non-strictly positive set ($\mathcal{S}$), and then
-checking the result position $\tau_2$.
-
-Rule \textsc{sp-rvar} describes checking a recursive parameter variable $t_r$, requiring that it is not currently
-in a non-strictly positive position (i.e. not in the $\mathcal{S}$ set). 
-
-\textsc{sp-var} merely descends on the types nested within a variant,
-\textsc{sp-prim} allows for primitive types ($\mathcal{T}$) and
-\textsc{sp-tvar} allows for type variables ($a$).
-
-Once strictly positive typing is checked, the reorganiser will embed all used recursive parameter variables
-with a reference to the recursive boxed record that they were bound to, which is used during the constraint
-solving phase.
-
-\section{Typing and Constraint Generation Rules}
-
-% Unboxed Not Recursive check
-\begin{figure}
-    \centering
-    $$
-        \infer{
-            \mu \text{ \textcircled{u} } \textbf{UnboxedNotRecursive}
-        }{
-            \mu = \epsilon
-        }
-    $$
-    $$
-        \infer{
-            (\textbf{mu } t) \text{ s } \textbf{UnboxedNotRecursive}
-        }{
-            s \neq \text{\textcircled{u}}
-        }
-    $$
-    \caption{A constraint checking that recursive parameters are used only with boxed records}
-    \label{fig:unboxednotrecursive}
-\end{figure}
-
-% PUT typing rule
-\begin{figure}
-    \centering
-    \begin{align*}
-        \infer[\textsc{\footnotesize{Put}}]{
-            A;\Gamma \vdash \textsf{put } e_1.f_k  = e_2 : \; \mu \; \{ \overline{f_i^u : \tau_i}, f_k^\circ : \tau_k \} s
-        }{
-            \begin{array}{c}
-                A;\Gamma \vdash e2 : \tau_k
-                \hspace{2em}
-                A \vdash \Gamma \rightsquigarrow \Gamma_1 \boxplus \Gamma_2
-                \hspace{2em}
-                s \neq \text{\textcircled{r}}
-                \vspace{0.5em} \\
-                A;\Gamma_1 \vdash e_1\; : \mu\; \{ \overline{f_i^u : \tau_i}, f_k^\bullet : \tau_k \}\; s
-                \vspace{0.5em} \\
-                \mu \textit{ s } \textbf{UnboxedNotRecursive}
-            \end{array}
-        }
-    \end{align*}
-    
-    \caption{The updated typing rule for \textsc{put}}
-    \label{fig:puttypingrule}
-\end{figure}
-
-% TAKE typing rule
-\begin{figure}
-    \centering
-    \begin{align*}
-        \infer[\textsc{\footnotesize{Take}}]{
-            A;\Gamma \vdash \textsf{take } r \{ f_k = y \} = e1 \textsf{ in } e_2 : \tau
-        }{
-            \begin{array}{c}
-                A \vdash \Gamma \rightsquigarrow \Gamma_1 \boxplus \Gamma_2
-                \hspace{3em}
-                A;\Gamma_1 \vdash e_1\; : \mu\; \{ \overline{f_i^u : \tau_i}, f_k^\circ : \tau_k \}\; s
-                \vspace{0.5em} \\
-                \mu \textit{ s } \textbf{UnboxedNotRecursive}
-                \hspace{3em}
-                s \neq \text{\textcircled{r}}
-                \vspace{0.5em} \\
-                A; r : \mu\; \{ \overline{f_i^u : \tau_i}, f_k^\bullet : \tau_k \}\; s
-                ,\; y : \tau_k,\; \Gamma_2 \vdash e_2 : \tau
-            \end{array}
-        }
-    \end{align*}
-    
-    \caption{The updated typing rule for \textsc{take}}
-    \label{fig:taketypingrule}
-\end{figure}
-
-% MEMBER typing rule
-\begin{figure}
-    \centering
-    \[
-        \infer[\textsc{\footnotesize{Member}}]{
-            A;\Gamma \vdash e.f_k : \tau
-        }{
-            A;\Gamma \vdash e : \mu\; \{ \overline{f_i^\bullet : \tau_i}, f_k^\circ : \tau_k \}\; s
-            &\hspace{1em}
-            \mu \textit{ s } \textbf{UnboxedNotRecursive}
-        }
-    \]
-    
-    \caption{The updated typing rule for \textsc{Member}}
-    \label{fig:membertypingrule}
-\end{figure}
-
-
-Our typing rules and Constraint generation rules have only been changed only to check one extra
-constraint on records - that recursive parameters are only used on boxed records. The check for this
-new constraint is outlined in \autoref{fig:unboxednotrecursive}
-
-We modify the original \textsc{Take}, \textsc{Put} and \textsc{Member} typing rules defined by
-\citet{LiamThesis} to include this constraint as in \autoref{fig:puttypingrule},
-\autoref{fig:taketypingrule} and \autoref{fig:membertypingrule}.
-
-\todo{Add constraint generation rules here}
-
-\section{Constraint Solver Rules}
-
-\begin{figure}
-    \centering
-    \begin{align}
-       t_r  &\subtype \tau  & \simp  && \textbf{unroll } t_r  &\subtype  \tau \\
-       \tau &\subtype t_r   & \simp  && \tau                  &\subtype  \textbf{unroll } t_r \\
-       t_r  &\typeeq  \tau  & \simp  && \textbf{unroll } t_r  &\typeeq   \tau \\
-       \tau &\typeeq  t_r   & \simp  && \tau                  &\typeeq   \textbf{unroll } t_r \\
-       t_r  &\typeeq  k_r   & \simp  && \textbf{unroll } t_r  &=         \textbf{unroll } k_r \\
-       t_r  &\subtype k_r   & \simp  && \textbf{unroll } t_r  &=         \textbf{unroll } k_r
-    \end{align}
-    \todo{The numbering of rules is kind of ugly here. Another way to do it?}
-    \caption{The new simplification rules}
-    \label{fig:simprules}
-\end{figure}
-
-To reason about our new recursive parameters, we add extra rules to the constraint solver.
-
-\todo{define unroll}
-
-\todo{Talk about simp rules, add unify rules, and all other changes}
-
-\section{Example Usage and Testing}
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\pagebreak
-\pagebreak
-
-{\Huge\todo{Everything below this line is old. Replace}}
-
+%%%%%%%%%%
 \section{Structure And Syntax}
 
 \subsection{Design}
 
+We have extended our record grammar with an optional recursive parameter \textbf{mu} as in \autoref{fig:mu} to add 
+recursive type parameters to Cogent's boxed records.
+
+Using these recursive boxed records, we can construct a recursive type by combining them with variant types like so: \\
+
+\begin{center}
+    \textbf{type} Recursive = \textbf{mu} $t$ \{ \textit{field}: $\langle \text{A } t\; |\; \text{B } \textsc{U8} \rangle$ \}
+\end{center}
 
 Where:
 \begin{itemize}
@@ -279,6 +41,17 @@ Where:
         $\langle \overline{\kappa^n\; \tau} \rangle$ is a variant type with $n$ constructors, 
         with $\kappa^i$ meaning constructor $i$ in the series that takes one argument of type $\tau$
 \end{itemize}
+
+\begin{figure}
+    \centering
+    \begin{align*}
+        \text{types } \tau
+            ::&= \dots\; |\; \mu\; \{ \overline{f_i^n\; \tau_i} \} \\
+        \text{recursive parameters }\mu ::&= \textbf{mu}\; t\; |\; \epsilon
+    \end{align*}
+    \caption{Extending our record syntax with recursive parameters}
+    \label{fig:mu}
+\end{figure}
 
 Our decision to use Cogent's existing records to house recursive types comes from the fact that they are boxed ---
 Cogent's verification framework does not allow for dynamic stack allocation, thereby prohibiting
@@ -355,6 +128,30 @@ about these types directly.
 
 Given our definition, we can check the strict positivity of a recursive type as in 
 \autoref{fig:strictlypositivecheck}
+
+\begin{figure}
+    \centering
+    $$
+    \infer{
+        \Gamma \vdash \textbf{mu } t\; \{\; f: \langle \overline{\kappa^n\; \tau} \rangle\; \}
+    }{
+    \forall \tau.\; \Gamma \vdash (\tau \sqsubseteq \phi \rightarrow \psi) \implies t \notin \phi
+    }
+    $$
+    \todo{Get suggestions on formatting this}
+    Where:
+    \begin{itemize}
+        \item 
+            $\tau \sqsubseteq \phi \rightarrow \psi$ is the subtyping relation that $\tau$ 
+            is a subtype of $\phi \rightarrow \psi$ 
+            (i.e. $\tau$ has the `shape' of a function, from type $\phi$ to $\psi$) 
+        \item
+            $t \notin \phi$ is the constraint that the recursive parameter $t$ 
+            does not exist anywhere in the type $\phi$.
+    \end{itemize}
+    \caption{A strict positivity check for a recursive type}
+    \label{fig:strictlypositivecheck}
+\end{figure}
 
 
 \subsection{Implementation In Reorganiser}
@@ -532,6 +329,25 @@ The difference here between the implicit \textsf{take} roll and the automatic \t
 \todo{Update rules to include UnboxedNoRecurse}
 
 \subsection{Constraint Generation}
+
+\begin{figure}
+    \centering
+    $$
+        \infer{
+            \mu \text{ \textcircled{u} } \textbf{UnboxedNotRecursive}
+        }{
+            \mu = \epsilon
+        }
+    $$
+    $$
+        \infer{
+            (\textbf{mu } t) \text{ s } \textbf{UnboxedNotRecursive}
+        }{
+            s \neq \text{\textcircled{u}}
+        }
+    $$
+    \caption{A constraint for checking that recursive parameters are used only with boxed records}
+\end{figure}
 \subsection{Rewriting Rules and Updated Solver}
 
 In addition to our new typing rules, we have added additional rules to the constraint
