@@ -7,15 +7,14 @@ within Cogent, termination and recursive types and linear and uniqueness types.
 %%% Basic syntax
 \begin{figure}
     \centering
-    %\includegraphics[width=350pt]{content/CogentGrammar.png}
 
     \begin{align*}
     \text{expressions}\quad e\; ::&= x\;\; |\;\; \ell & \text{(variables or literals)} \\
                 &|\; e_1 \text{ \textasteriskcentered }\; e_2 & \text{(primitive operations)} \\
                 &|\; e_1\; e_2 & \text{(function application)} \\
                 &|\; f\textbf{[}\harpoon{\tau_i}\textbf{]} & \text{(type application)} \\
-                &|\; \textbf{let } x = e_1 \textbf{ in } e_2 & \text{(let statements)} \\
-                &|\; \textbf{if } e_1\; \textbf{ then } e_2 \textbf{ else } e_3 & \text{(conditional)} \\
+                &|\; \textsf{let } x = e_1 \textsf{ in } e_2 & \text{(let statements)} \\
+                &|\; \textsf{if}\; e_1\; \textsf{then}\; e_2 \textsf{ else } e_3 & \text{(conditional)} \\
                 &|\; e :: \tau & \text{(type signatures)} \\
                 &|\; \dots \\
         \text{types}\quad \tau\; ::&= a & \text{(type variables)} \\
@@ -38,7 +37,10 @@ within Cogent, termination and recursive types and linear and uniqueness types.
     \begin{align*}
         \text{expressions}\quad e\; 
             ::&= \dots\; |\; \kappa\; e & \text{(variant constructor)} \\
-              &|\; \textbf{case } e_1 \textbf{ of } \kappa\; e_2\; \dots & \text{(pattern matching)} \\
+              &|\; \textsf{case } e_1 \textsf{ of } x.\; \kappa\; e_2\;
+                   \textsf{else}\; y.\; e_3 \; & \text{(pattern matching)} \\
+              &|\; \textsf{case } e_1 \textsf{ of } x.\; \kappa\; 
+                   & \text{(irrefutable match)} \\
         \text{types}\quad \tau\;
             ::&= \dots\; |\; \langle \overline{\kappa^n\; \tau} \rangle & \text{(variant types)} \\
         \text{constructors}\quad \kappa
@@ -54,8 +56,8 @@ within Cogent, termination and recursive types and linear and uniqueness types.
     \begin{align*}
         \text{expressions}\quad e\; 
             ::&= \dots\; |\; \#\{\overline{f_i = e_i}\} & \text{(unboxed records)} \\
-              &|\; \textbf{take } x\; \{ f = y\} = e_1 \textbf{ in } e_2 & \text{(record patterns)} \\
-              &|\; \textbf{put } e_1.f = e_2 & \text{(record updates)} \\
+              &|\; \textsf{take } x\; \{ f = y\} = e_1 \textsf{ in } e_2 & \text{(record patterns)} \\
+              &|\; \textsf{put } e_1.f = e_2 & \text{(record updates)} \\
               &|\; e_1.f & \text{(read record field)} \\
         \text{types}\quad \tau\;
             ::&= \dots\; |\; \{ \overline{f_i^n\; \tau_i} \}\; s & \text{(record types)} \\
