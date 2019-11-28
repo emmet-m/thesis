@@ -230,7 +230,7 @@ solving phase.
     \centering
     \[
         \infer[\textsc{\footnotesize{CG-Member}}]{
-            G \vdash e.f_k : \tau_k \rightsquigarrow G'\; |\; C_1 \land C_2 \land C_3
+            G \vdash e.f : \tau \rightsquigarrow G'\; |\; C_1 \land C_2 \land C_3
         }{
             \begin{array}{c}
                 \alpha, \beta, \gamma\; \text{fresh}
@@ -289,7 +289,7 @@ solving phase.
     \centering
     \[
         \infer[\textsc{\footnotesize{CG-Put}}]{
-            G_1 \vdash \textsf{put } e_1.f_k = e_2 : \tau_k \rightsquigarrow G_3\; 
+            G_1 \vdash \textsf{put } e_1.f = e_2 : \tau \rightsquigarrow G_3\; 
                 |\; \bigwedge_{k \in 1..5} C_k
         }{
             \begin{array}{c}
@@ -532,8 +532,7 @@ not be as complete as it possibly could, it allows us to use our assertions to p
                 \rightsquigarrow G_3\; |\; E_1\; |\; C_1 \cup C_2
         }{
             \begin{array}{c}
-                \alpha, \beta\; \textsf{fresh}
-                \hspace{1em}
+                \alpha, \beta\; \textsf{fresh} \\[5pt]
                 E_1; \alpha \tlt \beta,\; \beta \teq \textsf{get}(E_1,e_1),\; \alpha \teq \textsf{get}(E_1,e_2),\; 
                     G_1 \vdash e_1 \rightsquigarrow G_2\; |\; E_2\; |\; C_1 \\[5pt]
                 E_1; G_2 \vdash e_2 \rightsquigarrow G_3\; |\; E_3\; |\; C_2
@@ -677,7 +676,9 @@ not be as complete as it possibly could, it allows us to use our assertions to p
         }{
             E_1; G_1 \vdash e \rightsquigarrow G_2\; |\; E_2\; |\; C
         }
-        \hspace{1em}
+    \]
+    \vspace{0.5pt}
+    \[
         \infer[\textsc{\footnotesize T-Struct}]{
             E_1; G_1 \vdash \{\overline{f_i = e_i}\}
                 \rightsquigarrow G_{n+1}\; |\; E_1\; |\; \bigcup_{i = 1}^n C_i
@@ -687,7 +688,7 @@ not be as complete as it possibly could, it allows us to use our assertions to p
         }
     \]
     
-    \caption{Termination assertion generator rules,
+    \caption{Termination assertion generation rules,
              continiued from \autoref{fig:terminationassertiongen}}
     \label{fig:terminationassertiongen2}
 \end{figure}
@@ -837,11 +838,16 @@ away per recursive call, so it does not `skip' a base case.
 
 Finally, while termination checking has been formalised and defined,
 it has not yet been implemented in Minigent or Cogent due to it being
-only an extension to this thesis. Future work requires the adaptation
-of this formalisation to the compiler and to Minigent.
-
+only an extension to this thesis. Future work would require the adaptation
+of this formalisation to the compiler and to Minigent, and then
+generation of an Isabelle/HOL proof of termination from the results
+of the termination checker.
 
 \section{Example Usage and Testing}
 \label{ch:examplesandtesting}
 
 \todo{EXAMPLES, move this section before termination?}
+
+\section{Conclusion}
+
+\todo{this}

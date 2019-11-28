@@ -3,7 +3,7 @@
 Our investigation of existing works will consider three domains: The existing types and features
 within Cogent, termination and recursive types and linear and uniqueness types.
 
-\section{Cogent Currently}
+\section{Cogent}
 %%% Basic syntax
 \begin{figure}
     \centering
@@ -26,7 +26,7 @@ within Cogent, termination and recursive types and linear and uniqueness types.
         \text{literals}\quad \ell\; ::&= \textsc{True } | \textsc{ False } |\; \mathbb{N}  \\
     \end{align*}
 
-    \caption{The basic syntax for Cogent~\citep{ICFPCogent}}
+    \caption{The basic syntax for Cogent~\citep{LiamThesis}}
     \label{fig:cogentGrammar}
 \end{figure}
 
@@ -46,7 +46,7 @@ within Cogent, termination and recursive types and linear and uniqueness types.
         \text{constructors}\quad \kappa
     \end{align*}
 
-    \caption{The syntax for variant types within Cogent~\citep{ICFPCogent}. An $\overline{\text{overline}}$ indicates a set of 1 or more options}
+    \caption{The syntax for variant types within Cogent~\citep{LiamThesis}. An $\overline{\text{overline}}$ indicates a set of 1 or more options}
     \label{fig:variantGrammar}
 \end{figure}
 
@@ -72,10 +72,11 @@ within Cogent, termination and recursive types and linear and uniqueness types.
     \label{fig:recordGrammar}
 \end{figure}
 
-
-
-Cogent's uniqueness type system features a variety of basic types as well as the more advanced variants
-and records.
+\citet{LiamThesis} describes in his master thesis Cogent's uniqueness type
+system, which features typing constructs that facilitate the memory safety
+and totality guarantees that Cogent enjoys, as well as the features of
+Cogent's type checking system which employs constraint generation
+and constraint solving techniques to show type correctness.
 
 \subsection{Primitive Types}
 
@@ -138,9 +139,66 @@ combination of records on the heap. With the aid of variant types, records can a
 our recursive types with a recursive parameter, using variants to give the 
 differing construction cases for the type.
 
+\subsection{Constraint Based Type Inference And Type Checking}
+
+Cogent features a constraint based type checker, which checks the type
+correctness of programs by first generating constraints based on the
+body of each defined function, and then solving those constraints in
+the constraint solver. A constraint can be any requirement on the types
+featuring in a Cogent program, for example type equality ($\tau_1 \typeeq \tau_2$)
+and subtyping ($\tau_1 \subtype \tau_2$).
+
+\begin{figure}
+    \centering
+    \[
+        \infer[\textsc{\footnotesize CG-App}]{
+            G_1 \vdash e_1\; e_2 \rightsquigarrow G_3\; |\; C_1 \land C_2
+        }{
+            G_1 \vdash e_1 : \alpha \rightarrow \tau
+                \rightsquigarrow G_2\; |\; C_1
+            \hspace{1em}
+            G_2 \vdash e_2 : \alpha \rightsquigarrow G_3\; |\; C_2
+        }    
+    \]
+    
+    \caption{The function application constraint generation rule}
+    \label{fig:funcconstraintgen}
+\end{figure}
+
+The the constraint generation component has a defined rule for which constraints
+to generate based on which expression is encountered in the program. For
+example, the function application constraint generation rule in
+\autoref{fig:funcconstraintgen}, which starts with the function application
+expresion $e_1\; e_2$, and generates the constraints that the function
+expression $e_1$ must have type $\alpha \rightarrow \tau$ for some
+$\alpha$ and $\tau$, and that the argument expression $e_2$ must have
+the type of $\alpha$.
+
+The solver component has 5 phases; the \textit{simplifier}, the \textit{normaliser},
+the \textit{join/meet}, the \textit{sink/float} and the \textit{unifier} 
+phases. Each phase contains various rules that rewrite constraints
+and the types that feature in constraints. The solver feeds the set of
+all generated constraints through each phase until one phase rewrites
+one of the given constraints. It then restarts the solver phase until
+all constraints are eliminated or no changes can be made to any constraint,
+which correspond to the program being type correct or type incorrect respectively.
+
+Take for example a type equality constraint between two function types,
+$\tau_1 \rightarrow \tau_2 \typeeq \rho_1 \rightarrow \rho_2$. The simplifier
+phase contains a rule that this constraint can be simplified into solving
+two smaller contraints: 
+
+\[
+    \tau_1 \rightarrow \tau_2 \typeeq \rho_1 \rightarrow \rho_2 
+    \hspace{1em} \simp \hspace{1em}
+    \tau_1 \typeeq \rho_1, \tau_2 \typeeq \rho_2
+\]
+
+
+
 \section{Termination And Recursive Types}
 
-Proving total correctness about the programs we write is a very desirable result.
+Proving total correctness about the programs we write is a very desirable result, as
 Computation performed by a program is useless if the program never returns the
 result of the computation.
 In a systems context, termination is especially desirable as an infinitely looping component of a
@@ -149,7 +207,8 @@ system's function.
 
 To deal with termination, we must consider the environment where we will prove termination for
 Cogent programs --- the Isabelle embedding and how we can make this process easier on the type
-level within Cogent.
+level within Cogent. We then seek a way to facilitate checking the termination of functions
+in Cogent.
 
 \subsection{Proving Termination in Isabelle}
 
@@ -168,13 +227,6 @@ and \textbf{function} keywords in Isabelle. The \textbf{fun} keyword instructs I
 termination proof obligations, rejecting the definition if it fails (either because the definition does not 
 terminate or because Isabelle cannot prove it). In contrast to \textbf{fun}, \textbf{function}
 requires that the termination proofs be provided manually by whoever is writing the function.
-
-% Perhaps another time :(
-%\amos{Worth comparing the `gas' or `clock' approach as well, as used by CakeML (see CakeML: A Verified Implementation of ML, POPL 2014).
-%There, the embedding of the program has an extra parameter which is a natural number describing how much time the program has to compute a result.
-%At each recursive step, the clock is decremented and if it reaches zero the program runs out of time and throws an exception.
-%This lets you embed arbitrary programs as primitive recursion on a nat.
-%You have to prove termination separately, but you can reason about the program assuming termination (assume that there exists a large enough clock that the program will return a valid value).}
 
 Due to their automatic termination proofs, we would like as many Cogent functions as possible to be
 primitive. For all others, we can achieve an embedding via \textbf{fun} in the hope that Isabelle can find
@@ -341,6 +393,126 @@ Considering our Cogent embedding will be within Isabelle, if we can embed our na
 Cogent types into an Isabelle type then we gain Isabelle's automatically generated
 induction principle over our Cogent types, allowing for much 
 simpler reasoning about our Isabelle embedding.
+
+\subsection{Termination Checking}
+
+Many languages feature language based termination checking, a process
+where a langauge compiler has the ability to check if a user-written function
+terminates. For many theorem provers such as Isabelle, 
+termination is a requirement as permitting nonterminating functions
+can introduce logical inconsistencies in the theorem prover.
+
+One technique to identify if a function terminates is to check if it belongs
+to a subclass of functions that are known to terminate. One such subclass
+is \textit{primitive recursive} functions, which take away one constructor
+from a data structure in a recursive call, and gradually approach the
+`bottom' of the data structure, where they terminate.
+
+\citet{AboutPrimrecAlgorithms}, in his paper on primitive recursive algorithms 
+describes an inductive definition of primitive recursive functions:
+
+\theoremstyle{definition}
+\begin{definition}
+    \label{def:primrec}
+    A function is \textit{primitive recursive} if it can be constructed using 
+    a combination of the following combinators:
+
+    \begin{itemize}
+        \item 
+            \textsf{O}, the \textit{null} or \textit{constant} combinator that takes zero arguemnts.
+        \item 
+            \textsf{Succ}, the \textit{successor} combinator that takes one argument, and returns the successor
+            of that argument.
+        \item 
+            \textsf{$\pi^n_i$}, the \textit{projection} combinator that takes $n \geq 1$ arguments and returns
+            the $i$'th argument, where $1 \leq i \leq n$.
+        \item 
+            \textsf{$S^n_m(f, g_1, g_2, \dots, g_n)$}, the \textit{composition} combinator, where $f$ and $g_{1..n}$ are 
+            primitive recursive combinators that take $n$ and $m$ arguments respectfully, such that 
+                $$S^n_m(f, g_1, g_2, \dots, g_n) = f(g_1(x_1, \dots, x_m), \dots, g_n(x_1, \dots, x_m))$$
+        \item 
+            \textsf{$Rec(b,s)$}, where $b$ and $s$ are primitive recursive combinators that take
+            $n + 1$ arguments and $n + 2$ arguments respectfully is the \textit{recursion}
+            combinator with base case $b$ and recursive step $n$.
+    \end{itemize}
+\end{definition}
+
+Expressing a function in terms of these combinators shows that it is primitive recursive,
+and hence terminating. To make use of these combinators for termination checking 
+in Cogent, we seek a means to translate Cogent functions to a combination of the above
+combinators, and map expressions to natural numbers that these combinators operate on.
+
+The primitive recursive subclass however cannot express more complex functions such
+as the \textit{Ackermann function} \citep{Ackermann}, so using this technique limits
+termination checking in Cogent to functions that perform a kind of simple iteration or
+non recursive functions.
+
+Alternatively, or in conjunction with this approach, we may consider using
+structurally recursive methods as discussed by \citet{StrucrecStructures} and
+\citet{PredicateStructrec}. In this case our goal is to find a
+\textit{termination order} upon which our functions terminate --- An ordering
+where each recursive call operates on arguments that are `smaller' than the
+previous, and prove that our recursion gradually terminates for a given input. 
+
+A language with strictly positive types can rely on the fact that functions that
+recurse structurally on data structures terminate, as all strictly positive datatypes
+cannot be infinite.
+
+\citet{PredicateStructrec} talk in particular about \textit{structural ordering}, 
+by measuring term size in terms of constructors. They describe two axioms to measue
+this order, the first being given a term $e$ and a constructor $C$, the transitive closure of:
+$$
+    e < C (\dots, e, \dots)
+$$
+And for measuring the size of function expressions, given a function $f$ of 
+type $\alpha \longrightarrow \tau$, and an argument $a$ of type $\alpha$:
+$$
+    f\; a \leq f
+$$
+
+\citet{Foetus} also discusses seperately termination checking via means of
+creating a call graph between variables featured in recursive calls. He creates
+a matrix of relations between function argument variables and variables that
+feature in the recursive call of a function. These relations are relations
+on the structural size of the variables, which take the form of inequality ($<$),
+equality ($=$) and unknown (\textsf{?}) sizes, and are generated during
+langauge expressions such as constructor elimination. 
+
+Take for example the following function which operates on two Peano numbers:
+
+\[
+    \begin{array}{l}
+    f(x,y) = \\
+    \hspace{1em} \textsf{case}\; x\; \textsf{of} \\
+    \hspace{2em}    Z    \rightarrow Z \\
+    \hspace{2em}    S\; x' \rightarrow f(x',y) \\
+    \hspace{1em} \textsf{end}
+    \end{array}
+\]
+
+For the recursive call in the function, we produce the following relation matrix:
+
+\begin{center}
+    \begin{tabular}{c|cc}
+             & $x$        & $y$ \\
+        \hline
+        $x'$ & $<$        & \textsf{?} \\
+        $y$  & \textsf{?} & $=$ \\
+    \end{tabular}
+\end{center}
+
+Which shows that $x' < x$ (via constructor elimination), $y = y$ (as y is unchanged),
+and $x\; \textsf{?}\; y$ and $x'\; \textsf{?}\; y$ (no relation between $x'$, $x$ and $y$).
+
+By inspecting the diagonal column of the matrix, the respective relation between variables
+in the same argument position, we can show the function terminates by finding
+a lexicographical ordering between the arguments.
+
+This method shows promise for Cogent, as our language features many ways to produce
+size relations, such as \textsf{take}, \textsf{put}, \textsf{let} and \textsf{case}.
+In addition to this, if we find such a lexicographical ordering we may be able
+to produce an Isabelle proof of our function termination automatically,
+assisting the ease of verifying termination.
 
 \section{Linear And Uniqueness Types}
 
