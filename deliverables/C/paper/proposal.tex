@@ -743,9 +743,9 @@ to prove termination in some cases.
             \eta \teq \gamma,\;
             \phi \tlt \eta,\;
             \psi \teq \phi,\;
-            \pi \tlt \psi,\;
-            \pi \tlt \alpha\;
-        \} \]
+            \pi \tlt \psi\;
+        \}
+    \]
     \[
         C = \{\pi\}    
     \]
@@ -756,38 +756,64 @@ to prove termination in some cases.
     \label{fig:exampletermination}
 \end{figure}
 
+\begin{figure}
+    \centering
+    \begin {tikzpicture}[-latex, auto, node distance = 1.5 cm and 2cm, on grid,
+                         semithick, state/.style =
+                            {
+                                circle, draw, black, minimum width = 0.9 cm
+                            }
+                        ]
+        % Vertices
+        \node[state] (A)                       {$\alpha$};
+        \node[state] (B)  [right = of A]       {$\beta$};
+        \node[state] (G)  [right = of B]       {$\gamma$};
+        \node[state] (D)  [below right = of G] {$\delta$};
+        \node[state] (E)  [right = of G]       {$\eta$};
+        \node[state] (PH) [right = of E]       {$\phi$};
+        \node[state] (PS) [right = of PH]      {$\psi$};
+        \node[state] (PI) [right = of PS]      {$\pi$};
+
+        % Edges
+        \path (A) edge[bend right = 20] node{} (B);
+        \path (B) edge[bend right = 20] node{} (A);
+
+        \path (B) edge node{} (G);
+
+        \path (G) edge node{} (D);
+
+        \path (G) edge[bend right = 20] node{} (E);
+        \path (E) edge[bend right = 20] node{} (G);
+
+        \path (E) edge node{} (PH);
+
+        \path (PH) edge[bend right = 20] node{} (PS);
+        \path (PS) edge[bend right = 20] node{} (PH);
+
+        \path (PS) edge node{} (PI);
+
+    \end{tikzpicture}
+    
+    \caption{The graph constructed from the assertions generated in \autoref{fig:exampletermination}}
+    \label{fig:terminationgraph}
+\end{figure}
+
 \FloatBarrier
 
 To determine whether our function terminates, we construct a directed graph from
 our assertions, where variable names are vertices and edges are the relations
 between them. For example, $\alpha \tlt \beta$ would produce a directed edge from
 $\beta$ to $\alpha$, and $\alpha \teq \beta$ would produce a bidirectional edge between 
-$\alpha$ and $\beta$. To show termination, we show that there is a one way path
+$\alpha$ and $\beta$. To show termination, we show that there is a one-way path
 from the argument node to every goal node.
 
 As an example, consider the program in \autoref{fig:exampletermination} that
-features inline termination constraints. Note that our program also shadows
-the variable $r$ in the last take, which the termination
-rules generate a different fresh name for. Using our final set of assertions,
+features inline generated termination constraints. Note that our program also shadows
+the variable $r$ in the last \textsf{take} statement, which the termination
+rules generate a different fresh name for. Using our final set of assertions
 $G'$ and our goal set $C$ we must show that $\pi \tlt \alpha$.
-We construct the following graph:
-
-\begin {tikzpicture}[-latex ,auto ,node distance =4 cm and 5cm ,on grid ,
-    semithick,
-    state/.style ={circle ,top color =white , bottom color = white,
-            draw,black, text=blue , minimum width =1 cm}]
-    \node[state] (C)
-    {$1$};
-    \node[state] (A) [above left=of C] {$0$};
-    \node[state] (B) [above right =of C] {$2$};
-    \path (A) edge [loop left] node[left] {$1/4$} (A);
-    \path (C) edge [bend left =25] node[below =0.15 cm] {$1/2$} (A);
-    \path (A) edge [bend right = -15] node[below =0.15 cm] {$1/2$} (C);
-    \path (A) edge [bend left =25] node[above] {$1/4$} (B);
-    \path (B) edge [bend left =15] node[below =0.15 cm] {$1/2$} (A);
-    \path (C) edge [bend left =15] node[below =0.15 cm] {$1/2$} (B);
-    \path (B) edge [bend right = -25] node[below =0.15 cm] {$1/2$} (C);
-\end{tikzpicture}
+Using our assertions we construct the graph in \autoref{fig:terminationgraph}
+and observe the following path from $\alpha$ to $\pi$:
 
 \[
     \alpha \rightarrow \beta \rightarrow \gamma \rightarrow
@@ -795,8 +821,10 @@ We construct the following graph:
     \pi
 \]
 
-As our substitution to each variable makes all sizing assertions true,
-our given function terminates.
+We also observe that there are no outgoing edges from $\pi$, therefore there is no return path
+to $\alpha$ and hence our path is one-way. Thus, our example function terminates.
+
+\todo{Should I do a proof of reduction from our problem to PATH? Or is that overkill?}
 
 \subsection{Possible Future Improvements}
 
@@ -806,7 +834,7 @@ do not reason solely about program variables, however we seek a more complete wa
 this problem.
 
 One potential idea is to eliminate structural size inequality ($\tlt$), and preserve relative
-size information by talking about discrete size changes. Consider our earlier example $x \tlt C\; y$,
+size information by using only discrete size changes. Consider our earlier example $x \tlt C\; y$,
 where we were unable to remove the constructor $C$ from $y$. 
 If earlier when generating this assertion we wrote  $x - 1 \teq C\; y$,
 where $x - 1$ means `1 structural size less than $x$', we would be able to know exactly
@@ -814,12 +842,16 @@ how much structurally smaller $x$ is than $y$. If we wanted to simplify this ass
 we could do so by removing the constructor $C$ from $y$, and then taking away one structural size from
 the LHS of the assertion, leaving $x - 2 \teq y$.
 
-Not only does this allow us to use this assertion, but we can still use integer linear programming to
-solve the series of equations produced, provided all assertions still reference variables directly.
-As a result, our termination checker can identify a larger set of functions that are primitive recursive.
+Not only does this allow us to use extra assertions, but we may still determine 
+if our function terminates by showing existance of a one-way path from the input
+argument to recursive call arguments. We simply normalise all equations into the
+form $x - C \teq y$, where $x$ and $y$ are variables and $C$ is a constant, and
+then create a directed path from $y$ to $x$ if $C \neq 0$, and a bidirectional
+path between $x$ and $y$ if $C = 0$.
+
 
 Unfortunately, Cogent integer literals \textsc{U8}, \textsc{U16}, \textsc{U32} and
-\textsf{U64} are not structural types, and hence recursion on integers
+\textsf{U64} are not structural types, and hence terminating recursion on integers
 cannot be detected via our current method. Furthermore, as unsigned integer
 overflow is permitted in our Cogent programs, even basic structural integer
 recursion could produce a non-terminating program, as a program that takes
@@ -835,7 +867,7 @@ Finally, while termination checking has been formalised and defined,
 it has not yet been implemented in Minigent or Cogent due to it being
 only an extension to this thesis. Future work would require the adaptation
 of this formalisation to the compiler and to Minigent, and then
-generation of an Isabelle/HOL proof of termination from the results
+generation of an Isabelle/HOL termination proof from the results
 of the termination checker.
 
 \section{Example Usage and Testing}
