@@ -414,7 +414,7 @@ recursive call is strictly smaller than that of the function argument, i.e. the 
 given to a recursive call will only ever grow smaller, and hence the function will
 eventually reach the `bottom' of the structure and terminate.
 As all recursive types constructed must be finite due to our use of strictly positive
-types and Cogent's linear type system (no infinitely looping structures),
+types and Cogent's linear type system (i.e. no infinitely looping structures),
 all primitive recursive calls will terminate.
 
 Our size assertions take the form of two relations between variables, 
@@ -501,7 +501,8 @@ variable name in the assertion.
 
 After generating all of our assertions, we filter out any assertions that include a nothing ($\varepsilon$),
 as we cannot reason about them in any way, or fail if any goal contains a nothing. While this solution may
-not be as complete as it possibly could, it allows us to use our assertions to prove termination.
+not be as complete as it possibly could be, we may still use our remaining assertions
+to prove termination in some cases.
 
 \FloatBarrier
 
@@ -757,39 +758,42 @@ not be as complete as it possibly could, it allows us to use our assertions to p
 
 \FloatBarrier
 
-To determine whether a function terminates, we put our assertions and goals into an
-\textit{integer linear programming} (ILP) solver, which finds a valid number 
-substitution (i.e. a possible structural size for each variable) to every  
-variable in the assertions such that they are all true. If such a substitution exists, 
-then the function terminates. Otherwise, we know nothing about the function terminating.
-
-The decision to use an ILP solver comes from their speed. While the ILP
-problem is NP-Complete, many ILP solvers are quite fast at finding
-solutions, and as Cogent functions produce simple constraints
-that only involve equality ($\teq$) and inequality ($\tlt$),
-would be especially fast at showing termination.
+To determine whether our function terminates, we construct a directed graph from
+our assertions, where variable names are vertices and edges are the relations
+between them. For example, $\alpha \tlt \beta$ would produce a directed edge from
+$\beta$ to $\alpha$, and $\alpha \teq \beta$ would produce a bidirectional edge between 
+$\alpha$ and $\beta$. To show termination, we show that there is a one way path
+from the argument node to every goal node.
 
 As an example, consider the program in \autoref{fig:exampletermination} that
 features inline termination constraints. Note that our program also shadows
-the variable $r$ in the last take, which it generates a different fresh name
-for. Using our final set of assertions,
+the variable $r$ in the last take, which the termination
+rules generate a different fresh name for. Using our final set of assertions,
 $G'$ and our goal set $C$ we must show that $\pi \tlt \alpha$.
-We can perform the following substitutions to show termination:
+We construct the following graph:
 
-\begin{center}
-    \begin{tabular}{ccccl}
-        Assertions & Substitutions &  & Result & \\
-        $\alpha \teq \beta$  & $\alpha := 3$ && $3 \teq 3$ & \checkmark \\ 
-        $\gamma \tlt \beta$  & $\beta := 3$  && $2 \tlt 3$ & \checkmark \\
-        $\delta \tlt \gamma$ & $\delta := 1$ && $1 \tlt 2$ & \checkmark \\
-        $\eta \teq \gamma$   & $\gamma := 2$ 
-            & $\longrightarrow$\hspace{1em} & $2 \teq 2$   & \checkmark  \\
-        $\phi \tlt \eta$     & $\eta := 2$   && $1 \tlt 2$ & \checkmark  \\
-        $\psi \teq \phi$     & $\phi := 1$   && $1 \teq 1$ & \checkmark \\
-        $\pi \tlt \psi$      & $\psi := 1$   && $0 \tlt 1$ & \checkmark \\
-        $\pi \tlt \alpha$    & $\pi  := 0$   && $0 \tlt 4$ & \checkmark 
-    \end{tabular}
-\end{center}
+\begin {tikzpicture}[-latex ,auto ,node distance =4 cm and 5cm ,on grid ,
+    semithick,
+    state/.style ={circle ,top color =white , bottom color = white,
+            draw,black, text=blue , minimum width =1 cm}]
+    \node[state] (C)
+    {$1$};
+    \node[state] (A) [above left=of C] {$0$};
+    \node[state] (B) [above right =of C] {$2$};
+    \path (A) edge [loop left] node[left] {$1/4$} (A);
+    \path (C) edge [bend left =25] node[below =0.15 cm] {$1/2$} (A);
+    \path (A) edge [bend right = -15] node[below =0.15 cm] {$1/2$} (C);
+    \path (A) edge [bend left =25] node[above] {$1/4$} (B);
+    \path (B) edge [bend left =15] node[below =0.15 cm] {$1/2$} (A);
+    \path (C) edge [bend left =15] node[below =0.15 cm] {$1/2$} (B);
+    \path (B) edge [bend right = -25] node[below =0.15 cm] {$1/2$} (C);
+\end{tikzpicture}
+
+\[
+    \alpha \rightarrow \beta \rightarrow \gamma \rightarrow
+    \eta   \rightarrow \phi  \rightarrow \psi   \rightarrow
+    \pi
+\]
 
 As our substitution to each variable makes all sizing assertions true,
 our given function terminates.
@@ -813,15 +817,6 @@ the LHS of the assertion, leaving $x - 2 \teq y$.
 Not only does this allow us to use this assertion, but we can still use integer linear programming to
 solve the series of equations produced, provided all assertions still reference variables directly.
 As a result, our termination checker can identify a larger set of functions that are primitive recursive.
-
-Additionally, an alternative to integer linear programming is to construct a directed graph from
-our assertions, where variable names are vertices and edges are the relations
-between them. For example, $\alpha \tlt \beta$ would produce a directed edge from $\beta$ to
-$\alpha$, and $\alpha \teq \beta$ would produce a bidirectional edge between $\alpha$ and $\beta$.
-To show termination, we show that there is a one way path from every argument node to every
-goal node. This method may be easier to implement than using an ILP solver,
-and as it is written exclusively for the Cogent compiler can be optimised
-for our use case.
 
 Unfortunately, Cogent integer literals \textsc{U8}, \textsc{U16}, \textsc{U32} and
 \textsf{U64} are not structural types, and hence recursion on integers
