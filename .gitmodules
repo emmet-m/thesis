@@ -1,0 +1,3 @@
+[submodule "cogent-info"]
+	path = cogent-info
+	url  = git@github.com:liamoc/cogent-info.git
