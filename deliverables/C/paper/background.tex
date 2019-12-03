@@ -1,4 +1,4 @@
-\chapter{Background And Related Works}\label{ch:background}
+\chapter{Background and Related Works}\label{ch:background}
 
 Our investigation of existing works will consider three domains: The existing types and features
 within Cogent, termination and recursive types and linear and uniqueness types.
@@ -139,7 +139,7 @@ combination of records on the heap. With the aid of variant types, records can a
 our recursive types with a recursive parameter, using variants to give the 
 differing construction cases for the type.
 
-\subsection{Constraint Based Type Inference And Type Checking}
+\subsection{Constraint Based Type Inference and Type Checking}
 
 Cogent features a constraint based type checker, which checks the type
 correctness of programs by first generating constraints based on the
@@ -196,7 +196,7 @@ two smaller contraints:
 
 
 
-\section{Termination And Recursive Types}
+\section{Termination and Recursive Types}
 
 Proving total correctness about the programs we write is a very desirable result, as
 Computation performed by a program is useless if the program never returns the
@@ -378,14 +378,14 @@ The interactive theorem prover Isabelle generates the same induction principle f
 We can get the same induction principle over natural numbers by redefining our $Nat$
 type in Isabelle, as in figure \ref{fig:IsabelleNatInduct}.
 
-\begin{center}
-    \begin{figure}
-        \includegraphics[width=\linewidth]{content/isabelleNatInduct.png}
-        \caption{A type for natural numbers defined in Isabelle and the generated 
-        induction principle associated with the type.}
-        \label{fig:IsabelleNatInduct}
-    \end{figure}
-\end{center}
+\begin{figure}
+    \centering
+
+    \includegraphics[width=300pt]{content/isabelleNatInduct.png}
+    \caption{A type for natural numbers defined in Isabelle and the generated 
+    induction principle associated with the type.}
+    \label{fig:IsabelleNatInduct}
+\end{figure}
 
 \FloatBarrier
 
@@ -415,7 +415,7 @@ describes an inductive definition of primitive recursive functions:
 \begin{definition}
     \label{def:primrec}
     A function is \textit{primitive recursive} if it can be constructed using 
-    a combination of the following combinators:
+    the following combinators:
 
     \begin{itemize}
         \item 
@@ -444,15 +444,16 @@ combinators, and map expressions to natural numbers that these combinators opera
 
 The primitive recursive subclass however cannot express more complex functions such
 as the \textit{Ackermann function} \citep{Ackermann}, so using this technique limits
-termination checking in Cogent to functions that perform a kind of simple iteration or
-non recursive functions.
+termination checking in Cogent to functions that perform simple iteration or
+non-recursive functions.
 
-Alternatively, or in conjunction with this approach, we may consider using
+Alternatively, or in conjunction with this approach, we consider using
 structurally recursive methods as discussed by \citet{StrucrecStructures} and
 \citet{PredicateStructrec}. In this case our goal is to find a
 \textit{termination order} upon which our functions terminate --- An ordering
 where each recursive call operates on arguments that are `smaller' than the
-previous, and prove that our recursion gradually terminates for a given input. 
+previous, and prove that our recursion gradually 
+approaches termination for a given input. 
 
 A language with strictly positive types can rely on the fact that functions that
 recurse structurally on data structures terminate, as all strictly positive datatypes
@@ -514,7 +515,7 @@ In addition to this, if we find such a lexicographical ordering we may be able
 to produce an Isabelle proof of our function termination automatically,
 assisting the ease of verifying termination.
 
-\section{Linear And Uniqueness Types}
+\section{Linear and Uniqueness Types}
 
 Linear types are a kind of substructural type system as discussed by \citet{Substructural}.
 Many standard programming languages such as \textsc{C}, \textsc{Java} and \textsc{Haskell} feature

@@ -1,21 +1,22 @@
 \chapter{Completed Work}\label{ch:style}
 
-Considering our investigation, we have expanded upon the existing Cogent infrastructure keeping in mind
-three major requirements: the ability for programmers to create recursive, iterable data structures via
+We have expanded upon the existing Cogent infrastructure keeping in mind
+three major requirements: the ability for programmers to create recursive iterable data structures via
 recursive types, the necessity for our programs to be easily proven \textit{total},
-and the preservation of the benefits guaranteed by Congent's uniqueness types system.
+and the preservation of the benefits guaranteed by Cogent's uniqueness type system.
 
 Our proposed design has been implemented in \textit{Minigent}, a stripped down version of Cogent that
-features only the type checking component of Cogent in order to focus on integrating smoothly with the 
-existing project. This also allows us to focus on the design of our recursive types without having to change
-the C code generation and Isabelle embedding of Cogent.
+features only the type checking component of Cogent. This allows us to
+focus on the design of our recursive types without having to change
+the compiler's C code generation, Isabelle/HOL embedding and
+refinement proof linking the two.
 
-Work has been completed to incorporate our proposed design into the parsing, lexing, reorganising and 
-typechecking compiler phases of Minigent, with a rough design of a potential termination checking extension.
-In addition to the existing suite of tests in the Minigent typechecker, additional tests have 
-been added to test the newly added recursive types.
-
-\todo{Make sure the below addresses the above `three major requirements'}
+We have incorporated our proposed design into the parsing, lexing, reorganising and 
+typechecking compiler phases of Minigent. Moreover we provide 
+a formalisation of termination checking for primitive recursive functions.
+In addition to ensuring that the existing test suite in the Minigent 
+typechecker still works, we have added additional tests 
+to test the newly added recursive types.
 
 \section{Grammar and Syntax}
 
@@ -47,13 +48,13 @@ been added to test the newly added recursive types.
     \label{fig:muexample}
 \end{figure}
 
-We have extended the existing record grammar with an optional recursive parameter \textbf{mu} as in
-\autoref{fig:mu} to add recursive type parameters to Cogent's boxed records, and enabled the use
+We have extended the existing record grammar with an optional recursive parameter \textbf{mu} presented in
+\autoref{fig:mu} to add recursive type parameters to Cogent's boxed records, this enables the use
 of recursive parameter variables in the language.
 
 Boxed records now feature an optional recursive type variable bound by the \textbf{mu} keyword, which may
-feature in a record type in which they are bound. This also our new record syntax to be backwards
-compatible with the previous record syntax, enabling existing Cogent programs to remain unchanged.
+optionally feature in a record type in which they are bound. This also ensures our new record syntax is
+backwards compatible with the previous record syntax, enabling existing Cogent programs to remain unchanged.
 
 \autoref{fig:muexample} demostrates the use of our new grammar to construct an integer list datatype,
 with the use of a variant type in a recursive record field \textit{l} that is either Nil,
@@ -106,18 +107,18 @@ examples are discussed in \autoref{ch:examplesandtesting} at the end of the chap
     \label{fig:strictlypositivecheck}
 \end{figure}
 
-Checking that all types occur only strictly positive has been implemented in the reorganisation phase of the compiler
-instead of during type checking. This allows for a simple one-pass algorithm to analyse all the types in the program
-at once, and a simpler contraint generation and solving phases.
+Checking that all types only occur \emph{strictly positive} has been implemented in the reorganisation phase of the compiler
+instead of during type checking. This allows for a simple one-pass algorithm that can 
+analyse all the types in the program at once, and a simpler contraint generation and solving phases.
 
 \autoref{fig:strictlypositivecheck} describes the strictly positive check over Cogent's types.
 This algorithm keeps track of a set of in scope bound recursive parameters $\mathcal{B}$ and a set of recursive
-parameters currently in a non-strictly positive position $\mathcal{S}$.
+parameters currently appear in a non-strictly positive position $\mathcal{S}$.
 
 Rule \textsc{sp-rec} describes checking a record bound with a recursive parameter $t$, where parameter 
 is added to the bound set $\mathcal{B}$, and removed from the non-strictly positive set $\mathcal{S}$
 (as these variables can shadow previous variables), where $\textbf{RP}(\mu)$ returns the recursive
-parameter variable in $\mu$ if it has one.
+parameter variable in $\mu$ if the $\mu$ has one.
 
 Rule \textsc{sp-func} describes checking a function type, where checking the argument position $\tau_1$ adds
 all currently bound ($\mathcal{B}$) parameters to the non-strictly positive set ($\mathcal{S}$), and then
@@ -317,17 +318,17 @@ constraint on records - that recursive parameters are only used on boxed records
 new constraint is outlined in \autoref{fig:unboxednotrecursive}
 
 We modify the original \textsc{Take}, \textsc{Put} and \textsc{Member} typing rules defined by
-\citet{LiamThesis} to include this constraint as in \autoref{fig:puttypingrule},
+\citet{LiamThesis} to include this constraint as presented in \autoref{fig:puttypingrule},
 \autoref{fig:taketypingrule} and \autoref{fig:membertypingrule}.
 
-Next, we modify the \textsc{CG-Member}, \textsc{CG-Take} and \textsc{CG-Put} for constraint generation,
-where our new constraint will be produced, as in \autoref{fig:takeconstraintgen}, 
-\autoref{fig:putconstraintgen} and \autoref{fig:memberconstraintgen}, to also include this
-new constraint.
+Next, we modify the \textsc{CG-Member}, \textsc{CG-Take} and \textsc{CG-Put} to account
+for constraint generation. Our new constraints will be generated
+as defined by \autoref{fig:takeconstraintgen}, \autoref{fig:putconstraintgen} and 
+\autoref{fig:memberconstraintgen}, to also include this new constraint.
 
 Each of these rules additionally now includes an extra fresh unification variable, which is
 used to infer the recursive parameter of a given record. These variables are substituted
-for real recursive parameters during the constraint solver's \textit{unify} phase.
+for real recursive parameters during the constraint solver's \textit{unification} phase.
 
 \section{Constraint Solver Rules}
 
@@ -360,20 +361,20 @@ for real recursive parameters during the constraint solver's \textit{unify} phas
 \end{figure}
 
 The constraint solver now contains additional rules in order to reason about recursive
-records, which have changed the \textit{simplify} and \textit{unify}
+records, which have changed the \textit{simplification} and \textit{unification}
 constraint solving phases.
 
-\subsection{Simplify Phase}
+\subsection{Simplification Phase}
 
-In the simplify phase, the rules described in \autoref{fig:simprules} allow for
-the solver to reason about recursive types type the comparison constraints
+In the simplification phase, the rules described in \autoref{fig:simprules} allow
+the solver to reason about recursive types that feature in the comparison constraints
 subtyping ($\subtype$) and type equality ($\typeeq$). \autoref{eq:firsteq}
 through to \autoref{eq:lasteq} state that
 when a recursive type $t_r$ is directly compared against a type $\tau$, the solver
 can \textbf{unroll} $t_r$, as defined in \autoref{fig:unrolldef}.
 Additionally, \autoref{eq:firstrecs} and \autoref{eq:lastrecs} 
 cover the case where we compare two recursive parameters
-$t_r$ and $k_r$, where we check that \textbf{unroll}ing both parameters results
+$t_r$ and $k_r$, where \textbf{unroll}ing both parameters results
 in the same type via meta equality.
 
 \autoref{eq:firstunbox} and \autoref{eq:lastrecs} allow for the elmination of \textbf{UnboxedNotRecursive} constraints
@@ -381,9 +382,9 @@ given that either the recursive parameter is nothing ($\varepsilon$) and the sig
 unboxed (\textcircled{u}), or that the recursive paremeter is some \textbf{mu} $t$ and
 the accompanying sigil $s$ is readonly (\textcircled{r}) or writable (\textcircled{w}).
 
-\subsection{Unify Phase}
+\subsection{Unification Phase}
 
-The unify phase now unifies unknown recursive parameters that are embedded
+The unification phase now unifies unknown recursive parameters that are embedded
 on records. Given constraints of the form 
 $\alpha\; \{ \dots \} \subtype \mu\; \{ \dots \}$ or of the form
 $\alpha\; \{ \dots \} \typeeq \mu\; \{ \dots \}$, where $\alpha$ is a unification
@@ -393,11 +394,171 @@ $\alpha := \mu$ to our set of assignments that the solver will output.
 This is true symmetrically, when the left and right hand sides of the above
 constraints are swapped.
 
-The unify phase also now unifies recursive parameters in an \textbf{UnboxedNotRecursive}
+The unification phase also unifies recursive parameters in an \textbf{UnboxedNotRecursive}
 constraint to nothing ($\varepsilon$) if the sigil in that constraint has been unified to
 an unboxed sigil (\textcircled{u}). If this unification variable was meant to be a recursive
-parameter ($t_r$), then the constraint solving will fail elsewhere due to this substitution,
+parameter $t_r$, then the constraint solving will fail elsewhere due to this substitution,
 preserving the correctness of the solver.
+
+
+\section{Example Usage and Testing}
+\label{ch:examplesandtesting}
+
+\begin{figure}
+    \centering
+    \[
+        \begin{array}{l}
+            [a].\; \textbf{mu}\ t\; \{ \\
+            \hspace{2em} l: < \\
+            \hspace{4em}    \text{Nil Unit} \\
+            \hspace{3.3em}  |\ \text{Cons}\; \{\; \text{data}: a,\; \text{rest}: t\; \}\# \\ 
+            \hspace{2em} > \\
+            \}
+        \end{array}    
+    \]
+    \caption{A polymorphic list datatype in Minigent}
+    \label{fig:minigentlist}
+\end{figure}
+
+We present a list datatype in \autoref{fig:minigentlist}, which was implemented in Minigent during the course
+of testing our implmenetation. As Minigent's syntax is not as rich as the full compiler's,
+our definition differs from that of \autoref{fig:muexample}, as we are unable to create
+type aliases (i.e. $\textbf{type}\; \text{List} = \dots$) and unable to use tuples,
+which are replaced with an unboxed record instead.
+
+\begin{figure}
+    \centering
+    \[
+        \begin{array}{l}
+            \text{sumList} : \textsf{mu}\; t\; \{\; \text{l}: < \text{Nil Unit}\; |\; \text{Cons}\; \{\; \text{data}: \textsf{U32},\; \text{rest}: t!\; \}\# >\}!
+                \rightarrow \textsf{U32}; \\
+            \text{sumList}\; r = \\
+            \hspace{1em}    \textsf{take}\; r'\; \{ l = l \} = r\; \textsf{in}  \\
+            \hspace{2em}    \textsf{case}\; l\; \textsf{of} \\
+            \hspace{3em}        \text{Nil}\; u\; \rightarrow\; 0 \\
+            \hspace{3em}    |\; v2 \rightarrow \\
+            \hspace{4em}    \textsf{case}\; v2\; \textsf{of} \\
+            \hspace{5em}    \text{Cons}\; s\; \rightarrow  \\
+            \hspace{6em}    \textsf{take}\; s'\; \{ rest = x \} = s\; \textsf{in} \hspace{2em} \\
+            \hspace{7em}        s.data\; +\; \text{sumList}\; x \\
+            \hspace{6em}    \textsf{end} \\
+            \hspace{4em}    \textsf{end} \\
+            \hspace{2em}    \textsf{end} \\
+            \hspace{1em}    \textsf{end}
+        \end{array}
+    \]
+    
+    \caption{A function that sums a list of 32 bit integers}
+    \label{fig:listsum}
+\end{figure}
+
+A simple use of this list can be seen in \autoref{fig:listsum}, which sums a list of
+32 bit integers (\textsf{U32}). Our recursive call is on a variable $x$, which has
+the linear type $t!$, which the compiler will unroll and then propogate the bang ($!$)
+through the unrolled type via the normaliser.
+
+\begin{figure}
+    \centering
+    \[
+    \begin{array}{l}
+\text{alloc} : [x].\; \text{Unit} \rightarrow \textsf{mu}\; t\; \{\; \text{l}: < \text{Nil Unit}\; |\; \text{Cons}\; \{\; \text{data}: x,\; \text{rest}: t\; \}\# > \textsf{take}\; \}; \\[10pt]
+
+\text{map} : [a,b].\; \\
+\hspace{5em}
+    \{\; \text{list}: \textsf{mu}\; t\; \{\; l: < \text{Nil Unit}\; |\; \text{Cons}\; \{\; \text{data}: a,\; \text{rest}: t\; \}\# > \}!,\; \text{f}: (a -> b)\; \}\# \\
+\hspace{5em}
+    \rightarrow \textsf{mu}\; t\; \{\; l: < \text{Nil Unit}\; |\; \text{Cons}\; \{\; \text{data}: a,\; \text{rest}: t\; \}\# > \}; \\
+\text{map}\; l =  \\
+\hspace{1em}
+\textsf{take}\; l2\; \{\; \text{list} = node\; \} = l\; \textsf{in} \\
+\hspace{2em} 
+\textsf{take}\; l3\; \{\; \text{f} = fun\; \} = l2\; \textsf{in} \\
+\hspace{3em} 
+\textsf{take}\; node2\; \{\; \text{l} = head\; \}\; = node\; \textsf{in} \\
+\hspace{4em} 
+\textsf{case}\; head\; \textsf{of} \\
+\hspace{5em} 
+\text{Nil}\; u \rightarrow  \\
+\hspace{6em} 
+\textsf{let}\; newNode = \text{alloc Unit}\; \textsf{in}  \\
+\hspace{7em}
+\textsf{put}\; newNode.l := \text{Nil Unit}\; \textsf{end} \\
+\hspace{6em} 
+\textsf{end} \\
+\hspace{5em} 
+|\; v2 \rightarrow  \\
+\hspace{6em} 
+\textsf{case}\; v2\; \textsf{of} \\
+\hspace{7em} 
+\text{Cons}\; remaining \rightarrow \\
+\hspace{8em} 
+\textsf{take}\; remaining2\; \{\; \text{data} = x\; \} = remaining\; \textsf{in}  \\
+\hspace{9em} 
+\textsf{let}\; newNode = \text{alloc Unit}\; \textsf{in} \\
+\hspace{10em} 
+\textsf{put}\; newNode.l :=  \\
+\hspace{14em} 
+\text{Cons}\; \{ \\
+\hspace{15em}
+\text{data} = \text{fun} x, \\
+\hspace{15em} 
+\text{rest} = \text{map}\; \{\; \text{list} = remaining2.rest,\; \text{f} = fun \} \\
+\hspace{14em} 
+\}\; \textsf{end} \\
+\hspace{10em} 
+\textsf{end} \\
+\hspace{9em} 
+\textsf{end} \\
+\hspace{7em} 
+\textsf{end} \\
+\hspace{4em} 
+\textsf{end} \\
+\hspace{3em} 
+\textsf{end} \\
+\hspace{2em} 
+\textsf{end} \\
+\hspace{1em} 
+\textsf{end};
+        
+    \end{array}    
+    \]
+    
+    \caption{Map for lists implemented in Minigent}
+    \label{fig:listmap}
+\end{figure}
+
+We can write common functions that operate on lists, such as \textsf{map},
+as in \autoref{fig:listmap}. While our implementation is very verbose in Minigent,
+the full compiler's syntactic sugar would allow for a much more simplified
+implementation with tuples and more compact \textsf{case} statements.
+
+It can be seen in our recursive call to map, we pass \textit{remaining2.rest} and
+\textit{fun} as our arguments, being the tail and mapping function for the list
+respectively. As \textit{remaining2.rest} has the type of the recursive paramater
+for the list \textit{t}, our solver unrolls this variable as described in order
+to ensure the recursive call has been given expressions of the correct type.
+
+\begin{figure}
+    \centering
+
+    \[
+        \begin{array}{l}
+            [a].\; \textsf{mu}\; t\; \{\; \\
+            \hspace{2em} \text{f}: < \\
+            \hspace{4em} \text{Leaf Unit}\; \\
+            \hspace{3.3em} |\; \text{Node}\; \{\; \text{left}: t,\; \text{right}: t,\; \text{data}: a \}\# \\
+            \hspace{2em} >  \\
+            \}
+        \end{array}
+    \]
+    
+    \caption{A polymorphic tree datatype in Minigent}
+    \label{fig:minigenttree}
+\end{figure}
+
+Furthermore, we can create a tree datatype in Minigent as shown in \autoref{fig:minigenttree}.
+The tree type resembles our list datatype but with two fields that have the type of our
+\textsf{mu} quantified recursive parameter $t$, the left and right branches of the tree.
 
 \section{Termination}
 
@@ -408,11 +569,12 @@ a new phase into the compiler; the \textit{termination checker}.
 \subsection{Design}
 
 Our new termination checker works by generating assertions about the structural
-size of variables passed to the function, and when any recursive calls are made 
+size of variables passed to the function, similar to the approach
+taken by \citet{Foetus}. When recursive calls are made, the termination checker
 uses these assertions to check that the structural size of the argument to the
-recursive call is strictly smaller than that of the function argument, i.e. the argument
-given to a recursive call will only ever grow smaller, and hence the function will
-eventually reach the `bottom' of the structure and terminate.
+recursive call is strictly smaller than that of the function argument. Hence, the argument
+given to a recursive call will only ever grow smaller, and therefore the function will
+eventually reach the \emph{bottom} of the structure and terminate.
 As all recursive types constructed must be finite due to our use of strictly positive
 types and Cogent's linear type system (i.e. no infinitely looping structures),
 all primitive recursive calls will terminate.
@@ -427,9 +589,10 @@ The checker starts with a set of known termination assertions $G$, and then adds
 extra assertions by analysing the expression body of a function to produce
 a stronger set of assertions $G'$, as well as a set of expressions that are arguments
 to recursive function calls $C$. \autoref{fig:terminationcondition} describes the
-condition for soundness of our termination checker. Completeness for the termination
-checker is impossible as a consequence of the halting problem, and thus the checker
-does not attempt to check more than primitive recursion.
+condition for soundness of our termination checker. For our check to be \emph{complete},
+our checker would need to show all nonterminating functions are invalid.
+As a consequence of the halting problem however, this completeness is impossible
+so our checker only attempts to check for primitive recursion.
 
 \begin{figure}
     \centering
@@ -446,7 +609,7 @@ does not attempt to check more than primitive recursion.
                 & \text{empty set of assertions} \\[10pt]
             \implies G' \vdash \forall \beta \in C.\; \beta \tlt \alpha
                 & \text{The function terminates if} \\
-                & \text{every expression produced} \\
+                & \text{every goal expression produced} \\
                 & \text{is smaller than the function argument} \\
                 & \text{under the produced assertions}
         \end{array}
@@ -474,11 +637,11 @@ context $E$, which we update as we encounter new variable definitions in the
 function expression.
 
 With our current method of size relations, we are unable to reason about variables
-comapared against any general expression. For example, suppose the assertion $x \tlt C\; y$.
+compared against any general expression. For example, suppose the assertion $x \tlt C\; y$.
 This assertion is useless to us as we have no way of reasoning about $x$ and $y$ directly,
 and we are unable to remove the constructor $C$ as we have no information about the
-gap in size between $x$ and $y$. We could have $x \tlt y$ if x is more than 1 layer
-of structure smaller than y, or $x \teq y$ if x is only 1 layer of structure smaller.
+gap in size between $x$ and $y$. We could have $x \tlt y$ if $x$ is more than one layer
+of structure smaller than y, or $x \teq y$ if x is only one layer of structure smaller.
 
 We seek a way to eliminate such assertions from being generated. To do this,
 we define a function \textsf{get} in \autoref{fig:getdef} that maps an expression to
@@ -503,8 +666,6 @@ After generating all of our assertions, we filter out any assertions that includ
 as we cannot reason about them in any way, or fail if any goal contains a nothing. While this solution may
 not be as complete as it possibly could be, we may still use our remaining assertions
 to prove termination in some cases.
-
-\FloatBarrier
 
 \begin{figure}
     \centering
@@ -576,7 +737,12 @@ to prove termination in some cases.
             \end{array}
         }
     \]
-    \vspace{0.5pt}
+    \caption{Termination assertion generation rules}
+    \label{fig:terminationassertiongen}
+\end{figure}
+
+\begin{figure}[]
+    \centering
     \[
         \infer[\textsc{\footnotesize T-Member}]{
             E_1; G_1 \vdash e.f
@@ -585,12 +751,7 @@ to prove termination in some cases.
             E_1; G_1 \vdash e_1 \rightsquigarrow G_2\; |\; E_2\; |\; C
         }
     \]
-    \caption{Termination assertion generation rules}
-    \label{fig:terminationassertiongen}
-\end{figure}
-
-\begin{figure}[]
-    \centering
+    \vspace{0.5pt}
     \[
         \infer[\textsc{\footnotesize T-Con}]{
             E_1; G_1 \vdash \kappa\; e
@@ -807,8 +968,8 @@ $\beta$ to $\alpha$, and $\alpha \teq \beta$ would produce a bidirectional edge 
 $\alpha$ and $\beta$. To show termination, we show that there is a one-way path
 from the argument node to every goal node.
 
-As an example, consider the program in \autoref{fig:exampletermination} that
-features inline generated termination constraints. Note that our program also shadows
+As an example, consider our earlier list sum example in \autoref{fig:exampletermination}
+that features inline generated termination constraints. Note that our program also shadows
 the variable $r$ in the last \textsf{take} statement, which the termination
 rules generate a different fresh name for. Using our final set of assertions
 $G'$ and our goal set $C$ we must show that $\pi \tlt \alpha$.
@@ -823,8 +984,6 @@ and observe the following path from $\alpha$ to $\pi$:
 
 We also observe that there are no outgoing edges from $\pi$, therefore there is no return path
 to $\alpha$ and hence our path is one-way. Thus, our example function terminates.
-
-\todo{Should I do a proof of reduction from our problem to PATH? Or is that overkill?}
 
 \subsection{Possible Future Improvements}
 
@@ -849,7 +1008,6 @@ form $x - C \teq y$, where $x$ and $y$ are variables and $C$ is a constant, and
 then create a directed path from $y$ to $x$ if $C \neq 0$, and a bidirectional
 path between $x$ and $y$ if $C = 0$.
 
-
 Unfortunately, Cogent integer literals \textsc{U8}, \textsc{U16}, \textsc{U32} and
 \textsf{U64} are not structural types, and hence terminating recursion on integers
 cannot be detected via our current method. Furthermore, as unsigned integer
@@ -863,18 +1021,32 @@ each program has an expression with a base case for any recursive call
 on integers, and performs recursion by taking only one constructor
 away per recursive call, so it does not `skip' a base case.
 
-Finally, while termination checking has been formalised and defined,
-it has not yet been implemented in Minigent or Cogent due to it being
-only an extension to this thesis. Future work would require the adaptation
-of this formalisation to the compiler and to Minigent, and then
-generation of an Isabelle/HOL termination proof from the results
+As a thesis extension, we have defined termination checking and provided
+a pen-and-paper formalisation. As future work, termination checking can be
+the adapted and implemented in the full compiler and in Minigent, and then
+the generation of an Isabelle/HOL termination proof from the results
 of the termination checker.
-
-\section{Example Usage and Testing}
-\label{ch:examplesandtesting}
-
-\todo{EXAMPLES, move this section before termination?}
 
 \section{Conclusion}
 
-\todo{this}
+Our proposed work has satisfied our three major requirements: type-safe recursive types,
+maintaining the existing type system benefits that Cogent's type system provides,
+and ease of showing termination.
+
+Our design allows for the flexible creation of recursive types on top of Cogent's existing
+boxed records, which prevent type-incorrect programs from being permitted by Cogent's
+constraint solver. Our examples show that we can create data structures such as lists
+and trees, and implement functions such as \textsf{map} to operate on them. Cogent's
+uniqueness type guarantees are maintained as our recursive types do not alter the existing
+constraint generation rules or solver rules, but rather only add more constraints.
+This will in future allow the optimisations and high level embedding
+that Cogent currently has in the main compiler to remain unchanged
+when porting recursive types from Minigent.
+
+Our extension work for formalising a termination check within Cogent has set the groundwork
+to ensure that Cogent programs are total and terminating. While the design has room for
+improvement, the current formalised rules already provide the basis for an implementation
+in Minigent and then in the full compiler. Using an opt-out mechanism in the language,
+programmers would be allowed to express more complex functions if they choose while being reminded
+of potential non termination by the compiler, giving them an increased awareness
+of the termination proof awaiting in the embedding.
