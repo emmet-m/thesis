@@ -65,7 +65,7 @@ within Cogent, termination and recursive types, and linear and uniqueness types.
             ::&= \text{\textcircled{w}} & \text{(writable)} \\
             &|\quad\, \text{\textcircled{r}} & \text{(readable)}\\
             &|\quad\, \text{\textcircled{u}} & \text{(unboxed)}\\
-            &|\quad\; \alpha & \text{(unkown)}\\
+            &|\quad\; \alpha & \text{(unknown)}\\
         \text{field names } f
     \end{align*}
     \caption{The syntax for record types within Cogent~\citep{ICFPCogent}. An $\overline{\text{overline}}$ indicates a set of 1 or more options}
@@ -169,7 +169,7 @@ The constraint generation component has a defined rule for which constraints
 to generate based on which expression is encountered in the program. For
 example, the function application constraint generation rule in
 \autoref{fig:funcconstraintgen}, which starts with the function application
-expresion $e_1\; e_2$, and generates the constraints that the function
+expression $e_1\; e_2$, and generates the constraints that the function
 expression $e_1$ must have type $\alpha \rightarrow \tau$ for some
 $\alpha$ and $\tau$, and that the argument expression $e_2$ must have
 the type of $\alpha$.
@@ -186,7 +186,7 @@ which correspond to the program being type correct or type incorrect respectivel
 Take for example a type equality constraint between two function types,
 $\tau_1 \rightarrow \tau_2 \typeeq \rho_1 \rightarrow \rho_2$. The simplifier
 phase contains a rule that this constraint can be simplified into solving
-two smaller contraints: 
+two smaller constraints: 
 
 \[
     \tau_1 \rightarrow \tau_2 \typeeq \rho_1 \rightarrow \rho_2 
@@ -397,9 +397,9 @@ simpler reasoning about our Isabelle embedding.
 \subsection{Termination Checking}
 
 Many languages feature language based termination checking, a process
-where a langauge compiler has the ability to check if a user-written function
+where a language compiler has the ability to check if a user-written function
 terminates. For many theorem provers such as Isabelle, 
-termination is a requirement as permitting nonterminating functions
+termination is a requirement as permitting non-terminating functions
 can introduce logical inconsistencies in the theorem prover.
 
 One technique to identify if a function terminates is to check if it belongs
@@ -419,7 +419,7 @@ describes an inductive definition of primitive recursive functions:
 
     \begin{itemize}
         \item 
-            \textsf{O}, the \textit{null} or \textit{constant} combinator that takes zero arguemnts.
+            \textsf{O}, the \textit{null} or \textit{constant} combinator that takes zero arguments.
         \item 
             \textsf{Succ}, the \textit{successor} combinator that takes one argument, and returns the successor
             of that argument.
@@ -460,7 +460,7 @@ recurse structurally on data structures terminate, as all strictly positive data
 cannot be infinite.
 
 \citet{PredicateStructrec} talk in particular about \textit{structural ordering}, 
-by measuring term size in terms of constructors. They describe two axioms to measue
+by measuring term size in terms of constructors. They describe two axioms to measure
 this order, the first being given a term $e$ and a constructor $C$, the transitive closure of:
 $$
     e < C (\dots, e, \dots)
@@ -477,7 +477,7 @@ a matrix of relations between function argument variables and variables that
 feature in the recursive call of a function. These relations are relations
 on the structural size of the variables, which take the form of inequality ($<$),
 equality ($=$) and unknown (\textsf{?}) sizes, and are generated during
-langauge expressions such as constructor elimination. 
+language expressions such as constructor elimination. 
 
 Take for example the following function which operates on two Peano numbers:
 

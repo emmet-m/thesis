@@ -56,7 +56,7 @@ Boxed records now feature an optional recursive type variable bound by the \text
 optionally feature in a record type in which they are bound. This also ensures our new record syntax is
 backwards compatible with the previous record syntax, enabling existing Cogent programs to remain unchanged.
 
-\autoref{fig:muexample} demostrates the use of our new grammar to construct an integer list datatype,
+\autoref{fig:muexample} demonstrates the use of our new grammar to construct an integer list datatype,
 with the use of a variant type in a recursive record field \textit{l} that is either Nil,
 the end of the list, or Cons, the current integer and the rest of the list. Further
 examples are discussed in \autoref{ch:examplesandtesting} at the end of the chapter.
@@ -109,7 +109,7 @@ examples are discussed in \autoref{ch:examplesandtesting} at the end of the chap
 
 Checking that all types only occur \emph{strictly positive} has been implemented in the reorganisation phase of the compiler
 instead of during type checking. This allows for a simple one-pass algorithm that can 
-analyse all the types in the program at once, and a simpler contraint generation and solving phases.
+analyse all the types in the program at once, and a simpler constraint generation and solving phases.
 
 \autoref{fig:strictlypositivecheck} describes the strictly positive check over Cogent's types.
 This algorithm keeps track of a set of in scope bound recursive parameters $\mathcal{B}$ and a set of recursive
@@ -379,9 +379,9 @@ cover the case where we compare two recursive parameters
 $t_r$ and $k_r$, where \textbf{unroll}ing both parameters results
 in the same type via meta equality.
 
-\autoref{eq:firstunbox} and \autoref{eq:lastrecs} allow for the elmination of \textbf{UnboxedNotRecursive} constraints
+\autoref{eq:firstunbox} and \autoref{eq:lastrecs} allow for the elimination of \textbf{UnboxedNotRecursive} constraints
 given that either the recursive parameter is $\varepsilon$ and the sigil is
-unboxed (\textcircled{u}), or that the recursive paremeter is some \textbf{mu} $t$ and
+unboxed (\textcircled{u}), or that the recursive parameter is some \textbf{mu} $t$ and
 the accompanying sigil $s$ is readonly (\textcircled{r}) or writable (\textcircled{w}).
 
 \subsection{Unification Phase}
@@ -456,7 +456,7 @@ which are replaced with an unboxed record instead.
 
 A simple use of this list can be seen in \autoref{fig:listsum}, which sums a list of
 32 bit integers (\textsf{U32}). Our recursive call is on a variable $x$, which has
-the linear type $t!$, which the compiler will unroll and then propogate the bang ($!$)
+the linear type $t!$, which the compiler will unroll and then propagate the bang ($!$)
 through the unrolled type via the normaliser.
 
 \begin{figure}
@@ -536,7 +536,7 @@ implementation with tuples and more compact \textsf{case} statements.
 
 It can be seen in our recursive call to map, we pass \textit{remaining2.rest} and
 \textit{fun} as our arguments, being the tail and mapping function for the list
-respectively. As \textit{remaining2.rest} has the type of the recursive paramater
+respectively. As \textit{remaining2.rest} has the type of the recursive parameter
 for the list \textit{t}, our solver unrolls this variable as described in order
 to ensure the recursive call has been given expressions of the correct type.
 
@@ -596,11 +596,11 @@ call (i.e. every expression in $C$) is smaller than the argument to the function
 condition for soundness of our termination checker. 
 
 For our check to be \emph{complete},
-our checker would need to show all nonterminating functions are invalid.
+our checker would need to show all non-terminating functions are invalid.
 As a consequence of the halting problem, however, this completeness is impossible
 so our checker only attempts to check for primitive recursion.
 
-We generate such assertions by looking at Cogent's expression langauge 
+We generate such assertions by looking at Cogent's expression language 
 where any form of structural size is added or taken away, namely
 \textsf{take}, \textsf{put} and \textsf{case} expressions.
 \autoref{fig:terminationassertiongen} describes this assertion generation.
@@ -621,8 +621,8 @@ $x \tlt x$, which is clearly false.
     \label{fig:varmapenv}
 \end{figure}
 
-We prevent this from occuring by using a fresh variable name for every
-introduced varaible in scope, and use these fresh names in our assertions.
+We prevent this from occurring by using a fresh variable name for every
+introduced variable in scope, and use these fresh names in our assertions.
 We also store a mapping of program variables to fresh variables names in a
 context $E$, which we update as we encounter new variable definitions in the
 function expression. The syntax of our environment is as
@@ -842,7 +842,7 @@ to prove termination in some cases.
     \]
     
     \caption{Termination assertion generation rules,
-             continiued from \autoref{fig:terminationassertiongen}}
+             continued from \autoref{fig:terminationassertiongen}}
     \label{fig:terminationassertiongen2}
 \end{figure}
 
@@ -1019,7 +1019,7 @@ we could do so by removing the constructor $C$ from $y$, and then taking away on
 the LHS of the assertion, leaving $x - 2 \teq y$.
 
 Not only does this allow us to use extra assertions, but we may still determine 
-if our function terminates by showing existance of a one-way path from the input
+if our function terminates by showing existence of a one-way path from the input
 argument to recursive call arguments. We simply normalise all equations into the
 form $x - C \teq y$, where $x$ and $y$ are variables and $C$ is a constant, and
 then create a directed path from $y$ to $x$ if $C \neq 0$, and a bidirectional
