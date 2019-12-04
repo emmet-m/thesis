@@ -66,42 +66,42 @@ examples are discussed in \autoref{ch:examplesandtesting} at the end of the chap
 \begin{figure}
     \centering
     \begin{gather*}
-    \begin{split}
-        \textbf{RP}(\textbf{mu } t) &= \{t\} \\
-        \textbf{RP}(\varepsilon) &= \{\}
-    \end{split} \\[10pt]
-    \infer[\textsc{sp-rec}]{
-        \mathcal{S}; \mathcal{B} \vdash \mu\; \{\overline { f_i : \tau_i } \} \textbf{ SP}
-    }{
-        \mathcal{S}\setminus \textbf{RP}(\mu), \mathcal{B} \cup \textbf{RP}(\mu) \vdash \tau_i \textbf{ SP}
-    }
-    \hspace{3em}
-    \infer[\textsc{sp-var}]{
-        \mathcal{S}; \mathcal{B} \vdash \langle\overline{\kappa_i : \tau_i}\rangle \textbf{ SP}
-    }{
-        \mathcal{S}; \mathcal{B} \vdash \tau_i \textbf{ SP}
-    } \\[10pt]
-    \hspace{3em}
-    \infer[\textsc{sp-func}]{
-        \mathcal{S}; \mathcal{B} \vdash \tau_1 \rightarrow \tau_2 \textbf{ SP}
-    }{
-        \mathcal{S} \cup \mathcal{B}; \mathcal{B} \vdash \tau_1 \textbf{ SP}
-        &
-        \mathcal{S}; \mathcal{B} \vdash \tau_2 \textbf{ SP}
-    } \\[10pt]
-    \infer[\textsc{sp-rvar}]{
-        \mathcal{S}; \mathcal{B} \vdash t_r \textbf{ SP}
-    }{
-        t_r \notin \mathcal{S}
-    }
-    \hspace{2em}
-    \infer[\textsc{sp-prim}]{
-        \mathcal{S}; \mathcal{B} \vdash \mathcal{T} \textbf{ SP}
-    }{}
-    \hspace{2em}
-    \infer[\textsc{sp-tvar}]{
-        \mathcal{S}; \mathcal{B} \vdash a \textbf{ SP}
-    }{}
+        \begin{split}
+            \textbf{RP}(\textbf{mu } t) &= \{t\} \\
+            \textbf{RP}(\varepsilon) &= \{\}
+        \end{split} \\[10pt]
+        \infer[\textsc{sp-rec}]{
+            \mathcal{S}; \mathcal{B} \vdash \mu\; \{\overline { f_i : \tau_i } \} \textbf{ SP}
+        }{
+            \text{for all } i;\; \mathcal{S}\setminus \textbf{RP}(\mu); \mathcal{B} \cup \textbf{RP}(\mu) \vdash \tau_i \textbf{ SP}
+        }
+        \hspace{3em}
+        \infer[\textsc{sp-var}]{
+            \mathcal{S}; \mathcal{B} \vdash \langle\overline{\kappa_i : \tau_i}\rangle \textbf{ SP}
+        }{
+            \text{for all } i;\; \mathcal{S}; \mathcal{B} \vdash \tau_i \textbf{ SP}
+        } \\[10pt]
+        \hspace{3em}
+        \infer[\textsc{sp-func}]{
+            \mathcal{S}; \mathcal{B} \vdash \tau_1 \rightarrow \tau_2 \textbf{ SP}
+        }{
+            \mathcal{S} \cup \mathcal{B}; \mathcal{B} \vdash \tau_1 \textbf{ SP}
+            &
+            \mathcal{S}; \mathcal{B} \vdash \tau_2 \textbf{ SP}
+        } \\[10pt]
+        \infer[\textsc{sp-rvar}]{
+            \mathcal{S}; \mathcal{B} \vdash t_r \textbf{ SP}
+        }{
+            t_r \notin \mathcal{S}
+        }
+        \hspace{2em}
+        \infer[\textsc{sp-prim}]{
+            \mathcal{S}; \mathcal{B} \vdash \mathcal{T} \textbf{ SP}
+        }{}
+        \hspace{2em}
+        \infer[\textsc{sp-tvar}]{
+            \mathcal{S}; \mathcal{B} \vdash a \textbf{ SP}
+        }{}
     \end{gather*}
     \caption{The rules for checking that Cogent types are strictly positive}
     \label{fig:strictlypositivecheck}
@@ -174,7 +174,7 @@ solving phase.
                 \vspace{0.5em} \\
                 A;\Gamma_1 \vdash e_1\; : \mu\; \{ \overline{f_i^u : \tau_i}, f_k^\bullet : \tau_k \}\; s
                 \vspace{0.5em} \\
-                A \vdash \mu \textit{ s } \textbf{UnboxedNotRecursive}
+                \colorbox{highlighteq}{$A \vdash \mu \textit{ s } \textbf{UnboxedNotRecursive}$}
             \end{array}
         }
     \end{align*}
@@ -195,7 +195,7 @@ solving phase.
                 \hspace{3em}
                 A;\Gamma_1 \vdash e_1\; : \mu\; \{ \overline{f_i^u : \tau_i}, f_k^\circ : \tau_k \}\; s
                 \vspace{0.5em} \\
-                A \vdash \mu \textit{ s } \textbf{UnboxedNotRecursive}
+                \colorbox{highlighteq}{$A \vdash \mu \textit{ s } \textbf{UnboxedNotRecursive}$}
                 \hspace{3em}
                 s \neq \text{\textcircled{r}}
                 \vspace{0.5em} \\
@@ -218,7 +218,7 @@ solving phase.
         }{
             A;\Gamma \vdash e : \mu\; \{ \overline{f_i^\bullet : \tau_i}, f_k^\circ : \tau_k \}\; s
             &\hspace{1em}
-            A \vdash \mu \textit{ s } \textbf{UnboxedNotRecursive}
+            \colorbox{highlighteq}{$A \vdash \mu \textit{ s } \textbf{UnboxedNotRecursive}$}
         }
     \]
     
@@ -239,7 +239,7 @@ solving phase.
                 G \vdash e : \gamma\; \{ f^\circ : \tau | \alpha \}\; \beta \rightsquigarrow G'\; |\; C_1 \\[5pt]
                 C_2 = \gamma\; \{ f^\bullet : \tau | \alpha \}\; \beta\; \textbf{Drop}
                 \hspace{2em}
-                C_3 = \gamma\; \beta\; \textbf{UnboxedNotRecursive}
+                \colorbox{highlighteq}{$C_3 = \gamma\; \beta\; \textbf{UnboxedNotRecursive}$}
             \end{array}
         }
     \]
@@ -276,7 +276,7 @@ solving phase.
                     \text{ else } \top \\[5pt]
                 C_5 = \gamma \neq \text{\textcircled{r}}
                 \hspace{2em}
-                C_6 = \delta\; \gamma \textbf{ UnboxedNotRecursive}
+                \colorbox{highlighteq}{$C_6 = \delta\; \gamma \textbf{ UnboxedNotRecursive}$}
             \end{array}
         }
     \]
@@ -304,7 +304,7 @@ solving phase.
                     \gamma \subtype \tau
                 \hspace{2em}
                 C_4 = \gamma \neq \text{\textcircled{r}} \\[5pt]
-                C_5 = \delta\; \gamma \textbf{ UnboxedNotRecursive}
+                \colorbox{highlighteq}{$C_5 = \delta\; \gamma \textbf{ UnboxedNotRecursive}$}
             \end{array}
         }
     \]
@@ -319,12 +319,14 @@ new constraint is outlined in \autoref{fig:unboxednotrecursive}
 
 We modify the original \textsc{Take}, \textsc{Put} and \textsc{Member} typing rules defined by
 \citet{LiamThesis} to include this constraint as presented in \autoref{fig:puttypingrule},
-\autoref{fig:taketypingrule} and \autoref{fig:membertypingrule}.
+\autoref{fig:taketypingrule} and \autoref{fig:membertypingrule}, with our differences
+highlighted in \colorbox{highlighteq}{blue}.
 
 Next, we modify the \textsc{CG-Member}, \textsc{CG-Take} and \textsc{CG-Put} to account
 for constraint generation. Our new constraints will be generated
 as defined by \autoref{fig:takeconstraintgen}, \autoref{fig:putconstraintgen} and 
-\autoref{fig:memberconstraintgen}, to also include this new constraint.
+\autoref{fig:memberconstraintgen}, to also include this new constraint, with our differences
+again highlighted in \colorbox{highlighteq}{blue}.
 
 Each of these rules additionally now includes an extra fresh unification variable, which is
 used to infer the recursive parameter of a given record. These variables are substituted
@@ -342,7 +344,7 @@ for real recursive parameters during the constraint solver's \textit{unification
        t_r  &\typeeq  k_r   & \simp  && \textbf{unroll } t_r  &=         \textbf{unroll } k_r \label{eq:firstrecs} \\
        t_r  &\subtype k_r   & \simp  && \textbf{unroll } t_r  &=         \textbf{unroll } k_r \label{eq:lastrecs} \\
        (\textbf{mu } t)\; &s\; \textbf{UnboxedNotRecursive}   
-            & \simp &&  s = \text{\textcircled{r}} &\lor s = \text{\textcircled{w}} \label{eq:firstunbox} \\
+            & \simp &&  s &\neq \textcircled{u} \label{eq:firstunbox} \\
        \varepsilon\; &\text{\textcircled{u}}\; \textbf{UnboxedNotRecursive} 
             & \simp &&  &\varepsilon \label{eq:lastunbox}
     \end{align}
@@ -378,7 +380,7 @@ $t_r$ and $k_r$, where \textbf{unroll}ing both parameters results
 in the same type via meta equality.
 
 \autoref{eq:firstunbox} and \autoref{eq:lastrecs} allow for the elmination of \textbf{UnboxedNotRecursive} constraints
-given that either the recursive parameter is nothing ($\varepsilon$) and the sigil is
+given that either the recursive parameter is $\varepsilon$ and the sigil is
 unboxed (\textcircled{u}), or that the recursive paremeter is some \textbf{mu} $t$ and
 the accompanying sigil $s$ is readonly (\textcircled{r}) or writable (\textcircled{w}).
 
@@ -395,7 +397,7 @@ This is true symmetrically, when the left and right hand sides of the above
 constraints are swapped.
 
 The unification phase also unifies recursive parameters in an \textbf{UnboxedNotRecursive}
-constraint to nothing ($\varepsilon$) if the sigil in that constraint has been unified to
+constraint to $\varepsilon$ if the sigil in that constraint has been unified to
 an unboxed sigil (\textcircled{u}). If this unification variable was meant to be a recursive
 parameter $t_r$, then the constraint solving will fail elsewhere due to this substitution,
 preserving the correctness of the solver.
@@ -582,42 +584,21 @@ all primitive recursive calls will terminate.
 Our size assertions take the form of two relations between variables, 
 size inequality ($\tlt$) and size equality ($\teq$).
 $x \tlt y$ is the assertion that a variable $x$ is strictly
-structurally smaller than a varialbe $y$ and, $x \teq y$ is the assertion that a
-varialbe $x$ is structurally equal in size to a variable $y$.
+structurally smaller than a variable $y$ and, $x \teq y$ is the assertion that a
+variable $x$ is structurally equal in size to a variable $y$.
 
 The checker starts with a set of known termination assertions $G$, and then adds
 extra assertions by analysing the expression body of a function to produce
 a stronger set of assertions $G'$, as well as a set of expressions that are arguments
-to recursive function calls $C$. \autoref{fig:terminationcondition} describes the
-condition for soundness of our termination checker. For our check to be \emph{complete},
-our checker would need to show all nonterminating functions are invalid.
-As a consequence of the halting problem however, this completeness is impossible
-so our checker only attempts to check for primitive recursion.
+to recursive function calls $C$. We wish to show that every argument to a recursive function
+call (i.e. every expression in $C$) is smaller than the argument to the function. 
+\autoref{fig:terminationcondition} describes the
+condition for soundness of our termination checker. 
 
-\begin{figure}
-    \centering
-    \[
-        \begin{array}{ll}
-            f\; x = e              
-                & \text{Given a function definition} \\[10pt]
-            \implies \alpha \leftarrow x;\; \varnothing 
-                \vdash e \rightsquigarrow G'\; |\; E'\; |\; C
-                \hspace{2em}
-                & \text{And a set of assertions and goals} \\
-                & \text{generated by the termination checker} \\
-                & \text{from an initial environment and} \\
-                & \text{empty set of assertions} \\[10pt]
-            \implies G' \vdash \forall \beta \in C.\; \beta \tlt \alpha
-                & \text{The function terminates if} \\
-                & \text{every goal expression produced} \\
-                & \text{is smaller than the function argument} \\
-                & \text{under the produced assertions}
-        \end{array}
-    \]
-    
-    \caption{The termination checker soundness condition}
-    \label{fig:terminationcondition}
-\end{figure}
+For our check to be \emph{complete},
+our checker would need to show all nonterminating functions are invalid.
+As a consequence of the halting problem, however, this completeness is impossible
+so our checker only attempts to check for primitive recursion.
 
 We generate such assertions by looking at Cogent's expression langauge 
 where any form of structural size is added or taken away, namely
@@ -630,11 +611,23 @@ $\textsf{let } x = C\; x \textsf{ in } \dots$, which would produce the
 assertion $x \teq C\; x$, which by our structural size rules can be rewritten as
 $x \tlt x$, which is clearly false.
 
+\begin{figure}
+    \centering
+    \begin{align*}
+        E ::=&\; x \rightarrow \alpha,\; E  & \text{(variable mapping)} \\
+             &|\; \varepsilon                 & \text{(empty)}
+    \end{align*}
+    \caption{The syntax of our environments}
+    \label{fig:varmapenv}
+\end{figure}
+
 We prevent this from occuring by using a fresh variable name for every
 introduced varaible in scope, and use these fresh names in our assertions.
 We also store a mapping of program variables to fresh variables names in a
 context $E$, which we update as we encounter new variable definitions in the
-function expression.
+function expression. The syntax of our environment is as
+presented in \autoref{fig:varmapenv}, where $E[x]$ denotes the lookup
+of a variable $x$ in $E$, which returns the first mapping of $x$ found in $E$. 
 
 With our current method of size relations, we are unable to reason about variables
 compared against any general expression. For example, suppose the assertion $x \tlt C\; y$.
@@ -645,12 +638,10 @@ of structure smaller than y, or $x \teq y$ if x is only one layer of structure s
 
 We seek a way to eliminate such assertions from being generated. To do this,
 we define a function \textsf{get} in \autoref{fig:getdef} that maps an expression to
-a fresh variable name if the expression is a program variable and otherwise nothing 
-($\varepsilon$).
+a fresh variable name if the expression is a program variable and otherwise $\varepsilon$.
 Whenever we generate an assertion against an expression $e$, we use the result
 of $\textsf{get}(E,e)$ in the assertion, which will also insert the correct fresh
 variable name in the assertion.
-
 
 \begin{figure}
     \centering
@@ -670,70 +661,85 @@ to prove termination in some cases.
 \begin{figure}
     \centering
     \[
-        \fbox{$E; G \vdash e : \tau \rightsquigarrow G'\; |\; E'\; |\; C$}
+        \fbox{$E; G \vdash e : \tau \rightsquigarrow G'\; |\; C$}
     \]
     \[
         \infer[\textsc{\footnotesize T-Take}]{
-            E_1; G_1
+            E; G_1
                 \vdash \textsf{take } r'\; \{ f = x \} = e_1 \textsf{ in } e_2
-                \rightsquigarrow G_3\; |\; E_3\; |\; C_1 \cup C_2
+                \rightsquigarrow G_3\; |\; C_1 \cup C_2
         }{
             \begin{array}{c}
             \alpha, \beta\; \textsf{fresh}
             \hspace{1em}
-            E_1; \alpha \tlt \textsf{get}(E_1,e_1),\; \textsf{get}(E_1,e_1) \teq \beta,\; G_1 \vdash e_1
-                \rightsquigarrow G_2\; |\; E_2\; |\; C_1 \\[5pt]
-            E_1, \alpha \leftarrow x, \beta \leftarrow r'; G_2 \vdash e_2 \rightsquigarrow G_3\; |\; E_3\; |\; C_2
+            E; \alpha \tlt \textsf{get}(E,e_1),\; \textsf{get}(E,e_1) \teq \beta,\; G_1 \vdash e_1
+                \rightsquigarrow G_2\; |\; C_1 \\[5pt]
+            E, x \rightarrow \alpha , r' \rightarrow \beta ; G_2 \vdash e_2 \rightsquigarrow G_3\; |\; C_2
             \end{array}
         }
     \]
     \vspace{0.5pt}
     \[
         \infer[\textsc{\footnotesize T-Put}]{
-            E_1; G_1 \vdash \textsf{put } e_1.f := e_2
-                \rightsquigarrow G_3\; |\; E_1\; |\; C_1 \cup C_2
+            E; G_1 \vdash \textsf{put } e_1.f := e_2
+                \rightsquigarrow G_3\; |\; C_1 \cup C_2
         }{
             \begin{array}{c}
                 \alpha, \beta\; \textsf{fresh} \\[5pt]
-                E_1; \alpha \tlt \beta,\; \beta \teq \textsf{get}(E_1,e_1),\; \alpha \teq \textsf{get}(E_1,e_2),\; 
-                    G_1 \vdash e_1 \rightsquigarrow G_2\; |\; E_2\; |\; C_1 \\[5pt]
-                E_1; G_2 \vdash e_2 \rightsquigarrow G_3\; |\; E_3\; |\; C_2
+                E; \alpha \tlt \beta,\; \beta \teq \textsf{get}(E,e_1),\; \alpha \teq \textsf{get}(E,e_2),\; 
+                    G_1 \vdash e_1 \rightsquigarrow G_2\; |\; C_1 \\[5pt]
+                E; G_2 \vdash e_2 \rightsquigarrow G_3\; |\; C_2
             \end{array}
         }
     \]
     \vspace{0.5pt}
     \[
         \infer[\textsc{\footnotesize T-Case}]{
-            E_1; G_1 \vdash \textsf{case } e_1 \textsf{ of } \kappa\; x.\; e_2\; 
+            E; G_1 \vdash \textsf{case } e_1 \textsf{ of } \kappa\; x.\; e_2\; 
                 \textsf{else}\; y.\; e_3
-                \rightsquigarrow G_4\; |\; E_1\; |\; C_1 \cup C_2 \cup C_3
+                \rightsquigarrow G_4\; |\; C_1 \cup C_2 \cup C_3
         }{
             \begin{array}{c}
                 \alpha, \beta, \gamma\; \textsf{fresh}
                 \hspace{1em}
-                E_1;\; G_1,\; \beta \teq \textsf{get}(E_1, e_1)  \vdash e_1 
-                    \rightsquigarrow G_2\; |\; E_2\; |\; C_1 \\[5pt]
-                E_1, x \leftarrow \alpha;\; G_2, \alpha \tlt \beta 
-                    \vdash e_2 \rightsquigarrow G_3\; |\; E_3\; |\; C_2 \\[5pt]
-                E_1, y \leftarrow \gamma;\; G_3, \gamma \teq \beta 
-                    \vdash e_3 \rightsquigarrow G_4\; |\; E_4\; |\; C_3
+                E;\; G_1,\; \beta \teq \textsf{get}(E, e_1)  \vdash e_1 
+                    \rightsquigarrow G_2\; |\; C_1 \\[5pt]
+                E, \alpha \rightarrow x ;\; G_2, \alpha \tlt \beta 
+                    \vdash e_2 \rightsquigarrow G_3\; |\; C_2 \\[5pt]
+                E, \gamma \rightarrow y;\; G_3, \gamma \teq \beta 
+                    \vdash e_3 \rightsquigarrow G_4\; |\; C_3
             \end{array}
         }
     \]
     \vspace{0.5pt}
     \[
         \infer[\textsc{\footnotesize T-CaseIrr}]{
-            E_1; G_1 \vdash \textsf{case } e_1 \textsf{ of } \kappa\; x.\; e_2\; 
-                \rightsquigarrow G_3\; |\; E_1\; |\; C_1 \cup C_2
+            E; G_1 \vdash \textsf{case } e_1 \textsf{ of } \kappa\; x.\; e_2\; 
+                \rightsquigarrow G_3\; |\; C_1 \cup C_2
         }{
             \begin{array}{c}
                 \alpha, \beta\; \textsf{fresh}
                 \hspace{1em}
-                E_1;\; G_1,\; \beta \teq \textsf{get}(E_1, e_1)  \vdash e_1 
-                    \rightsquigarrow G_2\; |\; E_2\; |\; C_1 \\[5pt]
-                E_1, x \leftarrow \alpha;\; G_2, \alpha \tlt \beta 
-                    \vdash e_2 \rightsquigarrow G_3\; |\; E_3\; |\; C_2
+                E;\; G_1,\; \beta \teq \textsf{get}(E, e_1)  \vdash e_1 
+                    \rightsquigarrow G_2\; |\; C_1 \\[5pt]
+                E, \alpha \rightarrow x;\; G_2, \alpha \tlt \beta 
+                    \vdash e_2 \rightsquigarrow G_3\; |\; C_2
                 \hspace{2em}
+            \end{array}
+        }
+    \]
+    \vspace{0.5pt}
+    \[
+        \infer[\textsc{\footnotesize T-Let}]{
+            E; G_1 \vdash \textsf{let } x = e_1 \textsf{ in } e_2
+                \rightsquigarrow G_3\; |\; C_1 \cup C_2
+        }{
+            \begin{array}{c}
+                \alpha \; \textsf{fresh}
+                \hspace{1em}
+                E; G_1 \vdash e_1 \rightsquigarrow G_2\; |\; C_1 \\[5pt]
+                E, x \rightarrow \alpha; \alpha \teq \textsf{get}(E, e_1),\; G_2 \vdash e_2 
+                    \rightsquigarrow G_3\; |\; C_2
             \end{array}
         }
     \]
@@ -741,23 +747,23 @@ to prove termination in some cases.
     \label{fig:terminationassertiongen}
 \end{figure}
 
-\begin{figure}[]
+\begin{figure}
     \centering
     \[
         \infer[\textsc{\footnotesize T-Member}]{
-            E_1; G_1 \vdash e.f
-                \rightsquigarrow G_2\; |\; E_1\; |\; C
+            E; G_1 \vdash e.f
+                \rightsquigarrow G_2\; |\; C
         }{
-            E_1; G_1 \vdash e_1 \rightsquigarrow G_2\; |\; E_2\; |\; C
+            E; G_1 \vdash e_1 \rightsquigarrow G_2\; |\; C
         }
     \]
     \vspace{0.5pt}
     \[
         \infer[\textsc{\footnotesize T-Con}]{
-            E_1; G_1 \vdash \kappa\; e
-                \rightsquigarrow G_2\; |\; E_2\; |\; C
+            E; G_1 \vdash \kappa\; e
+                \rightsquigarrow G_2\; |\; C
         }{
-            E_1; G_1 \vdash e_1 \rightsquigarrow G_2\; |\; E_1\; |\; C
+            E; G_1 \vdash e_1 \rightsquigarrow G_2\; |\; C
         }
         \hspace{1em}
         \infer[\textsc{\footnotesize T-TApp}]{
@@ -769,13 +775,13 @@ to prove termination in some cases.
     \vspace{0.5pt}
     \[
         \infer[\textsc{\footnotesize T-FApp}]{
-            E_1; G_1 \vdash e_1\; e_2
-                \rightsquigarrow G_3\; |\; E_1\; |\; C_1 \cup C_2 
-                \cup \{\textsf{get}(E_1,e_2)\}
+            E; G_1 \vdash e_1\; e_2
+                \rightsquigarrow G_3\; |\; C_1 \cup C_2 
+                \cup \{\textsf{get}(E,e_2)\}
         }{
-            E_1; G_1 \vdash e_1 \rightsquigarrow G_2\; |\; E_2\; |\; C_1
+            E; G_1 \vdash e_1 \rightsquigarrow G_2\; |\; C_1
             \hspace{1em}
-            E_2; G_2 \vdash e_2 \rightsquigarrow G_3\; |\; E_3\; |\; C_2
+            E_2; G_2 \vdash e_2 \rightsquigarrow G_3\; |\; C_2
         }
     \]
     \vspace{0.5pt}
@@ -793,66 +799,77 @@ to prove termination in some cases.
     \vspace{0.5pt}
     \[
         \infer[\textsc{\footnotesize T-PrimOp}]{
-            E_1; G_1 \vdash e_1 \text{ \textasteriskcentered }\; e_2
-                \rightsquigarrow G_3\; |\; E_1\; |\; C_1 \cup C_2
+            E; G_1 \vdash e_1 \text{ \textasteriskcentered }\; e_2
+                \rightsquigarrow G_3\; |\; C_1 \cup C_2
         }{
-            E_1; G_1 \vdash e_1 \rightsquigarrow G_2\; |\; E_2\; |\; C_1
+            E; G_1 \vdash e_1 \rightsquigarrow G_2\; |\; C_1
             \hspace{1em}
-            E_2; G_2 \vdash e_2 \rightsquigarrow G_3\; |\; E_3\; |\; C_2
-        }
-    \]
-    \vspace{0.5pt}
-    \[
-        \infer[\textsc{\footnotesize T-Let}]{
-            E_1; G_1 \vdash \textsf{let } x = e_1 \textsf{ in } e_2
-                \rightsquigarrow G_3\; |\; E_3\; |\; C_1 \cup C_2
-        }{
-            \begin{array}{c}
-                \alpha \; \textsf{fresh}
-                \hspace{1em}
-                E_1; G_1 \vdash e_1 \rightsquigarrow G_2\; |\; E_2\; |\; C_1 \\[5pt]
-                E_1, \alpha \leftarrow x; \alpha \teq \textsf{get}(E_2, e_1),\; G_2 \vdash e_2 
-                    \rightsquigarrow G_3\; |\; E_3\; |\; C_2
-            \end{array}
+            E_2; G_2 \vdash e_2 \rightsquigarrow G_3\; |\; C_2
         }
     \]
     \vspace{0.5pt}
     \[
         \infer[\textsc{\footnotesize T-If}]{
-            E_1; G_1 \vdash \textsf{if } e_1 \textsf{ then } e_2 \textsf{ else } e_3
-                \rightsquigarrow G_4\; |\; E_1\; |\; C_1 \cup C_2 \cup C_3
+            E; G_1 \vdash \textsf{if } e_1 \textsf{ then } e_2 \textsf{ else } e_3
+                \rightsquigarrow G_4\; |\; C_1 \cup C_2 \cup C_3
         }{
             \begin{array}{c}
-                E_1; G_1 \vdash e_1 \rightsquigarrow G_2\; |\; E_2\; |\; C_1 \\[5pt]
-                E_1; G_2 \vdash e_2 \rightsquigarrow G_3\; |\; E_3\; |\; C_2
+                E; G_1 \vdash e_1 \rightsquigarrow G_2\; |\; C_1 \\[5pt]
+                E; G_2 \vdash e_2 \rightsquigarrow G_3\; |\; C_2
                 \hspace{1em}
-                E_1; G_3 \vdash e_3 \rightsquigarrow G_4\; |\; E_4\; |\; C_3
+                E; G_3 \vdash e_3 \rightsquigarrow G_4\; |\; C_3
             \end{array}
         }
     \]
     \vspace{0.5pt}
     \[
         \infer[\textsc{\footnotesize T-Tysig}]{
-            E_1; G_1 \vdash e :: \tau
-                \rightsquigarrow G_2\; |\; E_1\; |\; C
+            E; G_1 \vdash e :: \tau
+                \rightsquigarrow G_2\; |\; C
         }{
-            E_1; G_1 \vdash e \rightsquigarrow G_2\; |\; E_2\; |\; C
+            E; G_1 \vdash e \rightsquigarrow G_2\; |\; C
         }
     \]
     \vspace{0.5pt}
     \[
         \infer[\textsc{\footnotesize T-Struct}]{
-            E_1; G_1 \vdash \{\overline{f_i = e_i}\}
-                \rightsquigarrow G_{n+1}\; |\; E_1\; |\; \bigcup_{i = 1}^n C_i
+            E; G_1 \vdash \{\overline{f_i = e_i}\}
+                \rightsquigarrow G_{n+1}\; |\; \bigcup_{k = 1}^n C_k
         }{
-            i \in \{1, \dots, n\}\quad  E_i; G_i \vdash e_i 
-                \rightsquigarrow G_{i+1}\; |\; E_{i+1}\; |\; C_i
+           \text{for all } i \in \{1, \dots, n\}\quad  E; G_i \vdash e_i 
+                \rightsquigarrow G_{i+1}\; |\; C_i
         }
     \]
     
     \caption{Termination assertion generation rules,
              continiued from \autoref{fig:terminationassertiongen}}
     \label{fig:terminationassertiongen2}
+\end{figure}
+
+
+\begin{figure}
+    \centering
+    \[
+        \begin{array}{ll}
+            f\; x = e              
+                & \text{Given a function definition} \\[10pt]
+            \implies \alpha \leftarrow x,\varepsilon;\; \varnothing 
+                \vdash e \rightsquigarrow G'\; |\; C
+                \hspace{2em}
+                & \text{And a set of assertions and goals} \\
+                & \text{generated by the termination checker} \\
+                & \text{from an initial environment and} \\
+                & \text{empty set of assertions} \\[10pt]
+            \implies G' \vdash \forall \beta \in C.\; \beta \tlt \alpha
+                & \text{The function terminates if} \\
+                & \text{every goal expression produced} \\
+                & \text{is smaller than the function argument} \\
+                & \text{under the produced assertions}
+        \end{array}
+    \]
+    
+    \caption{The termination checker soundness condition}
+    \label{fig:terminationcondition}
 \end{figure}
 
 \begin{figure}

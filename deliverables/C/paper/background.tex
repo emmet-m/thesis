@@ -1,7 +1,7 @@
 \chapter{Background and Related Works}\label{ch:background}
 
-Our investigation of existing works will consider three domains: The existing types and features
-within Cogent, termination and recursive types and linear and uniqueness types.
+Our investigation of existing works will consider three domains: the existing types and features
+within Cogent, termination and recursive types, and linear and uniqueness types.
 
 \section{Cogent}
 %%% Basic syntax
@@ -165,7 +165,7 @@ and subtyping ($\tau_1 \subtype \tau_2$).
     \label{fig:funcconstraintgen}
 \end{figure}
 
-The the constraint generation component has a defined rule for which constraints
+The constraint generation component has a defined rule for which constraints
 to generate based on which expression is encountered in the program. For
 example, the function application constraint generation rule in
 \autoref{fig:funcconstraintgen}, which starts with the function application
@@ -544,14 +544,14 @@ three standard structural typing rules, described in figure \autoref{def:structu
     \label{def:structural}
 \end{figure}
 
-\textit{Exchange} is the rule that states that the order in which we add variables in an environment
+The \textit{exchange} rule states that the order in which we add variables in an environment
 is irrelevant. A conclusion of this is that if a term $e$ typechecks under environment $\Gamma$,
 then any permutation of $\Gamma$ will also typecheck $e$.
 
-\textit{Weakening} states that if a term $e$ typechecks under the assumptions
+The \textit{weakening} rule states that if a term $e$ typechecks under the assumptions
 in $\Gamma_1$, then $e$ will also typecheck if extra assumptions are added to the environment.
 
-\textit{Contraction} states that if we can typecheck a term $e$ using two identical
+The \textit{contraction} rule states that if we can typecheck a term $e$ using two identical
 assumptions, then we are able to check $e$ with just one of those two assumptions.
 
 Substructural type systems control access to information within the program by limiting which
