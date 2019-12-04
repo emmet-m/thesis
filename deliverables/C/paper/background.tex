@@ -83,7 +83,7 @@ and constraint solving techniques to show type correctness.
 Cogent's primitive datatypes consist of Boolean types (\texttt{Bool}) and the four unsigned integer types \texttt{U8}, 
 \texttt{U16}, \texttt{U32} and \texttt{U64}. Integer types can be upcast using the \texttt{\textsf{upcast}}
 keyword to convert a smaller integer type into a larger one (e.g. a \texttt{U8} into a \texttt{U32}).
-Details of these types can be seen in the syntax for Cogent's basic grammar in figure \ref{fig:cogentGrammar}.
+Details of these types can be seen in the syntax for Cogent's basic grammar in \ref{fig:cogentGrammar}.
 
 Each of these primitive types are of fixed size and thus are \emph{unboxed}, meaning they are stored on the
 stack and are not linear variables.
@@ -206,30 +206,30 @@ system could cause it to hang, denying services to other parts of a system which
 system's function.
 
 To deal with termination, we must consider the environment where we will prove termination for
-Cogent programs --- the Isabelle embedding and how we can make this process easier on the type
+Cogent programs --- the Isabelle/HOL embedding and how we can make this process easier on the type
 level within Cogent. We then seek a way to facilitate checking the termination of functions
 in Cogent.
 
 \subsection{Proving Termination in Isabelle}
 
-The official Isabelle tutorial~\citep{IsabelleTutorial} describes three methods of creating functions using
+The official Isabelle/HOL tutorial~\citep{IsabelleTutorial} describes three methods of creating functions using
 the keywords \textbf{primrec}, \textbf{fun} and \textbf{function}. The first, \textbf{primrec},
 allows one to create a \textit{primitive recursive} function --- one that returns a constant or removes
 a data type constructor from one of the arguments to the function in its body, `decreasing' in size every time.
 These primitive recursive functions are total by construction and therefore always terminate, removing the need for
-an explicit termination proof. This is required to reason inductively about any Isabelle function,
+an explicit termination proof. This is required to reason inductively about any Isabelle/HOL function,
 unless they are defined to be partial, however as partial functions may not terminate we do not want
 to consider them using them for our verification. Primitive recursive functions however are limited
 in their expressiveness and are a subset of computable functions, so we cannot rely on them for the general case.
 
 In his tutorial, Krauss~\citep{KraussIsabelle} discusses the details of creating functions using the \textbf{fun}
-and \textbf{function} keywords in Isabelle. The \textbf{fun} keyword instructs Isabelle to try and solve all necessary
+and \textbf{function} keywords in Isabelle. The \textbf{fun} keyword instructs Isabelle/HOL to try and solve all necessary
 termination proof obligations, rejecting the definition if it fails (either because the definition does not 
-terminate or because Isabelle cannot prove it). In contrast to \textbf{fun}, \textbf{function}
+terminate or because Isabelle/HOL cannot prove it). In contrast to \textbf{fun}, \textbf{function}
 requires that the termination proofs be provided manually by whoever is writing the function.
 
 Due to their automatic termination proofs, we would like as many Cogent functions as possible to be
-primitive. For all others, we can achieve an embedding via \textbf{fun} in the hope that Isabelle can find
+primitive. For all others, we can achieve an embedding via \textbf{fun} in the hope that Isabelle/HOL can find
 a termination proof. As a last resort we use \textbf{function} and have the proof engineer 
 manually give a proof of termination. 
 
@@ -374,15 +374,15 @@ for the successor of any natural number $x  \rightarrow P (x) \rightarrow P(S(x)
 of the given predicate $P$ for all natural numbers. This eliminator is indeed similar to the induction
 principle we previously defined, which is no coincidence due to their correspondence.
 
-The interactive theorem prover Isabelle generates the same induction principle for any type created.
+The interactive theorem prover Isabelle/HOL generates the same induction principle for any type created.
 We can get the same induction principle over natural numbers by redefining our $Nat$
-type in Isabelle, as in figure \ref{fig:IsabelleNatInduct}.
+type in Isabelle, as in \ref{fig:IsabelleNatInduct}.
 
 \begin{figure}
     \centering
 
     \includegraphics[width=300pt]{content/isabelleNatInduct.png}
-    \caption{A type for natural numbers defined in Isabelle and the generated 
+    \caption{A type for natural numbers defined in Isabelle/HOL and the generated 
     induction principle associated with the type.}
     \label{fig:IsabelleNatInduct}
 \end{figure}
@@ -390,9 +390,9 @@ type in Isabelle, as in figure \ref{fig:IsabelleNatInduct}.
 \FloatBarrier
 
 Considering our Cogent embedding will be within Isabelle, if we can embed our native
-Cogent types into an Isabelle type then we gain Isabelle's automatically generated
+Cogent types into an Isabelle/HOL type then we gain Isabelle's automatically generated
 induction principle over our Cogent types, allowing for much 
-simpler reasoning about our Isabelle embedding.
+simpler reasoning about our Isabelle/HOL embedding.
 
 \subsection{Termination Checking}
 
@@ -447,7 +447,7 @@ as the \textit{Ackermann function} \citep{Ackermann}, so using this technique li
 termination checking in Cogent to functions that perform simple iteration or
 non-recursive functions.
 
-Alternatively, or in conjunction with this approach, we consider using
+Alternatively, we may consider using
 structurally recursive methods as discussed by \citet{StrucrecStructures} and
 \citet{PredicateStructrec}. In this case our goal is to find a
 \textit{termination order} upon which our functions terminate --- An ordering
@@ -512,14 +512,14 @@ a lexicographical ordering between the arguments.
 This method shows promise for Cogent, as our language features many ways to produce
 size relations, such as \textsf{take}, \textsf{put}, \textsf{let} and \textsf{case}.
 In addition to this, if we find such a lexicographical ordering we may be able
-to produce an Isabelle proof of our function termination automatically,
+to produce an Isabelle/HOL proof of our function termination automatically,
 assisting the ease of verifying termination.
 
 \section{Linear and Uniqueness Types}
 
 Linear types are a kind of substructural type system as discussed by \citet{Substructural}.
 Many standard programming languages such as \textsc{C}, \textsc{Java} and \textsc{Haskell} feature
-three standard structural typing rules, described in figure \autoref{def:structural}.
+three standard structural typing rules, described in \autoref{def:structural}.
 
 \begin{figure}
     \centering

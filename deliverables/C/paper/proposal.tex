@@ -163,7 +163,7 @@ solving phase.
     \centering
     \begin{align*}
         \infer[\textsc{\footnotesize{Put}}]{
-            A;\Gamma \vdash \textsf{put } e_1.f_k  = e_2 : \; \mu \; \{ \overline{f_i^u : \tau_i}, f_k^\circ : \tau_k \} s
+            A;\Gamma \vdash \textsf{put } e_1.f_k  = e_2 : \; \colorbox{highlighteq}{$\mu$} \; \{ \overline{f_i^u : \tau_i}, f_k^\circ : \tau_k \} s
         }{
             \begin{array}{c}
                 A;\Gamma \vdash e2 : \tau_k
@@ -172,7 +172,7 @@ solving phase.
                 \hspace{2em}
                 s \neq \text{\textcircled{r}}
                 \vspace{0.5em} \\
-                A;\Gamma_1 \vdash e_1\; : \mu\; \{ \overline{f_i^u : \tau_i}, f_k^\bullet : \tau_k \}\; s
+                A;\Gamma_1 \vdash e_1\; : \colorbox{highlighteq}{$\mu$}\; \{ \overline{f_i^u : \tau_i}, f_k^\bullet : \tau_k \}\; s
                 \vspace{0.5em} \\
                 \colorbox{highlighteq}{$A \vdash \mu \textit{ s } \textbf{UnboxedNotRecursive}$}
             \end{array}
@@ -188,18 +188,18 @@ solving phase.
     \centering
     \begin{align*}
         \infer[\textsc{\footnotesize{Take}}]{
-            A;\Gamma \vdash \textsf{take } r \{ f_k = y \} = e1 \textsf{ in } e_2 : \tau
+            A;\Gamma \vdash \textsf{take } r\; \{ f_k = y \} = e1 \textsf{ in } e_2 : \tau
         }{
             \begin{array}{c}
                 A \vdash \Gamma \rightsquigarrow \Gamma_1 \boxplus \Gamma_2
                 \hspace{3em}
-                A;\Gamma_1 \vdash e_1\; : \mu\; \{ \overline{f_i^u : \tau_i}, f_k^\circ : \tau_k \}\; s
+                A;\Gamma_1 \vdash e_1\; : \colorbox{highlighteq}{$\mu$}\; \{ \overline{f_i^u : \tau_i}, f_k^\circ : \tau_k \}\; s
                 \vspace{0.5em} \\
-                \colorbox{highlighteq}{$A \vdash \mu \textit{ s } \textbf{UnboxedNotRecursive}$}
+                \colorbox{highlighteq}{$A \vdash \colorbox{highlighteq}{$\mu$} \textit{ s } \textbf{UnboxedNotRecursive}$}
                 \hspace{3em}
                 s \neq \text{\textcircled{r}}
                 \vspace{0.5em} \\
-                A; r : \mu\; \{ \overline{f_i^u : \tau_i}, f_k^\bullet : \tau_k \}\; s
+                A; r : \colorbox{highlighteq}{$\mu$}\; \{ \overline{f_i^u : \tau_i}, f_k^\bullet : \tau_k \}\; s
                 ,\; y : \tau_k,\; \Gamma_2 \vdash e_2 : \tau
             \end{array}
         }
@@ -216,7 +216,7 @@ solving phase.
         \infer[\textsc{\footnotesize{Member}}]{
             A;\Gamma \vdash e.f_k : \tau
         }{
-            A;\Gamma \vdash e : \mu\; \{ \overline{f_i^\bullet : \tau_i}, f_k^\circ : \tau_k \}\; s
+            A;\Gamma \vdash e : \colorbox{highlighteq}{$\mu$}\; \{ \overline{f_i^\bullet : \tau_i}, f_k^\circ : \tau_k \}\; s
             &\hspace{1em}
             \colorbox{highlighteq}{$A \vdash \mu \textit{ s } \textbf{UnboxedNotRecursive}$}
         }
@@ -234,10 +234,10 @@ solving phase.
             G \vdash e.f : \tau \rightsquigarrow G'\; |\; C_1 \land C_2 \land C_3
         }{
             \begin{array}{c}
-                \alpha, \beta, \gamma\; \text{fresh}
+                \alpha, \beta, \colorbox{highlighteq}{$\gamma$}\; \text{fresh}
                 \hspace{2em}
-                G \vdash e : \gamma\; \{ f^\circ : \tau | \alpha \}\; \beta \rightsquigarrow G'\; |\; C_1 \\[5pt]
-                C_2 = \gamma\; \{ f^\bullet : \tau | \alpha \}\; \beta\; \textbf{Drop}
+                G \vdash e : \colorbox{highlighteq}{$\gamma$}\; \{ f^\circ : \tau | \alpha \}\; \beta \rightsquigarrow G'\; |\; C_1 \\[5pt]
+                C_2 = \colorbox{highlighteq}{$\gamma$}\; \{ f^\bullet : \tau | \alpha \}\; \beta\; \textbf{Drop}
                 \hspace{2em}
                 \colorbox{highlighteq}{$C_3 = \gamma\; \beta\; \textbf{UnboxedNotRecursive}$}
             \end{array}
@@ -257,19 +257,19 @@ solving phase.
                 : \tau \rightsquigarrow G_3 | \bigwedge_{k \in 1..6} C_k
         }{
             \begin{array}{c}
-                \alpha, \beta, \gamma, \delta \text{ fresh}
+                \alpha, \beta, \gamma, \colorbox{highlighteq}{$\delta$} \text{ fresh}
                 \hspace{1em}
-                G_1 \vdash e : \delta\; \{ f^\circ : \beta\; |\; \alpha \}\;
+                G_1 \vdash e : \colorbox{highlighteq}{$\delta$}\; \{ f^\circ : \beta\; |\; \alpha \}\;
                     \gamma \rightsquigarrow G_2\; |\; C_1 \\[7pt]
-                x :_{\langle 0 \rangle} \delta \{ f^\bullet : \beta | \alpha \} \gamma,\;
+                x :_{\langle 0 \rangle} \colorbox{highlighteq}{$\delta$} \{ f^\bullet : \beta | \alpha \} \gamma,\;
                     y :_{\langle 0 \rangle} \beta,\;
                     G_2 \vdash e_2 : \tau 
                      \rightsquigarrow     
-                    x :_{\langle n \rangle} \delta \{ f^\bullet : \beta | \alpha \} \gamma,\;
+                    x :_{\langle n \rangle} \colorbox{highlighteq}{$\delta$} \{ f^\bullet : \beta | \alpha \} \gamma,\;
                     y :_{\langle m \rangle} \beta,\;
                     G_3\; |\; C_2 \\[7pt]
                 C_3 = \text{if } n = 0 \text{ then } 
-                    \delta\; \{ f^\bullet : \beta\; |\; \alpha\; \}\; \gamma \textbf{ Drop}
+                    \colorbox{highlighteq}{$\delta$}\; \{ f^\bullet : \beta\; |\; \alpha\; \}\; \gamma \textbf{ Drop}
                     \text{ else } \top \\[5pt]
                 C_4 = \text{if } m = 0 \text{ then } 
                     \beta \textbf{ Drop}
@@ -294,13 +294,13 @@ solving phase.
                 |\; \bigwedge_{k \in 1..5} C_k
         }{
             \begin{array}{c}
-                \alpha, \beta, \gamma, \delta \text{ fresh}
+                \alpha, \beta, \gamma, \colorbox{highlighteq}{$\delta$} \text{ fresh}
                 \hspace{2em}
-                G_1 \vdash e_1 : \delta\; \{ f^\bullet: \tau | \alpha \}\; 
+                G_1 \vdash e_1 : \colorbox{highlighteq}{$\delta$}\; \{ f^\bullet: \tau | \alpha \}\; 
                     \gamma \rightsquigarrow G_2\; |\; C_1 \\[5pt]
                 G_2 \vdash e_2 : \beta \rightsquigarrow G_3\; |\; C_2
                 \hspace{2em}
-                C_3 =  \delta\; \{ f^\circ : \tau | \alpha \}\; 
+                C_3 =  \colorbox{highlighteq}{$\delta$}\; \{ f^\circ : \tau | \alpha \}\; 
                     \gamma \subtype \tau
                 \hspace{2em}
                 C_4 = \gamma \neq \text{\textcircled{r}} \\[5pt]
@@ -589,11 +589,12 @@ variable $x$ is structurally equal in size to a variable $y$.
 
 The checker starts with a set of known termination assertions $G$, and then adds
 extra assertions by analysing the expression body of a function to produce
-a stronger set of assertions $G'$, as well as a set of expressions that are arguments
-to recursive function calls $C$. We wish to show that every argument to a recursive function
-call (i.e. every expression in $C$) is smaller than the argument to the function. 
-\autoref{fig:terminationcondition} describes the
-condition for soundness of our termination checker. 
+a stronger set of assertions $G'$, as well as a set of variables that are arguments
+to recursive calls in the function, $C$, which we call \emph{goal} variables.
+We wish to show that every argument to a recursive 
+function call (i.e. every variable in $C$, our goals) is smaller than the argument to 
+the function. \autoref{fig:terminationcondition} describes the condition 
+for soundness of our termination checker. 
 
 For our check to be \emph{complete},
 our checker would need to show all non-terminating functions are invalid.
@@ -607,8 +608,8 @@ where any form of structural size is added or taken away, namely
 
 However, if a user were to shadow a variable in a let expression they may
 create a false assertion. Consider the expression 
-$\textsf{let } x = C\; x \textsf{ in } \dots$, which would produce the
-assertion $x \teq C\; x$, which by our structural size rules can be rewritten as
+$\textsf{let } x = K\; x \textsf{ in } \dots$, which would produce the
+assertion $x \teq K\; x$, which by our structural size rules can be rewritten as
 $x \tlt x$, which is clearly false.
 
 \begin{figure}
@@ -624,15 +625,15 @@ $x \tlt x$, which is clearly false.
 We prevent this from occurring by using a fresh variable name for every
 introduced variable in scope, and use these fresh names in our assertions.
 We also store a mapping of program variables to fresh variables names in a
-context $E$, which we update as we encounter new variable definitions in the
+environment $E$, which we update as we encounter new variable definitions in the
 function expression. The syntax of our environment is as
 presented in \autoref{fig:varmapenv}, where $E[x]$ denotes the lookup
 of a variable $x$ in $E$, which returns the first mapping of $x$ found in $E$. 
 
 With our current method of size relations, we are unable to reason about variables
-compared against any general expression. For example, suppose the assertion $x \tlt C\; y$.
+compared against any general expression. For example, suppose the assertion $x \tlt K\; y$.
 This assertion is useless to us as we have no way of reasoning about $x$ and $y$ directly,
-and we are unable to remove the constructor $C$ as we have no information about the
+and we are unable to remove the constructor $K$ as we have no information about the
 gap in size between $x$ and $y$. We could have $x \tlt y$ if $x$ is more than one layer
 of structure smaller than y, or $x \teq y$ if x is only one layer of structure smaller.
 
@@ -653,10 +654,10 @@ variable name in the assertion.
     \label{fig:getdef}
 \end{figure}
 
-After generating all of our assertions, we filter out any assertions that include a nothing ($\varepsilon$),
-as we cannot reason about them in any way, or fail if any goal contains a nothing. While this solution may
-not be as complete as it possibly could be, we may still use our remaining assertions
-to prove termination in some cases.
+After generating all of our assertions, we filter out any assertions that include an $\varepsilon$,
+as we cannot reason about them in any way, or fail if any goal $C$ contains an $\varepsilon$. 
+While this solution may not be as complete as it possibly could be, we may still use
+our remaining assertions to prove termination in some cases.
 
 \begin{figure}
     \centering
@@ -1010,12 +1011,12 @@ do not reason solely about program variables, however we seek a more complete wa
 this problem.
 
 One potential idea is to eliminate structural size inequality ($\tlt$), and preserve relative
-size information by using only discrete size changes. Consider our earlier example $x \tlt C\; y$,
+size information by using only discrete size changes. Consider our earlier example $x \tlt K\; y$,
 where we were unable to remove the constructor $C$ from $y$. 
-If earlier when generating this assertion we wrote  $x - 1 \teq C\; y$,
+If earlier when generating this assertion we wrote  $x - 1 \teq K\; y$,
 where $x - 1$ means `1 structural size less than $x$', we would be able to know exactly
 how much structurally smaller $x$ is than $y$. If we wanted to simplify this assertion,
-we could do so by removing the constructor $C$ from $y$, and then taking away one structural size from
+we could do so by removing the constructor $K$ from $y$, and then taking away one structural size from
 the LHS of the assertion, leaving $x - 2 \teq y$.
 
 Not only does this allow us to use extra assertions, but we may still determine 
@@ -1036,7 +1037,7 @@ A potential solution to this problem could be to map unsigned integers
 and literals to a Peano natural number representation, and require that
 each program has an expression with a base case for any recursive call
 on integers, and performs recursion by taking only one constructor
-away per recursive call, so it does not `skip' a base case.
+away per recursive call, so it does not \emph{skip} a base case.
 
 As a thesis extension, we have defined termination checking and provided
 a pen-and-paper formalisation. As future work, termination checking can be
