@@ -705,9 +705,9 @@ our remaining assertions to prove termination in some cases.
                 \hspace{1em}
                 E;\; G_1,\; \beta \teq \textsf{get}(E, e_1)  \vdash e_1 
                     \rightsquigarrow G_2\; |\; C_1 \\[5pt]
-                E, \alpha \rightarrow x ;\; G_2, \alpha \tlt \beta 
+                E, x \rightarrow \alpha;\; G_2, \alpha \tlt \beta 
                     \vdash e_2 \rightsquigarrow G_3\; |\; C_2 \\[5pt]
-                E, \gamma \rightarrow y;\; G_3, \gamma \teq \beta 
+                E, y \rightarrow \gamma;\; G_3, \gamma \teq \beta 
                     \vdash e_3 \rightsquigarrow G_4\; |\; C_3
             \end{array}
         }
@@ -723,7 +723,7 @@ our remaining assertions to prove termination in some cases.
                 \hspace{1em}
                 E;\; G_1,\; \beta \teq \textsf{get}(E, e_1)  \vdash e_1 
                     \rightsquigarrow G_2\; |\; C_1 \\[5pt]
-                E, \alpha \rightarrow x;\; G_2, \alpha \tlt \beta 
+                E, x \rightarrow \alpha;\; G_2, \alpha \tlt \beta 
                     \vdash e_2 \rightsquigarrow G_3\; |\; C_2
                 \hspace{2em}
             \end{array}
@@ -782,7 +782,7 @@ our remaining assertions to prove termination in some cases.
         }{
             E; G_1 \vdash e_1 \rightsquigarrow G_2\; |\; C_1
             \hspace{1em}
-            E_2; G_2 \vdash e_2 \rightsquigarrow G_3\; |\; C_2
+            E; G_2 \vdash e_2 \rightsquigarrow G_3\; |\; C_2
         }
     \]
     \vspace{0.5pt}
@@ -805,7 +805,7 @@ our remaining assertions to prove termination in some cases.
         }{
             E; G_1 \vdash e_1 \rightsquigarrow G_2\; |\; C_1
             \hspace{1em}
-            E_2; G_2 \vdash e_2 \rightsquigarrow G_3\; |\; C_2
+            E; G_2 \vdash e_2 \rightsquigarrow G_3\; |\; C_2
         }
     \]
     \vspace{0.5pt}
