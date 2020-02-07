@@ -769,7 +769,7 @@ our remaining assertions to prove termination in some cases.
         \hspace{1em}
         \infer[\textsc{\footnotesize T-TApp}]{
             E; G \vdash f\textbf{[}\harpoon{\tau_i}\textbf{]}
-                \rightsquigarrow G\; |\; E\; |\; \varnothing
+                \rightsquigarrow G\; |\; \varnothing
         }{
         }
     \]
@@ -789,12 +789,12 @@ our remaining assertions to prove termination in some cases.
     \[
         \infer[\textsc{\footnotesize T-TVar}]{
             E; G \vdash x
-                \rightsquigarrow G\; |\; E\; |\; \varnothing
+                \rightsquigarrow G\; |\; \varnothing
         }{}
         \hspace{1em}
         \infer[\textsc{\footnotesize T-Lit}]{
             E; G \vdash \ell
-                \rightsquigarrow G\; |\; E\; |\; \varnothing
+                \rightsquigarrow G\; |\; \varnothing
         }{}
     \]
     \vspace{0.5pt}
