@@ -662,85 +662,94 @@ our remaining assertions to prove termination in some cases.
 \begin{figure}
     \centering
     \[
-        \fbox{$E; G \vdash e : \tau \rightsquigarrow G'\; |\; C$}
+        \fbox{$E \vdash e : \tau \rightsquigarrow G\; |\; C$}
     \]
     \[
         \infer[\textsc{\footnotesize T-Take}]{
-            E; G_1
-                \vdash \textsf{take } r'\; \{ f = x \} = e_1 \textsf{ in } e_2
-                \rightsquigarrow G_3\; |\; C_1 \cup C_2
-        }{
             \begin{array}{c}
-            \alpha, \beta\; \textsf{fresh}
-            \hspace{1em}
-            E; \alpha \tlt \textsf{get}(E,e_1),\; \textsf{get}(E,e_1) \teq \beta,\; G_1 \vdash e_1
-                \rightsquigarrow G_2\; |\; C_1 \\[5pt]
-            E, x \rightarrow \alpha , r' \rightarrow \beta ; G_2 \vdash e_2 \rightsquigarrow G_3\; |\; C_2
+                E \vdash \textsf{take } r'\; \{ f = x \} = e_1 \textsf{ in } e_2
+                    \rightsquigarrow \\[2.5pt]
+                    \alpha \tlt \textsf{get}(E,e_1),\; \textsf{get}(E,e_1) \teq \beta,\; G_2\; |\; C_1 \cup C_2
             \end{array}
-        }
-    \]
-    \vspace{0.5pt}
-    \[
-        \infer[\textsc{\footnotesize T-Put}]{
-            E; G_1 \vdash \textsf{put } e_1.f := e_2
-                \rightsquigarrow G_3\; |\; C_1 \cup C_2
-        }{
-            \begin{array}{c}
-                \alpha, \beta\; \textsf{fresh} \\[5pt]
-                E; \alpha \tlt \beta,\; \beta \teq \textsf{get}(E,e_1),\; \alpha \teq \textsf{get}(E,e_2),\; 
-                    G_1 \vdash e_1 \rightsquigarrow G_2\; |\; C_1 \\[5pt]
-                E; G_2 \vdash e_2 \rightsquigarrow G_3\; |\; C_2
-            \end{array}
-        }
-    \]
-    \vspace{0.5pt}
-    \[
-        \infer[\textsc{\footnotesize T-Case}]{
-            E; G_1 \vdash \textsf{case } e_1 \textsf{ of } \kappa\; x.\; e_2\; 
-                \textsf{else}\; y.\; e_3
-                \rightsquigarrow G_4\; |\; C_1 \cup C_2 \cup C_3
-        }{
-            \begin{array}{c}
-                \alpha, \beta, \gamma\; \textsf{fresh}
-                \hspace{1em}
-                E;\; G_1,\; \beta \teq \textsf{get}(E, e_1)  \vdash e_1 
-                    \rightsquigarrow G_2\; |\; C_1 \\[5pt]
-                E, x \rightarrow \alpha;\; G_2, \alpha \tlt \beta 
-                    \vdash e_2 \rightsquigarrow G_3\; |\; C_2 \\[5pt]
-                E, y \rightarrow \gamma;\; G_3, \gamma \teq \beta 
-                    \vdash e_3 \rightsquigarrow G_4\; |\; C_3
-            \end{array}
-        }
-    \]
-    \vspace{0.5pt}
-    \[
-        \infer[\textsc{\footnotesize T-CaseIrr}]{
-            E; G_1 \vdash \textsf{case } e_1 \textsf{ of } \kappa\; x.\; e_2\; 
-                \rightsquigarrow G_3\; |\; C_1 \cup C_2
         }{
             \begin{array}{c}
                 \alpha, \beta\; \textsf{fresh}
                 \hspace{1em}
-                E;\; G_1,\; \beta \teq \textsf{get}(E, e_1)  \vdash e_1 
-                    \rightsquigarrow G_2\; |\; C_1 \\[5pt]
-                E, x \rightarrow \alpha;\; G_2, \alpha \tlt \beta 
-                    \vdash e_2 \rightsquigarrow G_3\; |\; C_2
-                \hspace{2em}
+                E \vdash e_1
+                    \rightsquigarrow G_1\; |\; C_1 \\[2.5pt]
+                E, x \rightarrow \alpha , r' \rightarrow \beta \vdash e_2 \rightsquigarrow G_2\; |\; C_2
             \end{array}
         }
     \]
-    \vspace{0.5pt}
+    \vspace{10pt}
+    \[
+        \infer[\textsc{\footnotesize T-Put}]{
+            \begin{array}{c}
+                E \vdash \textsf{put } e_1.f := e_2
+                \rightsquigarrow \\[2.5pt]
+                \alpha \tlt \beta,\; \beta \teq \textsf{get}(E,e_1),\; \alpha \teq \textsf{get}(E,e_2),\; G_2\; |\; C_1 \cup C_2
+            \end{array}
+        }{
+            \begin{array}{c}
+                \alpha, \beta\; \textsf{fresh}
+                \hspace{1em}
+                E \vdash e_1 \rightsquigarrow G_1\; |\; C_1
+                \hspace{1em}
+                E \vdash e_2 \rightsquigarrow G_2\; |\; C_2
+            \end{array}
+        }
+    \]
+    \vspace{10pt}
+    \[
+        \infer[\textsc{\footnotesize T-Case}]{
+            \begin{array}{c}
+                E \vdash \textsf{case } e_1 \textsf{ of } \kappa\; x.\; e_2\; 
+                    \textsf{else}\; y.\; e_3 
+                    \rightsquigarrow \\[2.5pt]
+                    \beta \teq \textsf{get}(E, e_1),\; \alpha \tlt \beta,\; \gamma \teq \beta,\; G_3\; |\; C_1 \cup C_2 \cup C_3
+            \end{array}
+        }{
+            \begin{array}{c}
+                \alpha, \beta, \gamma\; \textsf{fresh}
+                \hspace{1em}
+                E\; \vdash e_1 \rightsquigarrow G_1\; |\; C_1 \\[2.5pt]
+                E, x \rightarrow \alpha\; \vdash e_2 \rightsquigarrow G_2\; |\; C_2
+                \hspace{1em}
+                E, y \rightarrow \gamma\; \vdash e_3 \rightsquigarrow G_3\; |\; C_3
+            \end{array}
+        }
+    \]
+    \vspace{10pt}
+    \[
+        \infer[\textsc{\footnotesize T-CaseIrr}]{
+            \begin{array}{c}
+                E \vdash \textsf{case } e_1 \textsf{ of } \kappa\; x.\; e_2\; 
+                \rightsquigarrow \\[2.5pt]
+                \beta \teq \textsf{get}(E, e_1),\; \alpha \tlt \beta,\; G_2\; |\; C_1 \cup C_2
+            \end{array}
+        }{
+            \begin{array}{c}
+                \alpha, \beta\; \textsf{fresh}
+                \hspace{1em}
+                E\; \vdash e_1 
+                    \rightsquigarrow G_1\; |\; C_1 \\[2.5pt]
+                E, x \rightarrow \alpha\; 
+                    \vdash e_2 \rightsquigarrow G_2\; |\; C_2
+            \end{array}
+        }
+    \]
+    \vspace{10pt}
     \[
         \infer[\textsc{\footnotesize T-Let}]{
-            E; G_1 \vdash \textsf{let } x = e_1 \textsf{ in } e_2
-                \rightsquigarrow G_3\; |\; C_1 \cup C_2
+            E \vdash \textsf{let } x = e_1 \textsf{ in } e_2
+                \rightsquigarrow  \alpha \teq \textsf{get}(E, e_1),\; G_2\; |\; C_1 \cup C_2
         }{
             \begin{array}{c}
                 \alpha \; \textsf{fresh}
                 \hspace{1em}
-                E; G_1 \vdash e_1 \rightsquigarrow G_2\; |\; C_1 \\[5pt]
-                E, x \rightarrow \alpha; \alpha \teq \textsf{get}(E, e_1),\; G_2 \vdash e_2 
-                    \rightsquigarrow G_3\; |\; C_2
+                E \vdash e_1 \rightsquigarrow G_1\; |\; C_1 \\[2.5pt]
+                E, x \rightarrow \alpha; \vdash e_2 
+                    \rightsquigarrow G_2\; |\; C_2
             \end{array}
         }
     \]
@@ -752,92 +761,92 @@ our remaining assertions to prove termination in some cases.
     \centering
     \[
         \infer[\textsc{\footnotesize T-Member}]{
-            E; G_1 \vdash e.f
-                \rightsquigarrow G_2\; |\; C
+            E \vdash e.f
+                \rightsquigarrow G_1\; |\; C
         }{
-            E; G_1 \vdash e_1 \rightsquigarrow G_2\; |\; C
+            E \vdash e \rightsquigarrow G_1\; |\; C
         }
     \]
-    \vspace{0.5pt}
+    \vspace{10pt}
     \[
         \infer[\textsc{\footnotesize T-Con}]{
-            E; G_1 \vdash \kappa\; e
-                \rightsquigarrow G_2\; |\; C
+            E \vdash \kappa\; e
+                \rightsquigarrow G_1\; |\; C
         }{
-            E; G_1 \vdash e_1 \rightsquigarrow G_2\; |\; C
+            E \vdash e \rightsquigarrow G_1\; |\; C
         }
         \hspace{1em}
         \infer[\textsc{\footnotesize T-TApp}]{
-            E; G \vdash f\textbf{[}\harpoon{\tau_i}\textbf{]}
-                \rightsquigarrow G\; |\; \varnothing
+            E \vdash f\textbf{[}\harpoon{\tau_i}\textbf{]}
+                \rightsquigarrow \varnothing\; |\; \varnothing
         }{
         }
     \]
-    \vspace{0.5pt}
+    \vspace{10pt}
     \[
         \infer[\textsc{\footnotesize T-FApp}]{
-            E; G_1 \vdash e_1\; e_2
-                \rightsquigarrow G_3\; |\; C_1 \cup C_2 
+            E \vdash e_1\; e_2
+                \rightsquigarrow G_2\; |\; C_1 \cup C_2 
                 \cup \{\textsf{get}(E,e_2)\}
         }{
-            E; G_1 \vdash e_1 \rightsquigarrow G_2\; |\; C_1
+            E \vdash e_1 \rightsquigarrow G_1\; |\; C_1
             \hspace{1em}
-            E; G_2 \vdash e_2 \rightsquigarrow G_3\; |\; C_2
+            E \vdash e_2 \rightsquigarrow G_2\; |\; C_2
         }
     \]
-    \vspace{0.5pt}
+    \vspace{10pt}
     \[
         \infer[\textsc{\footnotesize T-TVar}]{
-            E; G \vdash x
-                \rightsquigarrow G\; |\; \varnothing
+            E \vdash x
+                \rightsquigarrow \varnothing\; |\; \varnothing
         }{}
         \hspace{1em}
         \infer[\textsc{\footnotesize T-Lit}]{
-            E; G \vdash \ell
-                \rightsquigarrow G\; |\; \varnothing
+            E \vdash \ell
+                \rightsquigarrow \varnothing\; |\; \varnothing
         }{}
     \]
-    \vspace{0.5pt}
+    \vspace{10pt}
     \[
         \infer[\textsc{\footnotesize T-PrimOp}]{
-            E; G_1 \vdash e_1 \text{ \textasteriskcentered }\; e_2
-                \rightsquigarrow G_3\; |\; C_1 \cup C_2
+            E \vdash e_1 \text{ \textasteriskcentered }\; e_2
+                \rightsquigarrow G_2\; |\; C_1 \cup C_2
         }{
-            E; G_1 \vdash e_1 \rightsquigarrow G_2\; |\; C_1
+            E \vdash e_1 \rightsquigarrow G_1\; |\; C_1
             \hspace{1em}
-            E; G_2 \vdash e_2 \rightsquigarrow G_3\; |\; C_2
+            E \vdash e_2 \rightsquigarrow G_2\; |\; C_2
         }
     \]
-    \vspace{0.5pt}
+    \vspace{10pt}
     \[
         \infer[\textsc{\footnotesize T-If}]{
-            E; G_1 \vdash \textsf{if } e_1 \textsf{ then } e_2 \textsf{ else } e_3
-                \rightsquigarrow G_4\; |\; C_1 \cup C_2 \cup C_3
+            E \vdash \textsf{if } e_1 \textsf{ then } e_2 \textsf{ else } e_3
+                \rightsquigarrow G_3\; |\; C_1 \cup C_2 \cup C_3
         }{
             \begin{array}{c}
-                E; G_1 \vdash e_1 \rightsquigarrow G_2\; |\; C_1 \\[5pt]
-                E; G_2 \vdash e_2 \rightsquigarrow G_3\; |\; C_2
+                E \vdash e_1 \rightsquigarrow G_1\; |\; C_1 \\
+                E \vdash e_2 \rightsquigarrow G_2\; |\; C_2
                 \hspace{1em}
-                E; G_3 \vdash e_3 \rightsquigarrow G_4\; |\; C_3
+                E \vdash e_3 \rightsquigarrow G_3\; |\; C_3
             \end{array}
         }
     \]
-    \vspace{0.5pt}
+    \vspace{10pt}
     \[
         \infer[\textsc{\footnotesize T-Tysig}]{
-            E; G_1 \vdash e :: \tau
-                \rightsquigarrow G_2\; |\; C
+            E \vdash e :: \tau
+                \rightsquigarrow G_1\; |\; C
         }{
-            E; G_1 \vdash e \rightsquigarrow G_2\; |\; C
+            E \vdash e \rightsquigarrow G_1\; |\; C
         }
     \]
-    \vspace{0.5pt}
+    \vspace{10pt}
     \[
         \infer[\textsc{\footnotesize T-Struct}]{
-            E; G_1 \vdash \{\overline{f_i = e_i}\}
-                \rightsquigarrow G_{n+1}\; |\; \bigcup_{k = 1}^n C_k
+            E \vdash \{\overline{f_i = e_i}\}
+                \rightsquigarrow G_{n}\; |\; \bigcup_{k = 1}^n C_k
         }{
-           \text{for all } i \in \{1, \dots, n\}\quad  E; G_i \vdash e_i 
+           \text{for all } i \in \{1, \dots, n\}\quad  E \vdash e_i 
                 \rightsquigarrow G_{i+1}\; |\; C_i
         }
     \]
@@ -854,14 +863,14 @@ our remaining assertions to prove termination in some cases.
         \begin{array}{ll}
             f\; x = e              
                 & \text{Given a function definition} \\[10pt]
-            \implies \alpha \leftarrow x,\varepsilon;\; \varnothing 
-                \vdash e \rightsquigarrow G'\; |\; C
+            \implies \alpha \leftarrow x,\varepsilon\; 
+                \vdash e \rightsquigarrow G\; |\; C
                 \hspace{2em}
                 & \text{And a set of assertions and goals} \\
                 & \text{generated by the termination checker} \\
                 & \text{from an initial environment and} \\
                 & \text{empty set of assertions} \\[10pt]
-            \implies G' \vdash \forall \beta \in C.\; \beta \tlt \alpha
+            \implies G \vdash \forall \beta \in C.\; \beta \tlt \alpha
                 & \text{The function terminates if} \\
                 & \text{every goal expression produced} \\
                 & \text{is smaller than the function argument} \\
