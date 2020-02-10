@@ -587,9 +587,9 @@ $x \tlt y$ is the assertion that a variable $x$ is strictly
 structurally smaller than a variable $y$ and, $x \teq y$ is the assertion that a
 variable $x$ is structurally equal in size to a variable $y$.
 
-The checker starts with a set of known termination assertions $G$, and then adds
-extra assertions by analysing the expression body of a function to produce
-a stronger set of assertions $G'$, as well as a set of variables that are arguments
+The checker starts adding
+assertions by analysing the expression body of a function to produce
+a set of assertions $G$, as well as a set of variables that are arguments
 to recursive calls in the function, $C$, which we call \emph{goal} variables.
 We wish to show that every argument to a recursive 
 function call (i.e. every variable in $C$, our goals) is smaller than the argument to 
@@ -598,7 +598,7 @@ for soundness of our termination checker.
 
 For our check to be \emph{complete},
 our checker would need to show all non-terminating functions are invalid.
-As a consequence of the halting problem, however, this completeness is impossible
+As a consequence of the halting problem~\citep{HaltingProblem}, however, this completeness is impossible
 so our checker only attempts to check for primitive recursion.
 
 We generate such assertions by looking at Cogent's expression language 
@@ -662,85 +662,94 @@ our remaining assertions to prove termination in some cases.
 \begin{figure}
     \centering
     \[
-        \fbox{$E; G \vdash e : \tau \rightsquigarrow G'\; |\; C$}
+        \fbox{$E \vdash e : \tau \rightsquigarrow G\; |\; C$}
     \]
     \[
         \infer[\textsc{\footnotesize T-Take}]{
-            E; G_1
-                \vdash \textsf{take } r'\; \{ f = x \} = e_1 \textsf{ in } e_2
-                \rightsquigarrow G_3\; |\; C_1 \cup C_2
-        }{
             \begin{array}{c}
-            \alpha, \beta\; \textsf{fresh}
-            \hspace{1em}
-            E; \alpha \tlt \textsf{get}(E,e_1),\; \textsf{get}(E,e_1) \teq \beta,\; G_1 \vdash e_1
-                \rightsquigarrow G_2\; |\; C_1 \\[5pt]
-            E, x \rightarrow \alpha , r' \rightarrow \beta ; G_2 \vdash e_2 \rightsquigarrow G_3\; |\; C_2
+                E \vdash \textsf{take } r'\; \{ f = x \} = e_1 \textsf{ in } e_2
+                    \rightsquigarrow \\[2.5pt]
+                    \{\; \alpha \tlt \textsf{get}(E,e_1),\; \textsf{get}(E,e_1) \teq \beta\; \} \cup G_1 \cup G_2\; |\; C_1 \cup C_2
             \end{array}
-        }
-    \]
-    \vspace{0.5pt}
-    \[
-        \infer[\textsc{\footnotesize T-Put}]{
-            E; G_1 \vdash \textsf{put } e_1.f := e_2
-                \rightsquigarrow G_3\; |\; C_1 \cup C_2
-        }{
-            \begin{array}{c}
-                \alpha, \beta\; \textsf{fresh} \\[5pt]
-                E; \alpha \tlt \beta,\; \beta \teq \textsf{get}(E,e_1),\; \alpha \teq \textsf{get}(E,e_2),\; 
-                    G_1 \vdash e_1 \rightsquigarrow G_2\; |\; C_1 \\[5pt]
-                E; G_2 \vdash e_2 \rightsquigarrow G_3\; |\; C_2
-            \end{array}
-        }
-    \]
-    \vspace{0.5pt}
-    \[
-        \infer[\textsc{\footnotesize T-Case}]{
-            E; G_1 \vdash \textsf{case } e_1 \textsf{ of } \kappa\; x.\; e_2\; 
-                \textsf{else}\; y.\; e_3
-                \rightsquigarrow G_4\; |\; C_1 \cup C_2 \cup C_3
-        }{
-            \begin{array}{c}
-                \alpha, \beta, \gamma\; \textsf{fresh}
-                \hspace{1em}
-                E;\; G_1,\; \beta \teq \textsf{get}(E, e_1)  \vdash e_1 
-                    \rightsquigarrow G_2\; |\; C_1 \\[5pt]
-                E, x \rightarrow \alpha;\; G_2, \alpha \tlt \beta 
-                    \vdash e_2 \rightsquigarrow G_3\; |\; C_2 \\[5pt]
-                E, y \rightarrow \gamma;\; G_3, \gamma \teq \beta 
-                    \vdash e_3 \rightsquigarrow G_4\; |\; C_3
-            \end{array}
-        }
-    \]
-    \vspace{0.5pt}
-    \[
-        \infer[\textsc{\footnotesize T-CaseIrr}]{
-            E; G_1 \vdash \textsf{case } e_1 \textsf{ of } \kappa\; x.\; e_2\; 
-                \rightsquigarrow G_3\; |\; C_1 \cup C_2
         }{
             \begin{array}{c}
                 \alpha, \beta\; \textsf{fresh}
                 \hspace{1em}
-                E;\; G_1,\; \beta \teq \textsf{get}(E, e_1)  \vdash e_1 
-                    \rightsquigarrow G_2\; |\; C_1 \\[5pt]
-                E, x \rightarrow \alpha;\; G_2, \alpha \tlt \beta 
-                    \vdash e_2 \rightsquigarrow G_3\; |\; C_2
-                \hspace{2em}
+                E \vdash e_1
+                    \rightsquigarrow G_1\; |\; C_1 \\[2.5pt]
+                E, x \rightarrow \alpha , r' \rightarrow \beta \vdash e_2 \rightsquigarrow G_2\; |\; C_2
             \end{array}
         }
     \]
-    \vspace{0.5pt}
+    \vspace{10pt}
+    \[
+        \infer[\textsc{\footnotesize T-Put}]{
+            \begin{array}{c}
+                E \vdash \textsf{put } e_1.f := e_2
+                \rightsquigarrow \\[2.5pt]
+                \{\; \alpha \tlt \beta,\; \beta \teq \textsf{get}(E,e_1),\; \alpha \teq \textsf{get}(E,e_2)\; \} \cup G_1 \cup G_2\; |\; C_1 \cup C_2
+            \end{array}
+        }{
+            \begin{array}{c}
+                \alpha, \beta\; \textsf{fresh}
+                \hspace{1em}
+                E \vdash e_1 \rightsquigarrow G_1\; |\; C_1
+                \hspace{1em}
+                E \vdash e_2 \rightsquigarrow G_2\; |\; C_2
+            \end{array}
+        }
+    \]
+    \vspace{10pt}
+    \[
+        \infer[\textsc{\footnotesize T-Case}]{
+            \begin{array}{c}
+                E \vdash \textsf{case } e_1 \textsf{ of } \kappa\; x.\; e_2\; 
+                    \textsf{else}\; y.\; e_3 
+                    \rightsquigarrow \\[2.5pt]
+                    \{\; \beta \teq \textsf{get}(E, e_1),\; \alpha \tlt \beta,\; \gamma \teq \beta\; \} \cup G_1 \cup G_2 \cup G_3\; |\; C_1 \cup C_2 \cup C_3
+            \end{array}
+        }{
+            \begin{array}{c}
+                \alpha, \beta, \gamma\; \textsf{fresh}
+                \hspace{1em}
+                E\; \vdash e_1 \rightsquigarrow G_1\; |\; C_1 \\[2.5pt]
+                E, x \rightarrow \alpha\; \vdash e_2 \rightsquigarrow G_2\; |\; C_2
+                \hspace{1em}
+                E, y \rightarrow \gamma\; \vdash e_3 \rightsquigarrow G_3\; |\; C_3
+            \end{array}
+        }
+    \]
+    \vspace{10pt}
+    \[
+        \infer[\textsc{\footnotesize T-CaseIrr}]{
+            \begin{array}{c}
+                E \vdash \textsf{case } e_1 \textsf{ of } \kappa\; x.\; e_2\; 
+                \rightsquigarrow \\[2.5pt]
+                \{\; \beta \teq \textsf{get}(E, e_1),\; \alpha \tlt \beta\; \} \cup G_1 \cup G_2\; |\; C_1 \cup C_2
+            \end{array}
+        }{
+            \begin{array}{c}
+                \alpha, \beta\; \textsf{fresh}
+                \hspace{1em}
+                E\; \vdash e_1 
+                    \rightsquigarrow G_1\; |\; C_1 \\[2.5pt]
+                E, x \rightarrow \alpha\; 
+                    \vdash e_2 \rightsquigarrow G_2\; |\; C_2
+            \end{array}
+        }
+    \]
+    \vspace{10pt}
     \[
         \infer[\textsc{\footnotesize T-Let}]{
-            E; G_1 \vdash \textsf{let } x = e_1 \textsf{ in } e_2
-                \rightsquigarrow G_3\; |\; C_1 \cup C_2
+            E \vdash \textsf{let } x = e_1 \textsf{ in } e_2
+                \rightsquigarrow \{\; \alpha \teq \textsf{get}(E, e_1)\; \} \cup G_1 \cup G_2\; |\; C_1 \cup C_2
         }{
             \begin{array}{c}
                 \alpha \; \textsf{fresh}
                 \hspace{1em}
-                E; G_1 \vdash e_1 \rightsquigarrow G_2\; |\; C_1 \\[5pt]
-                E, x \rightarrow \alpha; \alpha \teq \textsf{get}(E, e_1),\; G_2 \vdash e_2 
-                    \rightsquigarrow G_3\; |\; C_2
+                E \vdash e_1 \rightsquigarrow G_1\; |\; C_1 \\[2.5pt]
+                E, x \rightarrow \alpha; \vdash e_2 
+                    \rightsquigarrow G_2\; |\; C_2
             \end{array}
         }
     \]
@@ -752,92 +761,92 @@ our remaining assertions to prove termination in some cases.
     \centering
     \[
         \infer[\textsc{\footnotesize T-Member}]{
-            E; G_1 \vdash e.f
-                \rightsquigarrow G_2\; |\; C
+            E \vdash e.f
+                \rightsquigarrow G\; |\; C
         }{
-            E; G_1 \vdash e_1 \rightsquigarrow G_2\; |\; C
+            E \vdash e \rightsquigarrow G\; |\; C
         }
     \]
-    \vspace{0.5pt}
+    \vspace{10pt}
     \[
         \infer[\textsc{\footnotesize T-Con}]{
-            E; G_1 \vdash \kappa\; e
-                \rightsquigarrow G_2\; |\; C
+            E \vdash \kappa\; e
+                \rightsquigarrow G\; |\; C
         }{
-            E; G_1 \vdash e_1 \rightsquigarrow G_2\; |\; C
+            E \vdash e \rightsquigarrow G\; |\; C
         }
         \hspace{1em}
         \infer[\textsc{\footnotesize T-TApp}]{
-            E; G \vdash f\textbf{[}\harpoon{\tau_i}\textbf{]}
-                \rightsquigarrow G\; |\; E\; |\; \varnothing
+            E \vdash f\textbf{[}\harpoon{\tau_i}\textbf{]}
+                \rightsquigarrow \varnothing\; |\; \varnothing
         }{
         }
     \]
-    \vspace{0.5pt}
+    \vspace{10pt}
     \[
         \infer[\textsc{\footnotesize T-FApp}]{
-            E; G_1 \vdash e_1\; e_2
-                \rightsquigarrow G_3\; |\; C_1 \cup C_2 
+            E \vdash e_1\; e_2
+                \rightsquigarrow G_1 \cup G_2\; |\; C_1 \cup C_2 
                 \cup \{\textsf{get}(E,e_2)\}
         }{
-            E; G_1 \vdash e_1 \rightsquigarrow G_2\; |\; C_1
+            E \vdash e_1 \rightsquigarrow G_1\; |\; C_1
             \hspace{1em}
-            E; G_2 \vdash e_2 \rightsquigarrow G_3\; |\; C_2
+            E \vdash e_2 \rightsquigarrow G_2\; |\; C_2
         }
     \]
-    \vspace{0.5pt}
+    \vspace{10pt}
     \[
         \infer[\textsc{\footnotesize T-TVar}]{
-            E; G \vdash x
-                \rightsquigarrow G\; |\; E\; |\; \varnothing
+            E \vdash x
+                \rightsquigarrow \varnothing\; |\; \varnothing
         }{}
         \hspace{1em}
         \infer[\textsc{\footnotesize T-Lit}]{
-            E; G \vdash \ell
-                \rightsquigarrow G\; |\; E\; |\; \varnothing
+            E \vdash \ell
+                \rightsquigarrow \varnothing\; |\; \varnothing
         }{}
     \]
-    \vspace{0.5pt}
+    \vspace{10pt}
     \[
         \infer[\textsc{\footnotesize T-PrimOp}]{
-            E; G_1 \vdash e_1 \text{ \textasteriskcentered }\; e_2
-                \rightsquigarrow G_3\; |\; C_1 \cup C_2
+            E \vdash e_1 \text{ \textasteriskcentered }\; e_2
+                \rightsquigarrow G_1 \cup G_2\; |\; C_1 \cup C_2
         }{
-            E; G_1 \vdash e_1 \rightsquigarrow G_2\; |\; C_1
+            E \vdash e_1 \rightsquigarrow G_1\; |\; C_1
             \hspace{1em}
-            E; G_2 \vdash e_2 \rightsquigarrow G_3\; |\; C_2
+            E \vdash e_2 \rightsquigarrow G_2\; |\; C_2
         }
     \]
-    \vspace{0.5pt}
+    \vspace{10pt}
     \[
         \infer[\textsc{\footnotesize T-If}]{
-            E; G_1 \vdash \textsf{if } e_1 \textsf{ then } e_2 \textsf{ else } e_3
-                \rightsquigarrow G_4\; |\; C_1 \cup C_2 \cup C_3
+            E \vdash \textsf{if } e_1 \textsf{ then } e_2 \textsf{ else } e_3
+                \rightsquigarrow G_1 \cup G_2 \cup G_3\; |\; C_1 \cup C_2 \cup C_3
         }{
             \begin{array}{c}
-                E; G_1 \vdash e_1 \rightsquigarrow G_2\; |\; C_1 \\[5pt]
-                E; G_2 \vdash e_2 \rightsquigarrow G_3\; |\; C_2
+                E \vdash e_1 \rightsquigarrow G_1\; |\; C_1 \\
+                E \vdash e_2 \rightsquigarrow G_2\; |\; C_2
                 \hspace{1em}
-                E; G_3 \vdash e_3 \rightsquigarrow G_4\; |\; C_3
+                E \vdash e_3 \rightsquigarrow G_3\; |\; C_3
             \end{array}
         }
     \]
-    \vspace{0.5pt}
+    \vspace{10pt}
     \[
         \infer[\textsc{\footnotesize T-Tysig}]{
-            E; G_1 \vdash e :: \tau
-                \rightsquigarrow G_2\; |\; C
+            E \vdash e :: \tau
+                \rightsquigarrow G\; |\; C
         }{
-            E; G_1 \vdash e \rightsquigarrow G_2\; |\; C
+            E \vdash e \rightsquigarrow G\; |\; C
         }
     \]
-    \vspace{0.5pt}
+    \vspace{10pt}
     \[
         \infer[\textsc{\footnotesize T-Struct}]{
-            E; G_1 \vdash \{\overline{f_i = e_i}\}
-                \rightsquigarrow G_{n+1}\; |\; \bigcup_{k = 1}^n C_k
+            E \vdash \{\overline{f_i = e_i}\}
+                \rightsquigarrow \bigcup_{k = 1}^n G_{k}\; |\; \bigcup_{k = 1}^n C_k
         }{
-           \text{for all } i \in \{1, \dots, n\}\quad  E; G_i \vdash e_i 
+           \text{for all } i \in \{1, \dots, n\}\quad  E \vdash e_i 
                 \rightsquigarrow G_{i+1}\; |\; C_i
         }
     \]
@@ -854,18 +863,17 @@ our remaining assertions to prove termination in some cases.
         \begin{array}{ll}
             f\; x = e              
                 & \text{Given a function definition} \\[10pt]
-            \implies \alpha \leftarrow x,\varepsilon;\; \varnothing 
-                \vdash e \rightsquigarrow G'\; |\; C
+            \implies \alpha \leftarrow x,\; \varepsilon\; 
+                \vdash e \rightsquigarrow G\; |\; C
                 \hspace{2em}
                 & \text{And a set of assertions and goals} \\
                 & \text{generated by the termination checker} \\
-                & \text{from an initial environment and} \\
-                & \text{empty set of assertions} \\[10pt]
-            \implies G' \vdash \forall \beta \in C.\; \beta \tlt \alpha
+                & \text{from an initial environment} \\[10pt]
+            \implies G \vdash \forall \beta \in C.\; \beta \tlt \alpha
                 & \text{The function terminates if} \\
                 & \text{every goal expression produced} \\
-                & \text{is smaller than the function argument} \\
-                & \text{under the produced assertions}
+                & \text{is structurally smaller than the function} \\
+                & \text{argument under the produced assertions}
         \end{array}
     \]
     
@@ -883,25 +891,25 @@ our remaining assertions to prove termination in some cases.
                 \\
             \hspace{1em}    \textsf{take}\; r'\; \{ l = l \} = r\; \textsf{in} 
                 & E_2, = E_1,\; \beta \leftarrow r',\; \gamma \leftarrow l;  \\
-                & G_2 = G_1,\; \alpha \teq \beta,\; \gamma \tlt \beta \\
+                & G_2 = G_1 \cup \{\; \alpha \teq \beta,\; \gamma \tlt \beta\; \} \\
                 & \textsc{\footnotesize (T-Take)}\\
 
             \hspace{2em}    \textsf{case}\; l\; \textsf{of} \\
             \hspace{3em}        \text{Nil}\; u\; \rightarrow\; 0 \\
             \hspace{3em}    |\; v2 \rightarrow 
                 & E_3 = E_2,\; u \leftarrow \delta,\; \eta \leftarrow v2; \\
-                & G_3 = G_2,\; \delta \tlt \gamma,\; \eta \teq \gamma \\
+                & G_3 = G_2 \cup \{\; \delta \tlt \gamma,\; \eta \teq \gamma\; \} \\
                 & \textsc{\footnotesize (T-Case)}\\
                 \\
             \hspace{4em}    \textsf{case}\; v2\; \textsf{of} \\
             \hspace{5em}    \text{Cons}\; s\; \rightarrow 
                 & E_4 = E_3,\; \phi \leftarrow s \\
-                & G_4 = G_3,\; \phi \tlt \eta \\
+                & G_4 = G_3 \cup \{\; \phi \tlt \eta\; \} \\
                 & \textsc{\footnotesize (T-CaseIrr)} \\
                 \\
             \hspace{6em}    \textsf{take}\; s'\; \{ rest = r \} = s\; \textsf{in} \hspace{2em}
                 & E_5 = E_4,\; \psi \leftarrow s',\; \pi \leftarrow r;  \\
-                & G_5 = G_4,\; \psi \teq \phi,\; \pi \tlt \psi  \\
+                & G_5 = G_4 \cup \{\; \psi \teq \phi,\; \pi \tlt \psi\; \} \\
                 & \textsc{\footnotesize (T-Take)} \\
                 \\
             \hspace{7em}        s.data\; +\; \text{sumList}\; r
@@ -915,7 +923,7 @@ our remaining assertions to prove termination in some cases.
     \]
     Final termination assertion generator output:
     \[
-        G' = \{\;
+        G = \{\;
             \alpha \teq \beta,\;
             \gamma \tlt \beta,\;
             \delta \tlt \gamma,\;
@@ -990,7 +998,7 @@ As an example, consider our earlier list sum example in \autoref{fig:exampleterm
 that features inline generated termination constraints. Note that our program also shadows
 the variable $r$ in the last \textsf{take} statement, which the termination
 rules generate a different fresh name for. Using our final set of assertions
-$G'$ and our goal set $C$ we must show that $\pi \tlt \alpha$.
+$G$ and our goal set $C$ we must show that $\pi \tlt \alpha$.
 Using our assertions we construct the graph in \autoref{fig:terminationgraph}
 and observe the following path from $\alpha$ to $\pi$:
 
@@ -1012,7 +1020,7 @@ this problem.
 
 One potential idea is to eliminate structural size inequality ($\tlt$), and preserve relative
 size information by using only discrete size changes. Consider our earlier example $x \tlt K\; y$,
-where we were unable to remove the constructor $C$ from $y$. 
+where we were unable to remove the constructor $K$ from $y$. 
 If earlier when generating this assertion we wrote  $x - 1 \teq K\; y$,
 where $x - 1$ means `1 structural size less than $x$', we would be able to know exactly
 how much structurally smaller $x$ is than $y$. If we wanted to simplify this assertion,
@@ -1026,7 +1034,7 @@ form $x - C \teq y$, where $x$ and $y$ are variables and $C$ is a constant, and
 then create a directed path from $y$ to $x$ if $C \neq 0$, and a bidirectional
 path between $x$ and $y$ if $C = 0$.
 
-Unfortunately, Cogent integer literals \textsc{U8}, \textsc{U16}, \textsc{U32} and
+Unfortunately, Cogent integer literals \textsf{U8}, \textsf{U16}, \textsf{U32} and
 \textsf{U64} are not structural types, and hence terminating recursion on integers
 cannot be detected via our current method. Furthermore, as unsigned integer
 overflow is permitted in our Cogent programs, even basic structural integer
