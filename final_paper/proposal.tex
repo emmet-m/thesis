@@ -109,11 +109,11 @@ examples are discussed in \autoref{ch:examplesandtesting} at the end of the chap
 
 Checking that all types only occur \emph{strictly positive} has been implemented in the reorganisation phase of the compiler
 instead of during type checking. This allows for a simple one-pass algorithm that can 
-analyse all the types in the program at once, and a simpler constraint generation and solving phases.
+analyse all the types in the program at once, and simpler constraint generation and solving phases.
 
 \autoref{fig:strictlypositivecheck} describes the strictly positive check over Cogent's types.
-This algorithm keeps track of a set of in scope bound recursive parameters $\mathcal{B}$ and a set of recursive
-parameters currently appear in a non-strictly positive position $\mathcal{S}$.
+This algorithm keeps track of a set of in scope bound recursive parameters $\mathcal{B}$, and a set of recursive
+parameters that would currently appear in a non-strictly positive position $\mathcal{S}$.
 
 Rule \textsc{sp-rec} describes checking a record bound with a recursive parameter $t$, where parameter 
 is added to the bound set $\mathcal{B}$, and removed from the non-strictly positive set $\mathcal{S}$
